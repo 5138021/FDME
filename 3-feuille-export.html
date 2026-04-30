@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feuille de Match — Éditable</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --blue:      #0B1829;
+  --blue-mid:  #122038;
+  --blue-soft: #1C3256;
+  --accent:    #E02D37;
+  --gold:      #F5A623;
+  --green:     #00C17A;
+  --cyan:      #4A9FFF;
+  --white:     #FFFFFF;
+  --off:       #F2F5FA;
+  --border:    #D4DCE8;
+  --muted:     #8A9BBE;
+  --font-h:    'Barlow Condensed', sans-serif;
+  --font-b:    'Barlow', sans-serif;
+  --edit-bg:   rgba(74,159,255,0.06);
+  --edit-border: rgba(74,159,255,0.35);
+}
+
+body {
+  background: #CBD5E4;
+  font-family: var(--font-b);
+  color: var(--blue);
+  padding: 16px;
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+  width: 297mm;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--blue);
+  border-radius: 8px;
+  padding: 8px 14px;
+  flex-wrap: wrap;
+}
+.toolbar-title {
+  font-family: var(--font-h);
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--white); flex: 1;
+}
+.toolbar-hint {
+  font-size: 10px; color: var(--muted);
+}
+.btn {
+  padding: 6px 14px;
+  border: none; border-radius: 5px;
+  font-family: var(--font-h); font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-print {
+  background: var(--accent); color: var(--white);
+}
+.btn-print:hover { background: #c0222c; }
+.btn-reset {
+  background: rgba(255,255,255,0.1); color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-reset:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE ── */
+.page {
+  width: 297mm;
+  margin: 0 auto;
+  background: var(--white);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ── EDITABLE FIELDS ── */
+[contenteditable="true"] {
+  outline: none;
+  border-radius: 2px;
+  transition: background 0.12s, box-shadow 0.12s;
+  cursor: text;
+  -webkit-user-modify: read-write;
+}
+[contenteditable="true"]:hover {
+  background: var(--edit-bg) !important;
+  box-shadow: 0 0 0 1px var(--edit-border);
+}
+[contenteditable="true"]:focus {
+  background: rgba(74,159,255,0.12) !important;
+  box-shadow: 0 0 0 1.5px var(--cyan);
+}
+
+/* ════════════════════════════════
+   HEADER
+════════════════════════════════ */
+.header { background: var(--blue); }
+
+.header-top {
+  display: flex;
+  align-items: stretch;
+}
+
+.brand {
+  background: var(--accent);
+  padding: 10px 18px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-width: 100px; flex-shrink: 0;
+}
+.brand-logo {
+  font-family: var(--font-h);
+  font-size: 26px; font-weight: 900;
+  letter-spacing: 2px; color: var(--white); line-height: 1;
+}
+.brand-sub {
+  font-family: var(--font-h);
+  font-size: 7px; font-weight: 700;
+  letter-spacing: 2px; color: rgba(255,255,255,0.65);
+  text-transform: uppercase; margin-top: 2px;
+}
+
+.header-titles {
+  flex: 1; padding: 10px 20px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.doc-eyebrow {
+  font-family: var(--font-h); font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+}
+.doc-title {
+  font-family: var(--font-h); font-size: 26px; font-weight: 900;
+  text-transform: uppercase; color: var(--white); line-height: 1; letter-spacing: 0.5px;
+}
+.doc-comp {
+  font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.3;
+}
+
+.header-ids {
+  padding: 10px 16px; border-left: 1px solid rgba(255,255,255,0.08);
+  display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 180px;
+}
+.id-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9px; color: var(--muted);
+}
+.id-row strong { color: var(--white); font-size: 10px; font-weight: 600; }
+.id-pip { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+/* MATCH HERO */
+.match-hero {
+  display: flex; align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: var(--blue-mid);
+  gap: 12px;
+}
+
+.team-side {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+}
+.team-side.away { flex-direction: row-reverse; }
+
+.team-badge {
+  width: 44px; height: 44px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-h); font-size: 16px; font-weight: 900; color: var(--white);
+  flex-shrink: 0;
+}
+.badge-home { background: var(--accent); }
+.badge-away { background: var(--blue-soft); border: 1.5px solid rgba(255,255,255,0.12); }
+
+.team-info { flex: 1; }
+.team-side.away .team-info { text-align: right; }
+.team-tag {
+  font-family: var(--font-h); font-size: 8px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+}
+.team-name {
+  font-family: var(--font-h); font-size: 18px; font-weight: 900;
+  text-transform: uppercase; color: var(--white); line-height: 1.1;
+}
+.team-code { font-size: 9px; color: var(--muted); margin-top: 1px; }
+
+.score-block {
+  text-align: center; flex-shrink: 0; padding: 0 16px;
+}
+.scores {
+  display: flex; align-items: center; gap: 6px;
+}
+.score-box {
+  width: 48px; height: 46px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  font-family: var(--font-h); font-size: 32px; font-weight: 900;
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+}
+.score-box.away-win { border-color: var(--cyan); color: var(--cyan); }
+.score-box.home-win { border-color: var(--accent); color: var(--accent); }
+.score-sep {
+  font-family: var(--font-h); font-size: 24px;
+  font-weight: 300; color: var(--muted);
+}
+.score-label {
+  font-family: var(--font-h); font-size: 7.5px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+  margin-top: 4px;
+}
+.ht-score {
+  font-size: 9.5px; color: rgba(255,255,255,0.4); margin-top: 2px;
+}
+
+/* ════════════════════════════════
+   INFO BAND
+════════════════════════════════ */
+.info-band {
+  background: var(--off);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+}
+.info-cell {
+  flex: 1; padding: 7px 12px;
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.info-cell:last-child { border-right: none; }
+.info-icon {
+  width: 26px; height: 26px; border-radius: 6px;
+  background: var(--blue); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.info-key {
+  font-size: 7.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); line-height: 1;
+}
+.info-val {
+  font-size: 10.5px; font-weight: 600; color: var(--blue);
+  line-height: 1.3; margin-top: 1px;
+}
+.info-val small { font-size: 9px; font-weight: 400; color: var(--muted); display: block; }
+
+/* ════════════════════════════════
+   BODY — TWO COLUMNS
+════════════════════════════════ */
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+}
+.col-divider { background: var(--border); }
+
+/* Section header */
+.sec-head {
+  display: flex; align-items: stretch;
+}
+.sec-bar { width: 4px; flex-shrink: 0; }
+.sec-bar-red { background: var(--accent); }
+.sec-bar-blue { background: var(--cyan); }
+
+.sec-label {
+  flex: 1; background: var(--blue);
+  font-family: var(--font-h); font-size: 10px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); padding: 5px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-label span { color: var(--white); }
+.sec-tag {
+  padding: 5px 10px;
+  font-family: var(--font-h); font-size: 10px; font-weight: 800;
+  letter-spacing: 1px;
+}
+.sec-tag-home { background: rgba(224,45,55,0.15); color: var(--accent); }
+.sec-tag-away { background: rgba(74,159,255,0.15); color: var(--cyan); }
+
+/* Player table */
+.ptable {
+  width: 100%; border-collapse: collapse;
+}
+.ptable thead tr { background: var(--blue); }
+.ptable thead th {
+  font-family: var(--font-h); font-size: 7.5px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); padding: 4px 4px;
+  text-align: center; white-space: nowrap;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.ptable thead th.th-name { text-align: left; padding-left: 8px; }
+
+.ptable tbody tr { border-bottom: 1px solid var(--border); }
+.ptable tbody tr:nth-child(even) { background: #F7F9FD; }
+.ptable tbody tr.capt-row-home { background: #FFFBF2; }
+.ptable tbody tr.capt-row-away { background: #F0F6FF; }
+
+.ptable td {
+  padding: 3px 4px;
+  text-align: center; vertical-align: middle;
+  font-size: 9px;
+}
+
+.td-num {
+  font-family: var(--font-h); font-size: 14px; font-weight: 800;
+  color: var(--blue); width: 24px;
+  background: var(--off);
+  border-right: 1px solid var(--border);
+}
+/* Couleur du numéro selon le poste */
+.td-num.num-gk  { color: var(--gold) !important; background: #1c2a0a; }
+.td-num.num-j   { color: var(--accent) !important; }
+/* Ancien (rétrocompat) */
+.td-num.gk-num { color: var(--gold); }
+.td-num.capt-home { color: var(--gold); }
+.td-num.capt-away { color: var(--cyan); font-weight: 900; }
+
+/* Capitaine checkbox */
+.capt-check {
+  width: 12px; height: 12px;
+  cursor: pointer; accent-color: var(--gold);
+  margin: 0; vertical-align: middle;
+}
+.td-capt {
+  width: 16px; text-align: center;
+  padding: 2px !important;
+}
+.capt-flag {
+  font-size: 9px; color: var(--gold); font-weight: 900;
+  display: none;
+}
+.capt-flag.active { display: inline; }
+
+.td-name {
+  text-align: left !important; padding-left: 8px !important;
+  font-weight: 600; color: var(--blue); font-size: 9.5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 0; min-width: 100px;
+}
+.td-name .lic { display: block; font-size: 7px; font-weight: 400; color: var(--muted); }
+
+.pos-badge {
+  display: inline-block; padding: 1px 4px;
+  border-radius: 8px; font-size: 7px; font-weight: 800;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  cursor: pointer; user-select: none;
+  transition: opacity 0.1s;
+}
+.pos-badge:hover { opacity: 0.75; }
+.pos-gk { background: #FFF3CD; color: #9A6E00; }
+.pos-j  { background: #E3ECFF; color: #2255CC; }
+
+.td-goals {
+  font-family: var(--font-h); font-size: 14px; font-weight: 800;
+  color: var(--green); width: 22px;
+}
+.td-goals.zero, .td-7m.zero, .td-ars.zero { color: var(--border); font-size: 11px; }
+.td-7m { font-family: var(--font-h); font-size: 12px; font-weight: 700; color: #00A068; width: 18px; }
+.td-tirs { font-size: 9px; color: var(--muted); width: 22px; }
+.td-ars { font-family: var(--font-h); font-size: 12px; font-weight: 700; color: #2255CC; width: 22px; }
+
+/* ── PENALTY CELLS ── */
+.pen-row {
+  display: flex; align-items: center; justify-content: center;
+}
+.pen-box {
+  width: 16px; height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700;
+  cursor: pointer; user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.pen-box:hover { transform: scale(1.15); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.c-yellow { background: #FFF3CD; border-color: #E0A800; color: #8A6200; }
+.c-2min   { background: #FFF0E5; border-color: #F5A623; color: #C07000; }
+.c-2min-used { background: #FFD580; border-color: #D08000; color: #6A4000; }
+.c-red    { background: #FFE0E2; border-color: var(--accent); color: var(--accent); }
+.c-blue   { background: #E0EDFF; border-color: #4A9FFF; color: #0055CC; }
+.c-empty  { background: var(--off); border-color: var(--border); color: var(--muted); }
+.c-2min-dis { background: linear-gradient(135deg, #FFD580 50%, #FFE0E2 50%); border-color: #D08000; color: #6A4000; font-size: 6px; font-weight: 900; }
+
+/* ── OFFICIALS ── */
+.off-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.off-cell {
+  padding: 5px 10px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.off-cell:nth-child(2n) { border-right: none; }
+.off-role {
+  font-size: 7px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+}
+.off-name { font-size: 10px; font-weight: 600; color: var(--blue); }
+
+/* Sanctions officiels */
+.off-sanctions {
+  display: flex; align-items: center; gap: 4px; margin-top: 4px; flex-wrap: wrap;
+}
+.off-san-label {
+  font-size: 7px; color: var(--muted); font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.off-pen-box {
+  width: 16px; height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700;
+  cursor: pointer; user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.off-pen-box:hover { transform: scale(1.15); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.off-pen-box.disabled { cursor: not-allowed; opacity: 0.35; pointer-events: none; }
+/* Étiquette globale (1 seul Av. / 1 seul 2' pour tous les officiels) */
+.off-global-badge {
+  font-size: 7px; background: rgba(255,193,7,0.12); color: #a07000;
+  border: 1px solid rgba(255,193,7,0.4); border-radius: 3px;
+  padding: 1px 4px; font-weight: 700; letter-spacing: 0.5px;
+}
+
+/* ════════════════════════════════
+   BOTTOM
+════════════════════════════════ */
+.bottom-row {
+  display: flex;
+  border-top: 2px solid var(--border);
+}
+.arb-block { flex: 1; border-right: 1px solid var(--border); }
+.stats-block {
+  width: 170px; flex-shrink: 0; border-right: 1px solid var(--border);
+  padding: 8px 12px;
+}
+.stats-title {
+  font-size: 7.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+}
+.stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 2px 0; border-bottom: 1px solid var(--border);
+  font-size: 9px;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--muted); }
+.stat-val { font-weight: 700; color: var(--blue); font-family: var(--font-h); font-size: 12px; }
+.stat-val.red { color: var(--accent); }
+.stat-val.blue-val { color: var(--cyan); }
+
+.period-block { padding: 6px 12px; }
+.period-title {
+  font-size: 7.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+}
+.period-grid {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden;
+  font-size: 9px;
+}
+.pg-header {
+  background: var(--blue); color: var(--muted);
+  font-family: var(--font-h); font-size: 7px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 6px; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.pg-cell {
+  padding: 3px 6px; text-align: center;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.pg-cell:last-child { border-right: none; }
+.pg-row-label {
+  background: var(--off); font-weight: 700; font-size: 8px;
+  padding: 3px 6px; color: var(--blue);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.pg-row-label.last { border-bottom: none; }
+.pg-cell.score-val {
+  font-family: var(--font-h); font-size: 13px; font-weight: 800;
+}
+.pg-cell.home-score { color: var(--accent); }
+.pg-cell.away-score { color: var(--cyan); }
+.pg-cell.empty-p { color: var(--border); font-size: 10px; }
+
+.sig-row {
+  display: flex; border-top: 2px solid var(--border);
+}
+.sig-block {
+  flex: 1; padding: 6px 10px;
+  border-right: 1px solid var(--border);
+}
+.sig-block:last-child { border-right: none; }
+.sig-label {
+  font-size: 7px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.sig-name { font-size: 8.5px; font-weight: 600; color: var(--blue); margin-bottom: 4px; }
+.sig-line {
+  height: 20px; border-bottom: 1.5px solid var(--border);
+}
+
+.obs-block { flex: 2; padding: 6px 10px; border-right: 1px solid var(--border); }
+.obs-label {
+  font-size: 7px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.obs-content {
+  font-size: 9px; color: var(--blue);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 6px; min-height: 30px;
+  line-height: 1.4;
+}
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 10px;
+  font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  background: rgba(0,193,122,0.12); color: var(--green);
+  border: 1px solid rgba(0,193,122,0.3);
+}
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+
+.footer {
+  background: var(--blue); padding: 5px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-left { font-size: 8px; color: var(--muted); }
+.footer-center {
+  font-family: var(--font-h); font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.2);
+}
+.footer-right { font-size: 8px; color: var(--muted); }
+
+/* ── LEGEND ── */
+.legend-bar {
+  background: var(--off); border-top: 1px solid var(--border);
+  padding: 5px 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.leg-key {
+  font-size: 7.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted);
+}
+.leg-item {
+  display: flex; align-items: center; gap: 4px; font-size: 8.5px; color: var(--blue);
+}
+
+/* ── PRINT STYLES ── */
+@media print {
+  body { background: white; padding: 0; }
+  .toolbar { display: none !important; }
+  .page { box-shadow: none; width: 100%; border-radius: 0; }
+  [contenteditable="true"]:hover,
+  [contenteditable="true"]:focus {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .pen-box:hover { transform: none !important; }
+}
+
+/* Cycle tooltip */
+.pen-cycle-hint {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--blue); color: var(--white);
+  font-size: 10px; padding: 6px 12px; border-radius: 6px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 999;
+  font-family: var(--font-b);
+}
+.pen-cycle-hint.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-title">📋 Feuille de Match — Export FFHB</div>
+  <span class="toolbar-hint">Données du match chargées automatiquement · Cliquer pour modifier · Cases de sanction cliquables</span>
+  <button class="btn btn-reset" onclick="goBack()" style="background:rgba(255,255,255,0.08);color:var(--muted);border:1px solid rgba(255,255,255,0.15);">← Match Live</button>
+  <button class="btn btn-reset" onclick="resetToOriginal()">↺ Vider</button>
+  <button class="btn btn-print" onclick="window.print()">🖨️ Imprimer / PDF</button>
+</div>
+
+<div class="pen-cycle-hint" id="cycleHint"></div>
+
+<div class="page">
+
+<!-- ════ HEADER ════ -->
+<div class="header">
+  <div class="header-top">
+    <div class="brand" style="background:var(--blue);padding:6px 10px;min-width:220px;flex-direction:row;gap:8px;border-right:1px solid rgba(255,255,255,0.1);">
+      <img src="20767-Photoroom.png" alt="Comité Isère" style="height:38px;object-fit:contain;"/>
+       <div style="width:1px;background:rgba(255,255,255,0.15);align-self:stretch;"></div>
+      <img src="logo-AURA-mobile.png" alt="Ligue AURA" style="height:38px;object-fit:contain;"/>
+      </div>
+    <div class="header-titles">
+      <div class="doc-eyebrow" contenteditable="true">Feuille de Match</div>
+      <div class="doc-title" id="h-teams" contenteditable="true">Équipe Domicile &nbsp;/&nbsp; Équipe Visiteur</div>
+      <div class="doc-comp" id="h-comp" contenteditable="true">Catégorie — Compétition · Poule · Groupe</div>
+    </div>
+    <div class="header-ids">
+      <div class="id-row"><div class="id-pip"></div> Code Renc : <strong id="h-code" contenteditable="true">—</strong></div>
+      <div class="id-row"><div class="id-pip"></div> Ligue : <strong contenteditable="true">—</strong></div>
+      <div class="id-row"><div class="id-pip"></div> Statut : <strong><span class="status-pill"><span class="status-dot"></span><span id="h-status" contenteditable="true">—</span></span></strong></div>
+    </div>
+  </div>
+
+  <!-- MATCH HERO -->
+  <div class="match-hero">
+    <div class="team-side">
+      <div class="team-badge badge-home" id="badge-home" style="background:var(--accent);"></div>
+      <div class="team-info">
+        <div class="team-tag">Club Recevant</div>
+        <div class="team-name" id="h-home-name" contenteditable="true">Équipe Domicile</div>
+        <div class="team-code" id="h-home-code" contenteditable="true">—</div>
+      </div>
+    </div>
+
+    <div class="score-block">
+      <div class="scores">
+        <div class="score-box" id="score-home" contenteditable="true" oninput="updateScoreColors()">0</div>
+        <div class="score-sep">:</div>
+        <div class="score-box" id="score-away" contenteditable="true" oninput="updateScoreColors()">0</div>
+      </div>
+      <div class="score-label">Score final</div>
+      <div class="ht-score" id="h-ht-score" contenteditable="true">Mi-temps : — – —</div>
+    </div>
+
+    <div class="team-side away">
+      <div class="team-badge badge-away" id="badge-away" style="background:var(--blue-soft);border:1.5px solid rgba(255,255,255,0.12);"></div>
+      <div class="team-info">
+        <div class="team-tag">Club Visiteur</div>
+        <div class="team-name" id="h-away-name" contenteditable="true">Équipe Visiteur</div>
+        <div class="team-code" id="h-away-code" contenteditable="true">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ INFO BAND ════ -->
+<!-- ════ BODY ════ -->
+<div class="body-grid">
+
+  <!-- ══ COLONNE DOMICILE ══ -->
+  <div>
+    <div class="sec-head">
+      <div class="sec-bar sec-bar-red"></div>
+      <div class="sec-label"><span contenteditable="true">Équipe Domicile</span> — Joueurs</div>
+      <div class="sec-tag sec-tag-home">DOM</div>
+    </div>
+    <table class="ptable" id="table-home">
+      <thead>
+        <tr>
+          <th style="width:16px" title="Capitaine">Cap</th>
+          <th style="width:24px">N°</th>
+          <th class="th-name">Nom · Prénom</th>
+          <th style="width:26px">Pos</th>
+          <th style="width:22px">Buts</th>
+          <th style="width:18px">7m</th>
+          <th style="width:22px">Tirs</th>
+          <th style="width:22px">Arrêts</th>
+          <th style="width:16px" title="Avertissement">Av.</th>
+          <th style="width:16px" title="2 minutes #1">2'</th>
+          <th style="width:16px" title="2 minutes #2">2'</th>
+          <th style="width:18px" title="2min + Disqualification">2'+D</th>
+          <th style="width:22px" title="Disqualification">Dis</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-home">
+      </tbody>
+    </table>
+    <div style="padding:4px 8px; border-top:1px solid var(--border);">
+      <button onclick="addRow('tbody-home','home')" style="font-size:8px;padding:2px 8px;background:var(--off);border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);font-family:var(--font-b);">+ Ajouter un joueur</button>
+    </div>
+
+    <!-- Officiels domicile -->
+    <div class="sec-head">
+      <div class="sec-bar sec-bar-red"></div>
+      <div class="sec-label"><span>Officiels</span> — Domicile</div>
+      <div style="padding:4px 8px;background:var(--blue);display:flex;align-items:center;gap:6px;">
+        <span class="off-global-badge">1 Av. max</span>
+        <span class="off-global-badge">1 Excl. max</span>
+      </div>
+    </div>
+    <div class="off-grid">
+      <div class="off-cell">
+        <div class="off-role">Officiel A</div>
+        <div class="off-name" contenteditable="true">— <span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel B</div>
+        <div class="off-name" contenteditable="true" style="color:var(--muted);">—</div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel C</div>
+        <div class="off-name" contenteditable="true" style="color:var(--muted);">—</div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel D</div>
+        <div class="off-name" contenteditable="true" style="color:var(--muted);">—</div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="home" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="col-divider"></div>
+
+  <!-- ══ COLONNE VISITEUR ══ -->
+  <div>
+    <div class="sec-head">
+      <div class="sec-bar sec-bar-blue"></div>
+      <div class="sec-label"><span contenteditable="true">Équipe Visiteur</span> — Joueurs</div>
+      <div class="sec-tag sec-tag-away">EXT</div>
+    </div>
+    <table class="ptable" id="table-away">
+      <thead>
+        <tr>
+          <th style="width:16px" title="Capitaine">Cap</th>
+          <th style="width:24px">N°</th>
+          <th class="th-name">Nom · Prénom</th>
+          <th style="width:26px">Pos</th>
+          <th style="width:22px">Buts</th>
+          <th style="width:18px">7m</th>
+          <th style="width:22px">Tirs</th>
+          <th style="width:22px">Arrêts</th>
+          <th style="width:16px">Av.</th>
+          <th style="width:16px">2'</th>
+          <th style="width:16px">2'</th>
+          <th style="width:18px">2'+D</th>
+          <th style="width:22px">Dis</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-away">
+      </tbody>
+    </table>
+    <div style="padding:4px 8px; border-top:1px solid var(--border);">
+      <button onclick="addRow('tbody-away','away')" style="font-size:8px;padding:2px 8px;background:var(--off);border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);font-family:var(--font-b);">+ Ajouter un joueur</button>
+    </div>
+
+    <!-- Officiels visiteur -->
+    <div class="sec-head">
+      <div class="sec-bar sec-bar-blue"></div>
+      <div class="sec-label"><span>Officiels</span> — Extérieur</div>
+      <div style="padding:4px 8px;background:var(--blue);display:flex;align-items:center;gap:6px;">
+        <span class="off-global-badge">1 Av. max</span>
+        <span class="off-global-badge">1 Excl. max</span>
+      </div>
+    </div>
+    <div class="off-grid">
+      <div class="off-cell">
+        <div class="off-role">Officiel A</div>
+        <div class="off-name" contenteditable="true">— <span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel B</div>
+        <div class="off-name" contenteditable="true">— <span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel C</div>
+        <div class="off-name" contenteditable="true">— <span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Officiel D</div>
+        <div class="off-name" contenteditable="true" style="color:var(--muted);">—</div>
+        <div class="off-sanctions">
+          <span class="off-san-label">Sanctions :</span>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-av" onclick="cycleOffPen(this)" title="Avertissement (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-team="away" data-type="off-2min" onclick="cycleOffPen(this)" title="Exclusion 2min (1 max/équipe)">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-dis" onclick="cycleOffPen(this)" title="Disqualification">—</div>
+          <div class="off-pen-box c-empty" data-state="empty" data-type="off-rapport" onclick="cycleOffPen(this)" title="Rapport écrit">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /body-grid -->
+
+<!-- ════ LÉGENDE ════ -->
+<div class="legend-bar">
+  <span class="leg-key">Légende pénalités :</span>
+  <span class="leg-item"><span class="pen-box c-yellow" style="display:inline-flex;">!</span> Avertissement</span>
+  <span class="leg-item"><span class="pen-box c-2min" style="display:inline-flex;">2'</span> Exclusion 2 min</span>
+  <span class="leg-item"><span class="pen-box c-2min-dis" style="display:inline-flex;">D</span> Exclusion disqualifiante</span>
+  <span class="leg-item"><span class="pen-box c-red" style="display:inline-flex;">■</span> Disqualification directe</span>
+  <span class="leg-item"><span class="pen-box c-blue" style="display:inline-flex;">■</span> Disqualification avec rapport écrit</span>
+  <span style="width:1px;background:var(--border);align-self:stretch;margin:0 4px;"></span>
+  <span class="leg-key">Officiels :</span>
+  <span class="leg-item" style="font-size:8px;color:var(--muted);">Av. &amp; 2' : 1 seul par équipe · Disqual. &amp; Rapport : par officiel</span>
+  <span class="leg-item" style="color:var(--muted);font-size:8px;">· Cliquer sur une case pour changer son état</span>
+</div>
+
+<!-- ════ BOTTOM ════ -->
+<div class="bottom-row">
+  <div class="arb-block">
+    <div class="sec-head">
+      <div class="sec-bar" style="background:var(--gold);"></div>
+      <div class="sec-label" style="background:#1A1A2E;"><span>Arbitres &amp; Table de marque</span></div>
+    </div>
+    <div class="off-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+      <div class="off-cell">
+        <div class="off-role">Arbitre 1</div>
+        <div class="off-name" contenteditable="true">—<br><span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Arbitre 2</div>
+        <div class="off-name" contenteditable="true" style="color:var(--muted);">—</div>
+      </div>
+      <div class="off-cell">
+        <div class="off-role">Chronométreur</div>
+        <div class="off-name" contenteditable="true">—<br><span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+      </div>
+      <div class="off-cell" style="border-right:none;">
+        <div class="off-role">Secrétaire</div>
+        <div class="off-name" contenteditable="true">—<br><span style="font-size:8px;color:var(--muted);">N° licence</span></div>
+      </div>
+    </div>
+    <div class="period-block">
+      <div class="period-title">Détail du score</div>
+      <div class="period-grid">
+        <div class="pg-header">Équipe</div>
+        <div class="pg-header">Période 1</div>
+        <div class="pg-header">Fin Tps Rég.</div>
+        <div class="pg-header">Prol. 1</div>
+        <div class="pg-header">Prol. 2</div>
+        <div class="pg-header">Tirs au but</div>
+        <div class="pg-row-label">DOM</div>
+        <div class="pg-cell score-val home-score" contenteditable="true">—</div>
+        <div class="pg-cell score-val home-score" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+        <div class="pg-row-label last">VIS</div>
+        <div class="pg-cell score-val away-score" contenteditable="true">—</div>
+        <div class="pg-cell score-val away-score" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+        <div class="pg-cell empty-p" contenteditable="true">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-block">
+    <div class="stats-title">Récapitulatif</div>
+    <div class="stat-row"><span class="stat-label">Buts Domicile</span><span class="stat-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">7m DOM réussi</span><span class="stat-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Tirs DOM</span><span class="stat-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Arrêts Gardiens DOM</span><span class="stat-val" contenteditable="true">—</span></div>
+    <div class="stat-row" style="border-top:2px solid var(--border);margin-top:2px;padding-top:2px;"></div>
+    <div class="stat-row"><span class="stat-label">Buts Visiteur</span><span class="stat-val blue-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">7m VIS réussi</span><span class="stat-val blue-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Tirs VIS</span><span class="stat-val blue-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Arrêts Gardiens VIS</span><span class="stat-val blue-val" contenteditable="true">—</span></div>
+    <div class="stat-row" style="border-top:2px solid var(--border);margin-top:2px;padding-top:2px;"></div>
+    <div class="stat-row"><span class="stat-label">Exclusions 2' total</span><span class="stat-val" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Cartons rouges</span><span class="stat-val red" contenteditable="true">—</span></div>
+    <div class="stat-row"><span class="stat-label">Cartons bleus</span><span class="stat-val" style="color:var(--cyan);" contenteditable="true">—</span></div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ════════════════════════════════
+// DONNÉES JOUEURS
+// ════════════════════════════════
+const ORIGINAL_PLAYERS_HOME = [
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' }
+];
+
+
+const ORIGINAL_PLAYERS_AWAY = [
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' },
+  { num:'—', name:'', lic:'', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' }
+];
+
+
+// ════════════════════════════════
+// SANCTION CYCLE — Joueurs
+// ════════════════════════════════
+const PEN_STATES = {
+  'empty':    { cls:'c-empty',    label:'—' },
+  'yellow':   { cls:'c-yellow',   label:'!' },
+  '2min':     { cls:'c-2min',     label:"2'" },
+  '2min-used':{ cls:'c-2min-used',label:'✓' },
+  '2min-dis': { cls:'c-2min-dis', label:"D" },
+  'red':      { cls:'c-red',      label:'■' },
+  'blue':     { cls:'c-blue',     label:'■' },
+};
+
+const PEN_CYCLES = {
+  av:   ['empty','yellow'],
+  p:    ['empty','2min','2min-used'],
+  p2d:  ['empty','2min-dis'],
+  dis:  ['empty','red','blue'],
+};
+
+function cyclePen(el, type) {
+  const currentState = el.dataset.state || 'empty';
+  const cycle = PEN_CYCLES[type];
+  const idx = cycle.indexOf(currentState);
+  const nextState = cycle[(idx + 1) % cycle.length];
+  setPenState(el, nextState);
+
+  const hint = document.getElementById('cycleHint');
+  const labels = { 'empty':'Vide', 'yellow':'Avertissement ⚠️', '2min':"2 min (vide)", '2min-used':"2 min infligée ✓", '2min-dis':"2'+D (disqualification)", 'red':'Disqualif. rouge ■', 'blue':'Rapport bleu ■' };
+  hint.textContent = '→ ' + labels[nextState];
+  hint.classList.add('show');
+  clearTimeout(hint._t);
+  hint._t = setTimeout(() => hint.classList.remove('show'), 1500);
+}
+
+function setPenState(el, state) {
+  const s = PEN_STATES[state] || PEN_STATES['empty'];
+  Object.values(PEN_STATES).forEach(v => el.classList.remove(v.cls));
+  el.classList.add(s.cls);
+  el.textContent = s.label;
+  el.dataset.state = state;
+}
+
+// ════════════════════════════════
+// SANCTIONS OFFICIELS
+// ════════════════════════════════
+// off-av & off-2min : 1 seul par équipe (home/away)
+// off-dis & off-rapport : 1 par officiel
+const OFF_STATES = {
+  'empty':   { cls:'c-empty',  label:'—' },
+  'yellow':  { cls:'c-yellow', label:'!' },
+  '2min':    { cls:'c-2min-used', label:"2'" },
+  'red':     { cls:'c-red',    label:'■' },
+  'blue':    { cls:'c-blue',   label:'■' },
+};
+
+function cycleOffPen(el) {
+  const type = el.dataset.type;
+  const team = el.dataset.team; // 'home' or 'away' (only for global types)
+  const currentState = el.dataset.state || 'empty';
+
+  if (type === 'off-av') {
+    // Global : 1 seul avertissement pour toute l'équipe
+    if (currentState === 'empty') {
+      // Vérifier si un autre officiel de la même équipe a déjà un avertissement
+      const allAv = document.querySelectorAll(`.off-pen-box[data-type="off-av"][data-team="${team}"]`);
+      const alreadyUsed = [...allAv].some(b => b !== el && b.dataset.state !== 'empty');
+      if (alreadyUsed) {
+        showHint('⛔ Un seul avertissement autorisé pour tous les officiels');
+        return;
+      }
+      setOffState(el, 'yellow');
+    } else {
+      setOffState(el, 'empty');
+    }
+  } else if (type === 'off-2min') {
+    // Global : 1 seule exclusion 2min pour toute l'équipe
+    if (currentState === 'empty') {
+      const all2min = document.querySelectorAll(`.off-pen-box[data-type="off-2min"][data-team="${team}"]`);
+      const alreadyUsed = [...all2min].some(b => b !== el && b.dataset.state !== 'empty');
+      if (alreadyUsed) {
+        showHint('⛔ Une seule exclusion 2min autorisée pour tous les officiels');
+        return;
+      }
+      setOffState(el, '2min');
+    } else {
+      setOffState(el, 'empty');
+    }
+  } else if (type === 'off-dis') {
+    // Par officiel : disqualification
+    const next = currentState === 'empty' ? 'red' : 'empty';
+    setOffState(el, next);
+  } else if (type === 'off-rapport') {
+    // Par officiel : rapport écrit
+    const next = currentState === 'empty' ? 'blue' : 'empty';
+    setOffState(el, next);
+  }
+}
+
+function setOffState(el, state) {
+  const s = OFF_STATES[state] || OFF_STATES['empty'];
+  Object.values(OFF_STATES).forEach(v => el.classList.remove(v.cls));
+  el.classList.add(s.cls);
+  el.textContent = s.label;
+  el.dataset.state = state;
+  const labels = { 'empty':'Vide', 'yellow':'Avertissement', '2min':'Exclusion 2min', 'red':'Disqualification', 'blue':'Rapport écrit' };
+  showHint('→ ' + labels[state]);
+}
+
+function showHint(msg) {
+  const hint = document.getElementById('cycleHint');
+  hint.textContent = msg;
+  hint.classList.add('show');
+  clearTimeout(hint._t);
+  hint._t = setTimeout(() => hint.classList.remove('show'), 2000);
+}
+
+// ════════════════════════════════
+// CAPITAINE — gestion checkbox
+// ════════════════════════════════
+function handleCaptainChange(checkbox) {
+  const team = checkbox.dataset.team;
+  const tbody = checkbox.closest('tbody');
+  // Décoche tous les autres de la même table
+  tbody.querySelectorAll('.capt-check').forEach(cb => {
+    if (cb !== checkbox) {
+      cb.checked = false;
+      updateCaptainRow(cb);
+    }
+  });
+  updateCaptainRow(checkbox);
+}
+
+function updateCaptainRow(checkbox) {
+  const tr = checkbox.closest('tr');
+  const isCapt = checkbox.checked;
+  const team = checkbox.dataset.team;
+  // Mise à jour de la couleur du drapeau dans la colonne nom
+  const flag = tr.querySelector('.capt-flag');
+  if (flag) {
+    if (isCapt) flag.classList.add('active'); else flag.classList.remove('active');
+  }
+  // Mise à jour class de la ligne
+  tr.classList.remove('capt-row-home', 'capt-row-away');
+  if (isCapt) tr.classList.add(team === 'home' ? 'capt-row-home' : 'capt-row-away');
+}
+
+// ════════════════════════════════
+// POSITION — toggle + couleur numéro
+// ════════════════════════════════
+function togglePos(el) {
+  const tr = el.closest('tr');
+  const numTd = tr.querySelector('.td-num');
+  if (el.classList.contains('pos-gk')) {
+    el.classList.remove('pos-gk'); el.classList.add('pos-j'); el.textContent = 'J';
+    if (numTd) { numTd.classList.remove('num-gk'); numTd.classList.add('num-j'); }
+  } else {
+    el.classList.remove('pos-j'); el.classList.add('pos-gk'); el.textContent = 'GK';
+    if (numTd) { numTd.classList.remove('num-j'); numTd.classList.add('num-gk'); }
+  }
+}
+
+// ════════════════════════════════
+// RENDER ROWS
+// ════════════════════════════════
+function buildPenBox(state, type) {
+  const s = PEN_STATES[state] || PEN_STATES['empty'];
+  return `<div class="pen-box ${s.cls}" data-state="${state}" onclick="cyclePen(this,'${type}')">${s.label}</div>`;
+}
+
+function buildRow(p, team) {
+  const isGK = p.isGK || p.pos === 'GK';
+  const numColorClass = isGK ? 'td-num num-gk' : 'td-num num-j';
+  const posClass = isGK ? 'pos-gk' : 'pos-j';
+  const posLabel = isGK ? 'GK' : 'J';
+  const goalsClass = p.goals === '—' ? 'td-goals zero' : 'td-goals';
+  const m7Class = p.m7 === '—' ? 'td-7m zero' : 'td-7m';
+  const arsClass = p.arrets === '—' ? 'td-ars zero' : 'td-ars';
+  const captChecked = p.isCapt ? 'checked' : '';
+  const rowClass = p.isCapt ? (team === 'home' ? 'capt-row-home' : 'capt-row-away') : '';
+  const flagActive = p.isCapt ? 'active' : '';
+
+  return `<tr class="${rowClass}">
+    <td class="td-capt"><input type="checkbox" class="capt-check" data-team="${team}" ${captChecked} onchange="handleCaptainChange(this)" title="Désigner capitaine"></td>
+    <td class="${numColorClass}" contenteditable="true">${p.num}</td>
+    <td class="td-name" contenteditable="true"><span class="capt-flag ${flagActive}">⚑ </span>${p.name}<span class="lic" contenteditable="true">${p.lic}</span></td>
+    <td><span class="pos-badge ${posClass}" onclick="togglePos(this)">${posLabel}</span></td>
+    <td class="${goalsClass}" contenteditable="true">${p.goals}</td>
+    <td class="${m7Class}" contenteditable="true">${p.m7}</td>
+    <td class="td-tirs" contenteditable="true">${p.tirs}</td>
+    <td class="${arsClass}" contenteditable="true">${p.arrets}</td>
+    <td><div class="pen-row">${buildPenBox(p.av,'av')}</div></td>
+    <td><div class="pen-row">${buildPenBox(p.p1,'p')}</div></td>
+    <td><div class="pen-row">${buildPenBox(p.p2,'p')}</div></td>
+    <td><div class="pen-row">${buildPenBox(p.p2d || 'empty','p2d')}</div></td>
+    <td><div class="pen-row">${buildPenBox(p.dis,'dis')}</div></td>
+    <td style="width:14px;padding:0;"><span onclick="deleteRow(this)" style="cursor:pointer;color:var(--muted);font-size:8px;padding:2px;" title="Supprimer">✕</span></td>
+  </tr>`;
+}
+
+function renderPlayers(tbodyId, players, team) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = players.map(p => buildRow(p, team)).join('');
+}
+
+function addRow(tbodyId, team) {
+  const newPlayer = { num:'00', name:'Nouveau Joueur', lic:'Licence · A', pos:'J', goals:'—', m7:'—', tirs:'—', arrets:'—', av:'empty', p1:'empty', p2:'empty', p2d:'empty', dis:'empty' };
+  document.getElementById(tbodyId).insertAdjacentHTML('beforeend', buildRow(newPlayer, team));
+}
+
+function deleteRow(el) {
+  const tr = el.closest('tr');
+  if (confirm('Supprimer ce joueur ?')) tr.remove();
+}
+
+function resetToOriginal() {
+  if (!confirm('Réinitialiser toute la feuille aux données originales ?')) return;
+  renderPlayers('tbody-home', ORIGINAL_PLAYERS_HOME, 'home');
+  renderPlayers('tbody-away', ORIGINAL_PLAYERS_AWAY, 'away');
+  // Reset officiels sanctions
+  document.querySelectorAll('.off-pen-box').forEach(el => {
+    el.dataset.state = 'empty';
+    Object.values(OFF_STATES).forEach(v => el.classList.remove(v.cls));
+    el.classList.add('c-empty');
+    el.textContent = '—';
+  });
+}
+
+// ════════════════════════════════
+// SCORE AUTO COLOR
+// ════════════════════════════════
+function updateScoreColors() {
+  const homeEl = document.getElementById('score-home');
+  const awayEl = document.getElementById('score-away');
+  const h = parseInt(homeEl.textContent.trim()) || 0;
+  const a = parseInt(awayEl.textContent.trim()) || 0;
+  homeEl.className = 'score-box';
+  awayEl.className = 'score-box';
+  if (h > a) {
+    homeEl.classList.add('home-win');
+  } else if (a > h) {
+    awayEl.classList.add('away-win');
+  }
+}
+
+// Init on load
+renderPlayers('tbody-home', ORIGINAL_PLAYERS_HOME, 'home');
+renderPlayers('tbody-away', ORIGINAL_PLAYERS_AWAY, 'away');
+updateScoreColors();
+
+// Prevent newlines in single-line fields on Enter
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.activeElement.contentEditable === 'true') {
+    const el = document.activeElement;
+    if (!el.classList.contains('obs-content') && !el.classList.contains('off-name') && !el.classList.contains('info-val')) {
+      e.preventDefault();
+      el.blur();
+    }
+  }
+});
+</script>
+</body>
+</html>
