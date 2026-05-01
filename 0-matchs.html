@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏆 Tableau de bord — FFHB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blue:#0B1829;--blue-mid:#122038;--blue-soft:#1C3256;
+  --accent:#E02D37;--gold:#F5A623;--green:#00C17A;
+  --cyan:#4A9FFF;--purple:#9B59B6;--white:#FFFFFF;
+  --muted:#8A9BBE;--border:rgba(255,255,255,0.09);
+  --font-h:'Barlow Condensed',sans-serif;
+  --font-b:'Barlow',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+.app-header{
+  background:linear-gradient(135deg,#0B1829,#1a0a2e);
+  padding:20px 16px 16px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.header-logo{
+  font-family:var(--font-h);font-size:32px;font-weight:900;
+  letter-spacing:3px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--gold),#ff9900);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:2px;
+}
+.header-sub{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+
+.header-actions{display:flex;gap:8px;justify-content:center;margin-top:14px;}
+.btn-prog{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:8px;
+  border:1px solid rgba(74,159,255,0.3);
+  background:rgba(74,159,255,0.1);color:var(--cyan);
+  font-family:var(--font-h);font-size:12px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+.btn-prog:hover{background:rgba(74,159,255,0.2);border-color:var(--cyan);}
+
+/* CONTENT */
+.content{padding:14px 14px 120px;}
+
+/* SECTION HEADER */
+.section-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.section-label{
+  font-family:var(--font-h);font-size:11px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:7px;
+}
+.section-label .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.count-badge{
+  font-family:var(--font-h);font-size:10px;font-weight:800;
+  background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.25);
+  color:var(--gold);border-radius:20px;padding:2px 8px;letter-spacing:.5px;
+}
+
+/* MATCH CARD */
+.match-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;overflow:hidden;
+  margin-bottom:10px;transition:all .2s;cursor:pointer;
+}
+.match-card:hover{border-color:rgba(245,166,35,0.4);background:rgba(255,255,255,0.06);transform:translateY(-1px);}
+.match-card:active{transform:scale(0.99);}
+
+.match-card-inner{display:flex;align-items:stretch;}
+.match-bar{width:5px;flex-shrink:0;}
+.match-bar.upcoming{background:linear-gradient(180deg,var(--gold),#ff9900);}
+.match-bar.today{background:linear-gradient(180deg,var(--green),#00a066);}
+.match-bar.past{background:var(--muted);}
+
+.match-info{flex:1;padding:12px 14px;}
+
+.match-header-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.badge-comp{
+  font-family:var(--font-h);font-size:13px;font-weight:800;
+  letter-spacing:.5px;color:var(--white);
+}
+.badge-div{
+  font-size:10px;color:var(--muted);
+  background:rgba(255,255,255,0.06);
+  border-radius:4px;padding:1px 6px;
+}
+.badge-today{
+  font-size:9px;font-family:var(--font-h);font-weight:800;letter-spacing:.5px;
+  background:rgba(0,193,122,0.2);color:var(--green);
+  border:1px solid rgba(0,193,122,0.3);border-radius:4px;padding:1px 6px;
+  text-transform:uppercase;
+}
+.badge-past{
+  font-size:9px;font-family:var(--font-h);font-weight:800;letter-spacing:.5px;
+  background:rgba(138,155,190,0.1);color:var(--muted);
+  border:1px solid rgba(138,155,190,0.2);border-radius:4px;padding:1px 6px;
+  text-transform:uppercase;
+}
+
+.match-vs{
+  font-family:var(--font-h);font-size:16px;font-weight:800;
+  color:var(--white);margin-bottom:7px;line-height:1.2;
+}
+.match-vs span{color:var(--muted);font-weight:600;font-size:13px;margin:0 4px;}
+
+.match-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.meta-chip{
+  display:flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--muted);
+}
+.meta-chip strong{color:rgba(255,255,255,.85);font-weight:600;}
+
+.match-cta{
+  display:flex;align-items:center;padding:0 12px;
+  flex-shrink:0;
+}
+.btn-start{
+  padding:9px 14px;border:none;border-radius:9px;
+  background:linear-gradient(135deg,var(--gold),#cc8800);
+  color:var(--blue);font-family:var(--font-h);font-size:12px;
+  font-weight:900;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(245,166,35,0.3);transition:all .2s;
+}
+.btn-start:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,166,35,0.4);}
+.btn-start.past{
+  background:rgba(138,155,190,0.15);color:var(--muted);
+  box-shadow:none;border:1px solid rgba(138,155,190,0.2);
+}
+
+/* TODAY SEPARATOR */
+.today-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:16px 0 12px;
+}
+.today-divider-line{flex:1;height:1px;background:rgba(0,193,122,0.25);}
+.today-divider-label{
+  font-family:var(--font-h);font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--green);padding:3px 10px;
+  background:rgba(0,193,122,0.1);border:1px solid rgba(0,193,122,0.2);
+  border-radius:20px;white-space:nowrap;
+}
+
+/* EMPTY STATE */
+.empty-state{
+  background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);
+  border-radius:14px;padding:40px 24px;text-align:center;
+}
+.es-icon{font-size:40px;margin-bottom:14px;}
+.es-title{
+  font-family:var(--font-h);font-size:16px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;color:var(--white);
+  margin-bottom:6px;
+}
+.es-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.btn-new-match{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:12px 20px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--cyan),#2277cc);
+  color:var(--white);font-family:var(--font-h);font-size:14px;
+  font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;box-shadow:0 6px 20px rgba(74,159,255,0.3);transition:all .2s;
+}
+.btn-new-match:hover{transform:translateY(-2px);}
+
+/* BOTTOM BAR */
+.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg,var(--blue-mid),rgba(18,32,56,.97));
+  padding:10px 14px;border-top:1px solid var(--border);z-index:50;
+}
+.btn-manual{
+  width:100%;padding:14px;border:none;border-radius:11px;
+  background:linear-gradient(135deg,var(--cyan),#2277cc);
+  color:var(--white);font-family:var(--font-h);font-size:16px;
+  font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 8px 24px rgba(74,159,255,0.3);transition:all .2s;
+}
+.btn-manual:hover{transform:translateY(-2px);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(0,193,122,0.95);color:var(--blue);
+  font-family:var(--font-h);font-size:13px;font-weight:800;
+  letter-spacing:.5px;padding:10px 18px;border-radius:10px;
+  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:300;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-logo">FFHB</div>
+  <div class="header-sub">Tableau de bord — Matchs</div>
+  <div class="header-actions">
+    <button class="btn-prog" onclick="window.location.href='0-programmation.html'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Gérer la programmation
+    </button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="section-hdr">
+    <div class="section-label"><span class="dot"></span>Matchs programmés</div>
+    <div class="count-badge" id="count-badge">0 match</div>
+  </div>
+  <div id="matches-container"></div>
+</div>
+
+<div class="bottom-bar">
+  <button class="btn-manual" onclick="startBlank()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    Nouveau match sans programmation
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'ffhb_scheduled_matches';
+
+function getMatches() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function classifyMatch(m) {
+  const t = todayStr();
+  if (!m.date) return 'upcoming';
+  if (m.date === t) return 'today';
+  if (m.date < t) return 'past';
+  return 'upcoming';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  return new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-FR', {
+    weekday: 'long', day: '2-digit', month: 'long'
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function launchMatch(m) {
+  // Build a prep data object pre-filled with the match info
+  const prepData = {
+    match: {
+      competition: m.competition || '',
+      division: m.division || '',
+      date: m.date || '',
+      heure: m.heure || '',
+      salle: m.salle || '',
+      ville: m.ville || '',
+      codeRenc: m.codeRenc || '',
+      arb1: m.arb1 || '',
+      arb2: m.arb2 || '',
+      arbLic1: m.arbLic1 || '',
+      arbLic2: m.arbLic2 || '',
+      delegue: m.delegue || '',
+      delegueLic: m.delegueLic || '',
+      chrono: '',
+      duree: m.duree || 30,
+      pause: m.pause || 10,
+      observations: '',
+      scoreHome: 0, scoreAway: 0,
+      scoreHTHome: 0, scoreHTAway: 0,
+      period: 1, matchEnded: false
+    },
+    home: {
+      nom: m.homeNom || 'Équipe A',
+      abr: m.homeAbr || 'DOM',
+      code: '',
+      color: '#E02D37',
+      players: [],
+      officials: [],
+      tmo: 0
+    },
+    away: {
+      nom: m.awayNom || 'Équipe B',
+      abr: m.awayAbr || 'EXT',
+      code: '',
+      color: '#4A9FFF',
+      players: [],
+      officials: [],
+      tmo: 0
+    },
+    events: []
+  };
+
+  localStorage.setItem('ffhb_prep_data', JSON.stringify(prepData));
+  showToast('✅ Données chargées — Redirection…');
+  setTimeout(() => window.location.href = '1-preparation.html', 600);
+}
+
+function startBlank() {
+  localStorage.removeItem('ffhb_prep_data');
+  window.location.href = '1-preparation.html';
+}
+
+function render() {
+  const matches = getMatches();
+  const container = document.getElementById('matches-container');
+  const countBadge = document.getElementById('count-badge');
+
+  // Sort: today first, then upcoming, then past
+  const sorted = [...matches].sort((a, b) => {
+    const da = (a.date||'9999') + (a.heure||'');
+    const db = (b.date||'9999') + (b.heure||'');
+    return da.localeCompare(db);
+  });
+
+  const upcoming = sorted.filter(m => classifyMatch(m) !== 'past');
+  const past = sorted.filter(m => classifyMatch(m) === 'past');
+  const total = matches.length;
+
+  countBadge.textContent = total + ' match' + (total > 1 ? 's' : '');
+
+  if (!total) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="es-icon">📅</div>
+        <div class="es-title">Aucun match programmé</div>
+        <div class="es-sub">Programmez vos matchs à l'avance pour les retrouver ici, ou démarrez directement une feuille vierge.</div>
+        <button class="btn-new-match" onclick="window.location.href='0-programmation.html'">
+          ＋ Programmer un match
+        </button>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+
+  if (upcoming.length) {
+    upcoming.forEach(m => {
+      html += buildCard(m);
+    });
+  }
+
+  if (past.length) {
+    html += `<div class="today-divider">
+      <div class="today-divider-line"></div>
+      <div class="today-divider-label">⏮ Matchs passés</div>
+      <div class="today-divider-line"></div>
+    </div>`;
+    past.forEach(m => {
+      html += buildCard(m);
+    });
+  }
+
+  container.innerHTML = html;
+}
+
+function buildCard(m) {
+  const type = classifyMatch(m);
+  const dateStr = formatDate(m.date);
+  const vs = (m.homeNom && m.awayNom) ? `${m.homeNom}<span>–</span>${m.awayNom}` : '';
+
+  let badgeHtml = '';
+  if (type === 'today') badgeHtml = '<span class="badge-today">Aujourd\'hui</span>';
+  else if (type === 'past') badgeHtml = '<span class="badge-past">Passé</span>';
+
+  const btnClass = type === 'past' ? 'btn-start past' : 'btn-start';
+  const btnLabel = type === 'past' ? '↩ Recharger' : '▶ Démarrer';
+
+  const matchJson = JSON.stringify(m).replace(/'/g, '&#39;');
+
+  return `
+    <div class="match-card" onclick="launchFromCard(this)" data-match='${matchJson}'>
+      <div class="match-card-inner">
+        <div class="match-bar ${type}"></div>
+        <div class="match-info">
+          <div class="match-header-row">
+            ${m.competition ? `<span class="badge-comp">${m.competition}</span>` : ''}
+            ${m.division ? `<span class="badge-div">${m.division}</span>` : ''}
+            ${badgeHtml}
+          </div>
+          ${vs ? `<div class="match-vs">${vs}</div>` : ''}
+          <div class="match-meta">
+            ${m.date ? `<div class="meta-chip">📅 <strong>${dateStr}</strong></div>` : ''}
+            ${m.heure ? `<div class="meta-chip">🕐 <strong>${m.heure}</strong></div>` : ''}
+            ${m.salle ? `<div class="meta-chip">🏟️ <strong>${m.salle}</strong></div>` : ''}
+            ${m.ville ? `<div class="meta-chip">🏙️ <strong>${m.ville}</strong></div>` : ''}
+          </div>
+        </div>
+        <div class="match-cta">
+          <button class="${btnClass}" onclick="event.stopPropagation();launchFromCard(this.closest('.match-card'))">${btnLabel}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function launchFromCard(card) {
+  try {
+    const m = JSON.parse(card.dataset.match);
+    launchMatch(m);
+  } catch(e) { console.error(e); }
+}
+
+// Refresh when coming back to this page (storage may have changed)
+window.addEventListener('focus', render);
+window.addEventListener('pageshow', render);
+
+render();
+</script>
+</body>
+</html>

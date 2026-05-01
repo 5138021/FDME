@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>📅 Programmation — FFHB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blue:#0B1829;--blue-mid:#122038;--blue-soft:#1C3256;
+  --accent:#E02D37;--gold:#F5A623;--green:#00C17A;
+  --cyan:#4A9FFF;--purple:#9B59B6;--white:#FFFFFF;
+  --muted:#8A9BBE;--border:rgba(255,255,255,0.09);
+  --font-h:'Barlow Condensed',sans-serif;
+  --font-b:'Barlow',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+.app-header{background:linear-gradient(135deg,#0B1829,#1a0a2e);padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+.header-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.header-logo{font-family:var(--font-h);font-size:24px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),#ff9900);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-title{font-family:var(--font-h);font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--white);flex:1;}
+.btn-nav{padding:6px 13px;border:1px solid var(--border);border-radius:7px;background:rgba(255,255,255,0.06);color:var(--muted);font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-nav:hover{background:rgba(255,255,255,.12);color:var(--white);}
+.counter-row{display:flex;align-items:center;gap:10px;}
+.counter-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.25);border-radius:20px;padding:4px 10px;font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:1px;color:var(--gold);}
+.counter-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+/* CONTENT */
+.content{padding:12px 14px 100px;}
+
+/* SECTION */
+.section-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.section-title{font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.section-title.gold{color:var(--gold);}
+.section-title.cyan{color:var(--cyan);}
+.section-title .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-row.three{grid-template-columns:1fr 1fr 1fr;}
+.form-group label{display:block;font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.form-group input,.form-group select{
+  width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:13px;
+  padding:9px 11px;outline:none;transition:border .2s;-webkit-appearance:none;
+}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);background:rgba(245,166,35,0.08);}
+.form-group input::placeholder{color:rgba(138,155,190,0.5);}
+.form-group select option{background:#1C3256;}
+
+/* RECURRENCE */
+.recurrence-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+.day-btn{padding:5px 10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--muted);font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .15s;}
+.day-btn.active{background:rgba(74,159,255,0.2);border-color:var(--cyan);color:var(--cyan);}
+
+/* SAVED MATCHES LIST */
+.matches-list{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.match-item{
+  display:flex;align-items:stretch;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);border-radius:11px;overflow:hidden;
+  transition:border .15s;
+}
+.match-item:hover{border-color:rgba(245,166,35,0.3);}
+.match-accent-bar{width:4px;flex-shrink:0;background:var(--gold);}
+.match-body{flex:1;padding:10px 12px;}
+.match-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.match-comp{font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:.5px;color:var(--white);}
+.match-div{font-size:10px;color:var(--muted);margin-left:2px;}
+.match-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.meta-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);}
+.meta-item span{font-weight:600;color:rgba(255,255,255,.8);}
+.match-actions{display:flex;flex-direction:column;gap:4px;padding:8px;}
+.btn-edit{background:rgba(74,159,255,0.12);border:1px solid rgba(74,159,255,0.2);border-radius:6px;color:var(--cyan);font-family:var(--font-h);font-size:10px;font-weight:800;padding:5px 8px;cursor:pointer;letter-spacing:.5px;transition:all .15s;}
+.btn-del{background:rgba(224,45,55,0.1);border:1px solid rgba(224,45,55,0.2);border-radius:6px;color:var(--accent);font-family:var(--font-h);font-size:10px;font-weight:800;padding:5px 8px;cursor:pointer;letter-spacing:.5px;transition:all .15s;}
+.empty-state{text-align:center;padding:28px 0;color:var(--muted);}
+.empty-state .es-icon{font-size:28px;margin-bottom:8px;}
+.empty-state .es-title{font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.empty-state .es-sub{font-size:11px;}
+
+/* BUTTONS */
+.btn-add{
+  width:100%;padding:12px;border:1px dashed rgba(245,166,35,0.3);border-radius:10px;
+  background:rgba(245,166,35,0.05);color:var(--gold);font-family:var(--font-h);
+  font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .2s;margin-top:4px;
+}
+.btn-add:hover{background:rgba(245,166,35,0.12);border-color:var(--gold);}
+
+/* BOTTOM BAR */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(0deg,var(--blue-mid),rgba(18,32,56,.97));padding:10px 14px;border-top:1px solid var(--border);z-index:50;}
+.btn-view{width:100%;padding:14px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--cyan),#2277cc);color:var(--white);font-family:var(--font-h);font-size:17px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(74,159,255,0.3);transition:all .2s;}
+.btn-view:hover{transform:translateY(-2px);}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);backdrop-filter:blur(5px);align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:var(--blue-mid);border-radius:20px 20px 0 0;padding:18px 14px 36px;width:100%;max-width:480px;animation:slideUp .22s ease;max-height:90vh;overflow-y:auto;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.modal-title{font-family:var(--font-h);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
+.modal-close{background:rgba(255,255,255,.08);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;}
+.btn-save{width:100%;padding:14px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--gold),#cc8800);color:var(--blue);font-family:var(--font-h);font-size:16px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:8px;}
+
+/* IMPORT/EXPORT */
+.io-row{display:flex;gap:8px;margin-top:8px;}
+.btn-io{flex:1;padding:9px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,0.05);color:var(--muted);font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s;}
+.btn-io:hover{background:rgba(255,255,255,0.1);color:var(--white);}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-row">
+    <div class="header-logo">FFHB</div>
+    <div class="header-title">📅 Programmation</div>
+    <button class="btn-nav" onclick="window.location.href='0-matchs.html'">← Tableau de bord</button>
+  </div>
+  <div class="counter-row">
+    <div class="counter-pill"><span class="counter-dot"></span><span id="match-count">0 match programmé</span></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- LISTE DES MATCHS PROGRAMMÉS -->
+  <div class="section-card">
+    <div class="section-title gold"><span class="dot"></span>Matchs programmés</div>
+    <div id="matches-list" class="matches-list"></div>
+    <button class="btn-add" onclick="openModal()">＋ Programmer un nouveau match</button>
+    <div class="io-row">
+      <button class="btn-io" onclick="exportJSON()">📤 Exporter JSON</button>
+      <button class="btn-io" onclick="document.getElementById('import-input').click()">📥 Importer JSON</button>
+    </div>
+    <input type="file" id="import-input" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom-bar">
+  <button class="btn-view" onclick="window.location.href='0-matchs.html'">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Voir le tableau de bord
+  </button>
+</div>
+
+<!-- MODAL SAISIE -->
+<div class="modal-overlay" id="matchModal">
+  <div class="modal-sheet">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title">Nouveau match</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="section-title cyan" style="margin-bottom:10px;"><span class="dot"></span>Compétition</div>
+    <div class="form-row">
+      <div class="form-group"><label>Compétition</label><input id="f-competition" placeholder="Ex: Championnat N1" type="text"></div>
+      <div class="form-group"><label>Division / Poule</label><input id="f-division" placeholder="Ex: Poule A" type="text"></div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group"><label>Code rencontre</label><input id="f-codeRenc" placeholder="Ex: 12345" type="text"></div>
+    </div>
+
+    <div class="section-title cyan" style="margin:12px 0 10px;"><span class="dot"></span>Date & Lieu</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input id="f-date" type="date"></div>
+      <div class="form-group"><label>Heure</label><input id="f-heure" type="time"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Salle / Gymnase</label><input id="f-salle" placeholder="Nom de la salle" type="text"></div>
+      <div class="form-group"><label>Ville</label><input id="f-ville" placeholder="Ville" type="text"></div>
+    </div>
+
+    <div class="section-title cyan" style="margin:12px 0 10px;"><span class="dot"></span>Équipes (optionnel)</div>
+    <div class="form-row">
+      <div class="form-group"><label>Équipe Domicile</label><input id="f-homeNom" placeholder="Nom équipe" type="text"></div>
+      <div class="form-group"><label>Abréviation</label><input id="f-homeAbr" placeholder="DOM" maxlength="4" type="text"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Équipe Extérieure</label><input id="f-awayNom" placeholder="Nom équipe" type="text"></div>
+      <div class="form-group"><label>Abréviation</label><input id="f-awayAbr" placeholder="EXT" maxlength="4" type="text"></div>
+    </div>
+
+    <div class="section-title cyan" style="margin:12px 0 10px;"><span class="dot"></span>Arbitrage</div>
+    <div class="form-row three">
+      <div class="form-group"><label>Arbitre 1</label><input id="f-arb1" placeholder="Nom" type="text"></div>
+      <div class="form-group"><label>Arbitre 2</label><input id="f-arb2" placeholder="Nom" type="text"></div>
+      <div class="form-group"><label>Délégué</label><input id="f-delegue" placeholder="Nom" type="text"></div>
+    </div>
+    <div class="form-row three">
+      <div class="form-group"><label>Licence Arb. 1</label><input id="f-arbLic1" placeholder="" type="text"></div>
+      <div class="form-group"><label>Licence Arb. 2</label><input id="f-arbLic2" placeholder="" type="text"></div>
+      <div class="form-group"><label>Licence Délégué</label><input id="f-delegueLic" placeholder="" type="text"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Durée mi-temps</label>
+        <select id="f-duree">
+          <option value="30">30 minutes</option>
+          <option value="25">25 minutes</option>
+          <option value="20">20 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="12">12 minutes</option>
+          <option value="10">10 minutes</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Pause mi-temps</label>
+        <select id="f-pause">
+          <option value="10">10 min</option>
+          <option value="15">15 min</option>
+          <option value="5">5 min</option>
+        </select>
+      </div>
+    </div>
+
+    <input type="hidden" id="f-edit-id" value="">
+    <button class="btn-save" onclick="saveMatch()">💾 Enregistrer le match</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'ffhb_scheduled_matches';
+let matches = [];
+let editId = null;
+
+// ─── INIT ───
+function init() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) try { matches = JSON.parse(raw); } catch(e) { matches = []; }
+  renderMatches();
+  // Set default date to today
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+}
+
+// ─── RENDER ───
+function renderMatches() {
+  const list = document.getElementById('matches-list');
+  const count = document.getElementById('match-count');
+  count.textContent = matches.length + ' match' + (matches.length > 1 ? 's' : '') + ' programmé' + (matches.length > 1 ? 's' : '');
+
+  if (!matches.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="es-icon">📅</div>
+      <div class="es-title">Aucun match programmé</div>
+      <div class="es-sub">Utilisez le bouton ci-dessous pour programmer votre premier match.</div>
+    </div>`;
+    return;
+  }
+
+  // Sort by date then time
+  const sorted = [...matches].sort((a, b) => {
+    const da = (a.date||'') + (a.heure||'');
+    const db = (b.date||'') + (b.heure||'');
+    return da.localeCompare(db);
+  });
+
+  list.innerHTML = sorted.map(m => {
+    const dateStr = m.date ? new Date(m.date + 'T12:00:00').toLocaleDateString('fr-FR', {weekday:'short', day:'2-digit', month:'short'}) : '—';
+    const vs = (m.homeNom && m.awayNom) ? `${m.homeNom} – ${m.awayNom}` : '';
+    const isPast = m.date && new Date(m.date) < new Date(new Date().toDateString());
+    return `<div class="match-item" style="${isPast ? 'opacity:.55' : ''}">
+      <div class="match-accent-bar" style="background:${isPast ? 'var(--muted)' : 'var(--gold)'}"></div>
+      <div class="match-body">
+        <div class="match-top">
+          <div class="match-comp">${m.competition || '—'}</div>
+          ${m.division ? `<div class="match-div">· ${m.division}</div>` : ''}
+          ${isPast ? '<span style="font-size:9px;background:rgba(138,155,190,.15);color:var(--muted);border-radius:4px;padding:1px 5px;font-family:var(--font-h);font-weight:700;letter-spacing:.5px;">PASSÉ</span>' : ''}
+        </div>
+        ${vs ? `<div style="font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--white);margin-bottom:5px;">${vs}</div>` : ''}
+        <div class="match-meta">
+          <div class="meta-item">📅 <span>${dateStr}</span></div>
+          ${m.heure ? `<div class="meta-item">🕐 <span>${m.heure}</span></div>` : ''}
+          ${m.salle ? `<div class="meta-item">🏟️ <span>${m.salle}</span></div>` : ''}
+          ${m.ville ? `<div class="meta-item">🏙️ <span>${m.ville}</span></div>` : ''}
+        </div>
+      </div>
+      <div class="match-actions">
+        <button class="btn-edit" onclick="editMatch('${m.id}')">✏️</button>
+        <button class="btn-del" onclick="deleteMatch('${m.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── MODAL ───
+function openModal(id = null) {
+  editId = id;
+  document.getElementById('modal-title').textContent = id ? 'Modifier le match' : 'Nouveau match';
+  clearForm();
+  if (id) {
+    const m = matches.find(x => x.id === id);
+    if (m) fillForm(m);
+  }
+  document.getElementById('matchModal').classList.add('open');
+}
+function closeModal() { document.getElementById('matchModal').classList.remove('open'); }
+
+function clearForm() {
+  ['competition','division','codeRenc','date','heure','salle','ville',
+   'homeNom','homeAbr','awayNom','awayAbr','arb1','arb2','arb1','arb2',
+   'delegue','arbLic1','arbLic2','delegueLic'].forEach(f => {
+    const el = document.getElementById('f-'+f);
+    if (el) el.value = f === 'date' ? new Date().toISOString().split('T')[0] : '';
+  });
+  document.getElementById('f-duree').value = '30';
+  document.getElementById('f-pause').value = '10';
+}
+
+function fillForm(m) {
+  const map = {
+    competition:'competition', division:'division', codeRenc:'codeRenc',
+    date:'date', heure:'heure', salle:'salle', ville:'ville',
+    homeNom:'homeNom', homeAbr:'homeAbr', awayNom:'awayNom', awayAbr:'awayAbr',
+    arb1:'arb1', arb2:'arb2', delegue:'delegue',
+    arbLic1:'arbLic1', arbLic2:'arbLic2', delegueLic:'delegueLic'
+  };
+  Object.entries(map).forEach(([key, fid]) => {
+    const el = document.getElementById('f-'+fid);
+    if (el && m[key] !== undefined) el.value = m[key];
+  });
+  if (m.duree) document.getElementById('f-duree').value = m.duree;
+  if (m.pause) document.getElementById('f-pause').value = m.pause;
+}
+
+function editMatch(id) { openModal(id); }
+
+function saveMatch() {
+  const get = id => document.getElementById('f-'+id)?.value?.trim() || '';
+  const m = {
+    id: editId || 'match_' + Date.now(),
+    competition: get('competition'),
+    division: get('division'),
+    codeRenc: get('codeRenc'),
+    date: get('date'),
+    heure: get('heure'),
+    salle: get('salle'),
+    ville: get('ville'),
+    homeNom: get('homeNom'),
+    homeAbr: get('homeAbr'),
+    awayNom: get('awayNom'),
+    awayAbr: get('awayAbr'),
+    arb1: get('arb1'),
+    arb2: get('arb2'),
+    delegue: get('delegue'),
+    arbLic1: get('arbLic1'),
+    arbLic2: get('arbLic2'),
+    delegueLic: get('delegueLic'),
+    duree: parseInt(document.getElementById('f-duree').value),
+    pause: parseInt(document.getElementById('f-pause').value),
+    createdAt: editId ? (matches.find(x=>x.id===editId)?.createdAt || Date.now()) : Date.now()
+  };
+
+  if (!m.date) { alert('⚠️ La date est obligatoire.'); return; }
+
+  if (editId) {
+    const idx = matches.findIndex(x => x.id === editId);
+    if (idx >= 0) matches[idx] = m;
+  } else {
+    matches.push(m);
+  }
+
+  save();
+  closeModal();
+  renderMatches();
+  editId = null;
+}
+
+function deleteMatch(id) {
+  if (!confirm('Supprimer ce match programmé ?')) return;
+  matches = matches.filter(m => m.id !== id);
+  save();
+  renderMatches();
+}
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(matches)); }
+
+// ─── IMPORT / EXPORT ───
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(matches, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ffhb-programmation-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) { alert('Format invalide.'); return; }
+      if (!confirm(`Importer ${imported.length} match(s) ? Les matchs existants seront conservés.`)) return;
+      // Merge by ID
+      const existingIds = new Set(matches.map(m => m.id));
+      imported.forEach(m => { if (!existingIds.has(m.id)) matches.push(m); });
+      save(); renderMatches();
+      alert(`✅ ${imported.length} match(s) importé(s) !`);
+    } catch(err) { alert('Erreur de lecture du fichier JSON.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+init();
+</script>
+</body>
+</html>
