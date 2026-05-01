@@ -396,10 +396,100 @@ function init() {
   for(let i=0;i<8;i++) addPlayer('away', i===0);
   // Set today's date
   document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  // Check for saved data
-  if (localStorage.getItem('ffhb_prep_data')) {
-    document.getElementById('loadBtn').style.display = 'flex';
+
+  // ── Auto-load from scheduled match (set by 0-matchs.html) ──
+  const raw = localStorage.getItem('ffhb_prep_data');
+  if (raw) {
+    try {
+      const d = JSON.parse(raw);
+      // Determine if this comes from the scheduler (no players = fresh scheduled data)
+      const isScheduled = d._fromScheduler === true ||
+        (!d.home?.players?.length && !d.away?.players?.length);
+
+      if (isScheduled) {
+        // Auto-fill silently — no confirm prompt
+        applyPrepData(d);
+        // Clear the flag so a page refresh doesn't re-apply
+        delete d._fromScheduler;
+        localStorage.setItem('ffhb_prep_data', JSON.stringify(d));
+        showBanner();
+      } else {
+        // Has player data → offer to reload as before
+        document.getElementById('loadBtn').style.display = 'flex';
+      }
+    } catch(e) {
+      document.getElementById('loadBtn').style.display = 'flex';
+    }
   }
+}
+
+function applyPrepData(d) {
+  if (d.match) {
+    ['competition','division','date','heure','salle','ville','codeRenc',
+     'arb1','arb2','arbLic1','arbLic2','delegue','delegueLic','chrono','observations'].forEach(k => {
+      const el = document.getElementById('f-'+k);
+      if (el && d.match[k]) el.value = d.match[k];
+    });
+    if (d.match.duree) {
+      const sel = document.getElementById('f-duree');
+      if (sel) sel.value = d.match.duree;
+    }
+    if (d.match.pause) {
+      const sel = document.getElementById('f-pause');
+      if (sel) sel.value = d.match.pause;
+    }
+  }
+  ['home','away'].forEach(team => {
+    const t = d[team];
+    if (!t) return;
+    if (t.nom) document.getElementById(team+'-nom').value = t.nom;
+    if (t.abr) document.getElementById(team+'-abr').value = t.abr;
+    if (t.code) document.getElementById(team+'-code').value = t.code;
+    if (t.color) {
+      if (team === 'home') homeColor = t.color; else awayColor = t.color;
+      initColors(team, t.color);
+    }
+    if (t.players && t.players.length) {
+      document.getElementById(team+'-players-list').innerHTML = '';
+      if (team==='home') homePlayerCount=0; else awayPlayerCount=0;
+      t.players.forEach(p => {
+        addPlayer(team, p.isGK);
+        const id = team==='home' ? homePlayerCount : awayPlayerCount;
+        const uid = team+'-p-'+id;
+        if (p.num)  document.getElementById(uid+'-num').value  = p.num;
+        if (p.name) document.getElementById(uid+'-name').value = p.name;
+        if (p.lic)  document.getElementById(uid+'-lic').value  = p.lic;
+        if (p.isCapt) toggleCapt(team, uid);
+      });
+    }
+    if (t.officials && t.officials.length) {
+      t.officials.forEach((off, i) => {
+        const n = document.getElementById(team+'-off-nom-'+i);
+        const l = document.getElementById(team+'-off-lic-'+i);
+        if (n && off.nom) n.value = off.nom;
+        if (l && off.lic) l.value = off.lic;
+      });
+    }
+  });
+}
+
+function showBanner() {
+  const banner = document.createElement('div');
+  banner.id = 'scheduled-banner';
+  banner.style.cssText = `
+    display:flex;align-items:center;gap:10px;
+    background:rgba(0,193,122,0.12);border:1px solid rgba(0,193,122,0.3);
+    border-radius:10px;padding:10px 14px;margin-bottom:12px;
+    font-family:var(--font-h);font-size:12px;font-weight:700;
+    letter-spacing:.5px;color:var(--green);
+  `;
+  banner.innerHTML = `
+    <span style="font-size:16px;">✅</span>
+    <span style="flex:1;">Données du match programmé chargées automatiquement</span>
+    <button onclick="this.closest('#scheduled-banner').remove()" style="background:none;border:none;color:var(--green);font-size:16px;cursor:pointer;line-height:1;">✕</button>
+  `;
+  const content = document.querySelector('.content');
+  content.insertBefore(banner, content.firstChild);
 }
 
 function initColors(team, selectedColor) {
@@ -576,40 +666,7 @@ function loadSaved() {
   if (!raw) return;
   try {
     const d = JSON.parse(raw);
-    if (d.match) {
-      ['competition','division','date','heure','salle','ville','codeRenc',
-       'arb1','arb2','arbLic1','arbLic2','delegue','delegueLic','chrono','observations'].forEach(k => {
-        const el = document.getElementById('f-'+k); if(el && d.match[k]) el.value = d.match[k];
-      });
-      if(d.match.duree) document.getElementById('f-duree').value = d.match.duree;
-      if(d.match.pause) document.getElementById('f-pause').value = d.match.pause;
-    }
-    // Reload teams
-    ['home','away'].forEach(team => {
-      const t = d[team];
-      if (!t) return;
-      if(t.nom) document.getElementById(team+'-nom').value = t.nom;
-      if(t.abr) document.getElementById(team+'-abr').value = t.abr;
-      if(t.code) document.getElementById(team+'-code').value = t.code;
-      if(t.color) { selectColor(team, t.color, document.querySelector(`#${team}-colors .color-dot[style*="${t.color}"]`) || document.querySelector(`#${team}-colors .color-dot`)); }
-      // Players
-      document.getElementById(team+'-players-list').innerHTML = '';
-      if(team==='home') homePlayerCount=0; else awayPlayerCount=0;
-      (t.players||[]).forEach(p => {
-        addPlayer(team, p.isGK);
-        const id = team==='home'?homePlayerCount:awayPlayerCount;
-        const uid = team+'-p-'+id;
-        if(p.num) document.getElementById(uid+'-num').value = p.num;
-        if(p.name) document.getElementById(uid+'-name').value = p.name;
-        if(p.lic) document.getElementById(uid+'-lic').value = p.lic;
-        if(p.isCapt) toggleCapt(team, uid);
-      });
-      // Officials
-      (t.officials||[]).forEach((off, i) => {
-        const n = document.getElementById(team+'-off-nom-'+i); if(n && off.nom) n.value = off.nom;
-        const l = document.getElementById(team+'-off-lic-'+i); if(l && off.lic) l.value = off.lic;
-      });
-    });
+    applyPrepData(d);
     document.getElementById('loadBtn').style.display = 'none';
     alert('✅ Données chargées !');
   } catch(e) { alert('Erreur lors du chargement'); }
