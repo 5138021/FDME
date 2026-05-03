@@ -708,7 +708,7 @@ function updateScoreColors(){
 // OFFICIALS GRID
 // ═══════════════════════════════════
 function buildOfficialsGrid(team, officials) {
-  const roles = ['Entraîneur','Entraîneur adj.','Soigneur','Délégué d\'équipe'];
+  const roles = ['Officiel A','Officiel B','Officiel C','Officiel D'];
   return roles.map((role, i) => {
     const off = officials[i] || {};
     const avState = off.av || 'empty';
