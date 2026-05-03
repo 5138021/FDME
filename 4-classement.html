@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏆 Classement — FFHB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blue:#0B1829;--blue-mid:#122038;--blue-soft:#1C3256;
+  --accent:#E02D37;--gold:#F5A623;--green:#00C17A;
+  --cyan:#4A9FFF;--purple:#9B59B6;--white:#FFFFFF;
+  --muted:#8A9BBE;--border:rgba(255,255,255,0.09);
+  --font-h:'Barlow Condensed',sans-serif;
+  --font-b:'Barlow',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+.app-header{
+  background:linear-gradient(135deg,#0B1829,#1a0a2e);
+  padding:20px 16px 16px;border-bottom:1px solid var(--border);text-align:center;
+}
+.header-logo{
+  font-family:var(--font-h);font-size:32px;font-weight:900;letter-spacing:3px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--gold),#ff9900);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px;
+}
+.header-sub{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.header-actions{display:flex;gap:8px;justify-content:center;margin-top:14px;}
+.btn-back{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
+  border:1px solid rgba(74,159,255,0.3);background:rgba(74,159,255,0.1);color:var(--cyan);
+  font-family:var(--font-h);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.btn-back:hover{background:rgba(74,159,255,0.2);border-color:var(--cyan);}
+.btn-sync{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;
+  border:1px solid rgba(0,193,122,0.3);background:rgba(0,193,122,0.08);color:var(--green);
+  font-family:var(--font-h);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.btn-sync:hover{background:rgba(0,193,122,0.15);border-color:var(--green);}
+
+/* TABS */
+.tabs{display:flex;background:rgba(255,255,255,0.04);border-bottom:1px solid var(--border);}
+.tab{
+  flex:1;padding:13px;text-align:center;
+  font-family:var(--font-h);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab:hover:not(.active){color:var(--white);}
+
+.content{padding:14px 14px 60px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* SECTION */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-label{
+  font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:7px;
+}
+.section-label .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* LEGEND */
+.legend{
+  display:flex;gap:12px;flex-wrap:wrap;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;margin-bottom:14px;
+}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.legend-dot.v{background:var(--green);}
+.legend-dot.n{background:var(--gold);}
+.legend-dot.d{background:var(--accent);}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-btn{
+  padding:5px 12px;border-radius:20px;
+  border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);
+  color:var(--muted);font-family:var(--font-h);font-size:10px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+.filter-btn.active{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:var(--gold);}
+.filter-btn:hover:not(.active){color:var(--white);}
+
+/* RANKING TABLE */
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table thead tr{background:rgba(255,255,255,0.05);border-bottom:1px solid var(--border);}
+.rank-table th{
+  font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:1px;
+  text-transform:uppercase;color:var(--muted);padding:8px 6px;text-align:center;
+}
+.rank-table th.left{text-align:left;padding-left:10px;}
+.rank-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;}
+.rank-table tbody tr:hover{background:rgba(255,255,255,0.04);}
+.rank-table td{padding:10px 6px;text-align:center;font-size:12px;color:rgba(255,255,255,.8);}
+.rank-table td.left{text-align:left;padding-left:10px;}
+.rank-pos{font-family:var(--font-h);font-size:17px;font-weight:900;color:var(--muted);}
+.rank-pos.gold{color:var(--gold);}
+.rank-pos.silver{color:#C0C0C0;}
+.rank-pos.bronze{color:#cd7f32;}
+.rank-team{font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--white);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rank-pts{font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--cyan);}
+.rank-diff{font-family:var(--font-mono);font-size:11px;}
+.rank-diff.pos{color:var(--green);}
+.rank-diff.neg{color:var(--accent);}
+.rank-diff.zero{color:var(--muted);}
+
+/* MATCH ROW */
+.match-group{margin-bottom:20px;}
+.match-group-label{
+  font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding:0 2px;
+}
+.match-row{
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 14px;margin-bottom:8px;
+}
+.match-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.match-row-comp{font-size:10px;color:var(--muted);font-family:var(--font-h);letter-spacing:.5px;}
+.match-row-date{font-size:10px;color:var(--muted);}
+.match-row-teams{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.team-name{flex:1;font-family:var(--font-h);font-size:15px;font-weight:800;color:var(--white);}
+.team-name.away{text-align:right;}
+.match-vs-badge{
+  font-family:var(--font-h);font-size:11px;font-weight:800;color:var(--muted);
+  letter-spacing:1px;white-space:nowrap;padding:2px 8px;background:rgba(255,255,255,0.06);border-radius:4px;
+}
+.match-row-score{display:flex;align-items:center;gap:8px;}
+.score-input-wrap{flex:1;display:flex;align-items:center;gap:6px;}
+.score-input-wrap.right{justify-content:flex-end;}
+.score-label{font-size:10px;color:var(--muted);white-space:nowrap;}
+.score-input{
+  width:58px;padding:9px 6px;border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);
+  color:var(--white);font-family:var(--font-mono);font-size:18px;font-weight:700;
+  text-align:center;outline:none;transition:border-color .2s;-moz-appearance:textfield;
+}
+.score-input::-webkit-inner-spin-button,.score-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.score-input:focus{border-color:var(--cyan);background:rgba(74,159,255,0.1);}
+.score-separator{font-family:var(--font-h);font-size:20px;font-weight:900;color:var(--muted);}
+.result-badge{display:flex;gap:6px;justify-content:center;margin-top:8px;}
+.rbadge{font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:4px;text-transform:uppercase;}
+.rbadge.v{background:rgba(0,193,122,0.15);color:var(--green);border:1px solid rgba(0,193,122,0.25);}
+.rbadge.n{background:rgba(245,166,35,0.15);color:var(--gold);border:1px solid rgba(245,166,35,0.25);}
+.rbadge.d{background:rgba(224,45,55,0.12);color:var(--accent);border:1px solid rgba(224,45,55,0.2);}
+.rbadge.none{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);}
+
+/* INFO BANNER */
+.info-banner{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(74,159,255,0.08);border:1px solid rgba(74,159,255,0.2);
+  border-radius:10px;padding:10px 14px;margin-bottom:14px;
+  font-size:11px;color:var(--muted);line-height:1.6;
+}
+.info-banner a{color:var(--cyan);text-decoration:none;font-weight:700;}
+
+/* EMPTY */
+.empty-state{
+  background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);
+  border-radius:14px;padding:40px 24px;text-align:center;
+}
+.es-icon{font-size:40px;margin-bottom:14px;}
+.es-title{font-family:var(--font-h);font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--white);margin-bottom:6px;}
+.es-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.btn-go{
+  display:inline-flex;align-items:center;gap:7px;padding:12px 20px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--cyan),#2277cc);color:var(--white);
+  font-family:var(--font-h);font-size:14px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;
+}
+
+/* SETTINGS */
+.settings-section{margin-bottom:22px;}
+.settings-title{
+  font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:7px;
+}
+.settings-title .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.points-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px;}
+.pts-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 8px;text-align:center;}
+.pts-card-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.pts-card-input{
+  width:60px;padding:7px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.08);color:var(--white);font-family:var(--font-mono);font-size:20px;font-weight:700;
+  text-align:center;outline:none;-moz-appearance:textfield;
+}
+.pts-card-input::-webkit-inner-spin-button,.pts-card-input::-webkit-outer-spin-button{-webkit-appearance:none;}
+.pts-card-input:focus{border-color:var(--cyan);}
+.btn-danger{
+  width:100%;padding:12px;border-radius:10px;border:1px solid rgba(224,45,55,0.3);
+  background:rgba(224,45,55,0.08);color:var(--accent);font-family:var(--font-h);font-size:13px;
+  font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+.btn-danger:hover{background:rgba(224,45,55,0.15);}
+.btn-primary-full{
+  width:100%;padding:12px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--green),#009960);color:var(--blue);
+  font-family:var(--font-h);font-size:13px;font-weight:900;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;transition:all .2s;margin-bottom:10px;
+}
+.btn-primary-full:hover{transform:translateY(-1px);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(0,193,122,0.95);color:var(--blue);
+  font-family:var(--font-h);font-size:13px;font-weight:800;
+  letter-spacing:.5px;padding:10px 18px;border-radius:10px;
+  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:300;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-logo">FFHB</div>
+  <div class="header-sub">Classement — Poule</div>
+  <div class="header-actions">
+    <a class="btn-back" href="0-matchs.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Tableau de bord
+    </a>
+    <button class="btn-sync" onclick="syncFromProg()">↻ Sync</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('classement')">🏆 Classement</div>
+  <div class="tab" onclick="switchTab('matchs')">⚽ Matchs</div>
+  <div class="tab" onclick="switchTab('reglages')">⚙️ Réglages</div>
+</div>
+
+<div class="content">
+
+  <!-- CLASSEMENT -->
+  <div class="panel active" id="panel-classement">
+    <div class="section-hdr">
+      <div class="section-label"><span class="dot"></span>Classement général</div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot v"></div>Victoire : <strong id="lbl-v">3</strong> pts</div>
+      <div class="legend-item"><div class="legend-dot n"></div>Nul : <strong id="lbl-n">2</strong> pts</div>
+      <div class="legend-item"><div class="legend-dot d"></div>Défaite : <strong id="lbl-d">1</strong> pt</div>
+    </div>
+    <div class="filter-bar" id="filter-bar-rank"></div>
+    <div id="ranking-container"></div>
+  </div>
+
+  <!-- MATCHS -->
+  <div class="panel" id="panel-matchs">
+    <div class="section-hdr" style="margin-bottom:8px;">
+      <div class="section-label"><span class="dot"></span>Résultats</div>
+    </div>
+    <div class="info-banner">
+      ℹ️ Matchs lus depuis <a href="0-programmation.html">la programmation</a>. Saisissez les scores — le classement se recalcule instantanément.
+    </div>
+    <div class="filter-bar" id="filter-bar-matchs"></div>
+    <div id="matches-container"></div>
+  </div>
+
+  <!-- RÉGLAGES -->
+  <div class="panel" id="panel-reglages">
+    <div class="settings-section">
+      <div class="settings-title"><span class="dot"></span>Système de points</div>
+      <div class="points-grid">
+        <div class="pts-card">
+          <div class="pts-card-label" style="color:var(--green);">Victoire</div>
+          <input class="pts-card-input" type="number" id="pts-v" value="3" min="0" max="9" onchange="saveSettings()">
+        </div>
+        <div class="pts-card">
+          <div class="pts-card-label" style="color:var(--gold);">Nul</div>
+          <input class="pts-card-input" type="number" id="pts-n" value="2" min="0" max="9" onchange="saveSettings()">
+        </div>
+        <div class="pts-card">
+          <div class="pts-card-label" style="color:var(--accent);">Défaite</div>
+          <input class="pts-card-input" type="number" id="pts-d" value="1" min="0" max="9" onchange="saveSettings()">
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title"><span class="dot"></span>Synchronisation</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+        Les matchs sont lus depuis <strong style="color:var(--white);">0-programmation.html</strong>.<br>
+        La synchronisation est automatique à chaque ouverture de page.
+      </p>
+      <button class="btn-primary-full" onclick="syncFromProg()">↻ Synchroniser maintenant</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title"><span class="dot"></span>Réinitialisation</div>
+      <button class="btn-danger" onclick="resetScores()">🗑 Effacer tous les scores saisis</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CLÉS localStorage
+   ffhb_scheduled_matches  ← matchs de 0-programmation.html (lecture seule)
+   ffhb_classement_scores  → scores saisis ici, indexés par m.id
+   ffhb_classement_cfg     → points V/N/D + filtres actifs
+===================================================================== */
+const SK_PROG   = 'ffhb_scheduled_matches';
+const SK_SCORES = 'ffhb_classement_scores';
+const SK_CFG    = 'ffhb_classement_cfg';
+
+function loadProg()   { try { return JSON.parse(localStorage.getItem(SK_PROG))   || []; } catch(e){ return []; } }
+function loadScores() { try { return JSON.parse(localStorage.getItem(SK_SCORES)) || {}; } catch(e){ return {}; } }
+function loadCfg()    { try { return JSON.parse(localStorage.getItem(SK_CFG))    || {}; } catch(e){ return {}; } }
+function saveCfg()    { localStorage.setItem(SK_CFG,    JSON.stringify(cfg)); }
+function saveScores() { localStorage.setItem(SK_SCORES, JSON.stringify(scores)); }
+
+let progMatches = loadProg();
+let scores      = loadScores();
+let cfg         = Object.assign({ v:3, n:2, d:1, filterRank:'all', filterMatchs:'all' }, loadCfg());
+let activeTab   = 'classement';
+
+// ── TOAST ─────────────────────────────────────────────
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color || 'rgba(0,193,122,0.95)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ── SYNC ──────────────────────────────────────────────
+function syncFromProg(quiet) {
+  progMatches = loadProg();
+  // Purge scores for matches that no longer exist
+  const validIds = new Set(progMatches.map(m => m.id));
+  let changed = false;
+  Object.keys(scores).forEach(id => { if (!validIds.has(id)) { delete scores[id]; changed = true; } });
+  if (changed) saveScores();
+  renderAll();
+  if (!quiet) showToast('↻ Synchronisé — ' + progMatches.length + ' match(s)');
+}
+
+// ── TABS ──────────────────────────────────────────────
+function switchTab(tab) {
+  activeTab = tab;
+  ['classement','matchs','reglages'].forEach((name, i) => {
+    document.querySelectorAll('.tab')[i].classList.toggle('active', name === tab);
+    document.getElementById('panel-' + name).classList.toggle('active', name === tab);
+  });
+  if (tab === 'classement') renderRanking();
+  if (tab === 'matchs')     renderMatches();
+  if (tab === 'reglages')   renderReglages();
+}
+function renderAll() {
+  renderRanking();
+  if (activeTab === 'matchs') renderMatches();
+}
+
+// ── SETTINGS ─────────────────────────────────────────
+function saveSettings() {
+  cfg.v = Math.max(0, parseInt(document.getElementById('pts-v').value) || 0);
+  cfg.n = Math.max(0, parseInt(document.getElementById('pts-n').value) || 0);
+  cfg.d = Math.max(0, parseInt(document.getElementById('pts-d').value) || 0);
+  saveCfg(); updateLegend(); renderRanking();
+}
+function updateLegend() {
+  document.getElementById('lbl-v').textContent = cfg.v;
+  document.getElementById('lbl-n').textContent = cfg.n;
+  document.getElementById('lbl-d').textContent = cfg.d;
+}
+function renderReglages() {
+  document.getElementById('pts-v').value = cfg.v;
+  document.getElementById('pts-n').value = cfg.n;
+  document.getElementById('pts-d').value = cfg.d;
+}
+function resetScores() {
+  if (!confirm('Effacer tous les scores ? Les matchs programmés restent intacts.')) return;
+  scores = {}; saveScores(); renderAll();
+  showToast('🗑 Scores effacés', 'rgba(224,45,55,0.9)');
+}
+
+// ── FILTERS ───────────────────────────────────────────
+function getCompetitions() {
+  return [...new Set(progMatches.map(m => m.competition).filter(Boolean))];
+}
+function filteredList(filterKey) {
+  if (!filterKey || filterKey === 'all') return progMatches;
+  return progMatches.filter(m => m.competition === filterKey);
+}
+function renderFilterBar(elId, active, onClickFn) {
+  const comps = getCompetitions();
+  const el = document.getElementById(elId);
+  if (!comps.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<button class="filter-btn ${active==='all'?'active':''}" onclick="${onClickFn}('all')">Tous</button>`
+    + comps.map(c => `<button class="filter-btn ${active===c?'active':''}" onclick="${onClickFn}(${JSON.stringify(c)})">${c}</button>`).join('');
+}
+
+// ── COMPUTE RANKING ────────────────────────────────────
+function computeRanking(list) {
+  const { v, n, d } = cfg;
+  const teams = {};
+  list.forEach(m => {
+    [m.homeNom, m.awayNom].filter(Boolean).forEach(name => {
+      if (!teams[name]) teams[name] = { name, pts:0, pj:0, v:0, n:0, d:0, bp:0, bc:0 };
+    });
+  });
+  list.forEach(m => {
+    const sc = scores[m.id];
+    if (!sc || sc.home === '' || sc.home === null || sc.away === '' || sc.away === null) return;
+    const sh = parseInt(sc.home), sa = parseInt(sc.away);
+    if (isNaN(sh) || isNaN(sa)) return;
+    const h = teams[m.homeNom], a = teams[m.awayNom];
+    if (!h || !a) return;
+    h.pj++; a.pj++;
+    h.bp += sh; h.bc += sa;
+    a.bp += sa; a.bc += sh;
+    if      (sh > sa) { h.pts += v; h.v++; a.pts += d; a.d++; }
+    else if (sh < sa) { a.pts += v; a.v++; h.pts += d; h.d++; }
+    else              { h.pts += n; h.n++; a.pts += n; a.n++; }
+  });
+  return Object.values(teams).sort((a, b) => {
+    const da = a.bp - a.bc, db = b.bp - b.bc;
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (db !== da)       return db - da;
+    return b.bp - a.bp;
+  });
+}
+
+// ── RENDER RANKING ─────────────────────────────────────
+function setFilterRank(val) { cfg.filterRank = val; saveCfg(); renderRanking(); }
+function setFilterMatchs(val) { cfg.filterMatchs = val; saveCfg(); renderMatches(); }
+
+function renderRanking() {
+  updateLegend();
+  renderFilterBar('filter-bar-rank', cfg.filterRank, 'setFilterRank');
+  const list = filteredList(cfg.filterRank);
+  const ranking = computeRanking(list);
+  const container = document.getElementById('ranking-container');
+
+  if (!progMatches.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="es-icon">📅</div>
+      <div class="es-title">Aucun match programmé</div>
+      <div class="es-sub">Ajoutez des matchs dans la programmation puis revenez saisir les scores.</div>
+      <a class="btn-go" href="0-programmation.html">📅 Ouvrir la programmation</a>
+    </div>`; return;
+  }
+  if (!ranking.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="es-icon">🏆</div>
+      <div class="es-title">Aucune équipe</div>
+      <div class="es-sub">Vérifiez que les matchs ont des noms d'équipes renseignés.</div>
+    </div>`; return;
+  }
+
+  let html = `<div style="overflow-x:auto;border-radius:12px;border:1px solid var(--border);">
+    <table class="rank-table"><thead><tr>
+      <th class="left">#</th>
+      <th class="left">Équipe</th>
+      <th>PTS</th><th>PJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>+/-</th>
+    </tr></thead><tbody>`;
+
+  ranking.forEach((t, i) => {
+    const pos = i + 1;
+    const pc = pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';
+    const diff = t.bp - t.bc;
+    const dc = diff>0?'pos':diff<0?'neg':'zero';
+    const ds = diff>0?'+'+diff:String(diff);
+    html += `<tr>
+      <td class="left"><span class="rank-pos ${pc}">${pos}</span></td>
+      <td class="left"><div class="rank-team">${t.name}</div></td>
+      <td><span class="rank-pts">${t.pts}</span></td>
+      <td>${t.pj}</td>
+      <td style="color:var(--green);font-weight:600;">${t.v}</td>
+      <td style="color:var(--gold);font-weight:600;">${t.n}</td>
+      <td style="color:var(--accent);font-weight:600;">${t.d}</td>
+      <td>${t.bp}</td><td>${t.bc}</td>
+      <td><span class="rank-diff ${dc}">${t.pj>0?ds:'—'}</span></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+  container.innerHTML = html;
+}
+
+// ── RENDER MATCHES ─────────────────────────────────────
+function renderMatches() {
+  renderFilterBar('filter-bar-matchs', cfg.filterMatchs, 'setFilterMatchs');
+  const list = filteredList(cfg.filterMatchs);
+  const container = document.getElementById('matches-container');
+
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="es-icon">📋</div>
+      <div class="es-title">Aucun match</div>
+      <div class="es-sub">Programmez des matchs dans <a href="0-programmation.html" style="color:var(--cyan);">la programmation</a>.</div>
+    </div>`; return;
+  }
+
+  // Sort by date + heure
+  const sorted = [...list].sort((a, b) =>
+    ((a.date||'9999')+(a.heure||'')).localeCompare((b.date||'9999')+(b.heure||''))
+  );
+
+  // Group by date
+  const groups = {};
+  sorted.forEach(m => {
+    const key = m.date || '__nodate__';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(m);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([key, matches]) => {
+    let label = 'Sans date';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(key)) {
+      label = new Date(key+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    }
+    html += `<div class="match-group"><div class="match-group-label">${label}</div>`;
+    matches.forEach(m => { html += buildMatchRow(m); });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function buildMatchRow(m) {
+  const sc  = scores[m.id] || {};
+  const sh  = sc.home !== undefined ? sc.home : '';
+  const sa  = sc.away !== undefined ? sc.away : '';
+  const comp = [m.competition, m.division].filter(Boolean).join(' · ') || '—';
+  const heure = m.heure ? ' · ' + m.heure : '';
+  const dateStr = m.date ? new Date(m.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}) : '';
+  return `<div class="match-row">
+    <div class="match-row-header">
+      <span class="match-row-comp">${comp}</span>
+      <span class="match-row-date">${dateStr}${heure}</span>
+    </div>
+    <div class="match-row-teams">
+      <div class="team-name">${m.homeNom || '—'}</div>
+      <div class="match-vs-badge">VS</div>
+      <div class="team-name away">${m.awayNom || '—'}</div>
+    </div>
+    <div class="match-row-score">
+      <div class="score-input-wrap">
+        <span class="score-label">DOM</span>
+        <input class="score-input" type="number" min="0" value="${sh}" placeholder="—"
+          oninput="updateScore('${m.id}','home',this.value)">
+      </div>
+      <div class="score-separator">:</div>
+      <div class="score-input-wrap right">
+        <input class="score-input" type="number" min="0" value="${sa}" placeholder="—"
+          oninput="updateScore('${m.id}','away',this.value)">
+        <span class="score-label">EXT</span>
+      </div>
+    </div>
+    <div class="result-badge" id="badge-${m.id}">${makeBadge(sh,sa)}</div>
+  </div>`;
+}
+
+function makeBadge(sh, sa) {
+  if (sh!=='' && sa!=='' && sh!==null && sa!==null) {
+    const h=parseInt(sh), a=parseInt(sa);
+    if (!isNaN(h)&&!isNaN(a)) {
+      if (h>a) return `<span class="rbadge v">Vict. DOM</span><span class="rbadge d">Déf. EXT</span>`;
+      if (h<a) return `<span class="rbadge d">Déf. DOM</span><span class="rbadge v">Vict. EXT</span>`;
+      return `<span class="rbadge n">Match nul</span>`;
+    }
+  }
+  return `<span class="rbadge none">Score à saisir</span>`;
+}
+
+function updateScore(matchId, side, val) {
+  if (!scores[matchId]) scores[matchId] = { home:'', away:'' };
+  scores[matchId][side] = val !== '' ? parseInt(val) : '';
+  saveScores();
+  const el = document.getElementById('badge-'+matchId);
+  if (el) el.innerHTML = makeBadge(scores[matchId].home, scores[matchId].away);
+  renderRanking();
+}
+
+// ── INIT ──────────────────────────────────────────────
+updateLegend();
+renderRanking();
+
+window.addEventListener('focus',    () => syncFromProg(true));
+window.addEventListener('pageshow', () => syncFromProg(true));
+</script>
+</body>
+</html>
