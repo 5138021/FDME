@@ -493,12 +493,13 @@ function renderPlayers(team){
 function buildPlayerCard(team,p,idx){
   const isGK=p.isGK;
   const tot2=(p.p1&&p.p1!=='empty'?1:0)+(p.p2&&p.p2!=='empty'?1:0)+(p.p3&&p.p3!=='empty'?1:0);
-  const hasSan=p.av==='yellow'||tot2>0||p.dis!=='empty'||p.blanc;
+  const hasSan=p.av==='yellow'||tot2>0||p.dis==='red'||p.dis==='red3x2'||p.dis==='blue'||p.blanc;
   let cls='player-card'+(isGK?' gk':'')+(hasSan?' sanctioned':'')+(p.excluActive?' excluded':'');
   let sans='';
   if(p.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
   if(tot2>0)sans+=`<span class="san san-2min" title="Exclusion 2'">2'${tot2>1?`<span class="san-count">${tot2}</span>`:''}</span>`;
-  if(p.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
+  if(p.dis==='red')sans+='<span class="san san-dis" title="Disqualification directe"></span>';
+  if(p.dis==='red3x2')sans+='<span class="san san-dis" title="2\' + Disqualification"></span>';
   if(p.dis==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
   if(p.blanc)sans+='<span class="san san-blanc" title="Carton blanc"></span>';
   return `<div class="${cls}" onclick="openPlayerModal('${team}',${idx})">
@@ -576,10 +577,10 @@ function doPA(action){
       let isDisq=false;
       if(!p.p1||p.p1==='empty'){p.p1='2min';}
       else if(!p.p2||p.p2==='empty'){p.p2='2min';}
-      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red';isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
+      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red3x2';isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
       else{showToast('❌ 3 exclusions déjà atteintes');return;}
       p.excluActive=true;startExcluTimer(team,idx);
-      addEvent({type:'2min',team,time:t,player:p.num,desc:tn+(isDisq?" — Exclusion 2' disqualifiante (3e×2') 🟥 (":" — Exclusion 2' ⏱️ (")+p.num+' '+p.name+')'});
+      addEvent({type:'2min',team,time:t,player:p.num,disq3x2:isDisq,desc:tn+(isDisq?" — Exclusion 2' disqualifiante (3e×2') 🟥 (":" — Exclusion 2' ⏱️ (")+p.num+' '+p.name+')'});
       if(!isDisq)showToast("⏱️ Exclusion 2' — "+p.name);break;}
     case 'dis':p.dis='red';p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
     case 'rapport':p.dis='blue';addEvent({type:'rapport',team,time:t,player:p.num,desc:tn+' — Rapport écrit 📝 ('+p.num+' '+p.name+')'});showToast('📝 Rapport — '+p.name);break;
@@ -598,7 +599,7 @@ function undoPlayer(team,p){
         case 'save':p.arrets=Math.max(0,(p.arrets||1)-1);break;
         case 'tir':p.tirs=Math.max(0,(p.tirs||1)-1);break;
         case 'av':p.av='empty';break;
-        case '2min':if(p.p3&&p.p3!=='empty')p.p3='empty';else if(p.p2&&p.p2!=='empty')p.p2='empty';else if(p.p1&&p.p1!=='empty')p.p1='empty';p.excluActive=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
+        case '2min':if(p.p3&&p.p3!=='empty'){p.p3='empty';if(p.dis==='red3x2')p.dis='empty';}else if(p.p2&&p.p2!=='empty')p.p2='empty';else if(p.p1&&p.p1!=='empty')p.p1='empty';p.excluActive=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
         case 'dis':p.dis='empty';p.excluActive=false;break;
         case 'rapport':p.dis='empty';break;
         case 'blanc':p.blanc=false;break;

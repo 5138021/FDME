@@ -655,7 +655,8 @@ function buildRow(p,team){
   const avState = p.av || 'empty';
   const p1State = (p.p1==='2min'||p.p1==='2min-used') ? '2min-used' : (p.p1||'empty');
   const p2State = (p.p2==='2min'||p.p2==='2min-used') ? '2min-used' : (p.p2||'empty');
-  const disState = p.dis==='red'?'red':p.dis==='blue'?'blue':'empty';
+  const p2dState = p.dis==='red3x2' ? '2min-dis' : 'empty';
+  const disState = p.dis==='red' ? 'red' : p.dis==='blue' ? 'blue' : 'empty';
   return `<tr class="${rowCls}">
     <td class="td-capt"><input type="checkbox" class="capt-check" data-team="${team}" ${captChecked} onchange="handleCaptainChange(this)"></td>
     <td class="${numCls}" contenteditable="true">${p.num||'—'}</td>
@@ -668,7 +669,7 @@ function buildRow(p,team){
     <td><div class="pen-row">${buildPenBox(avState,'av')}</div></td>
     <td><div class="pen-row">${buildPenBox(p1State,'p')}</div></td>
     <td><div class="pen-row">${buildPenBox(p2State,'p')}</div></td>
-    <td><div class="pen-row">${buildPenBox('empty','p2d')}</div></td>
+    <td><div class="pen-row">${buildPenBox(p2dState,'p2d')}</div></td>
     <td><div class="pen-row">${buildPenBox(disState,'dis')}</div></td>
     <td style="width:14px;padding:0;"><span onclick="deleteRow(this)" style="cursor:pointer;color:var(--muted);font-size:8px;padding:2px;" title="Supprimer">✕</span></td>
   </tr>`;
@@ -767,6 +768,7 @@ function calcStats(players) {
     if(p.p1!=='empty')exclu++;
     if(p.p2!=='empty')exclu++;
     if(p.dis==='red')red++;
+    if(p.dis==='red3x2')exclu++; // 3e exclusion = compte comme exclusion, pas rouge direct
     if(p.dis==='blue')blue++;
   });
   return {goals,m7,tirs,arrets,exclu,red,blue};
