@@ -579,7 +579,7 @@ function doPA(action){
       else{showToast('❌ 3 exclusions déjà atteintes');return;}
       p.excluActive=true;startExcluTimer(team,idx);
       addEvent({type:'2min',team,time:t,player:p.num,desc:tn+" — Exclusion 2' ⏱️ ("+p.num+' '+p.name+')'});showToast("⏱️ Exclusion 2' — "+p.name);break;}
-    case 'dis':p.dis='red';p.excluActive=true;addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
+    case 'dis':p.dis='red';p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
     case 'rapport':p.dis='blue';addEvent({type:'rapport',team,time:t,player:p.num,desc:tn+' — Rapport écrit 📝 ('+p.num+' '+p.name+')'});showToast('📝 Rapport — '+p.name);break;
     case 'blanc':p.blanc=true;addEvent({type:'blanc',team,time:t,player:p.num,desc:tn+' — Carton blanc ⬜ protocole commotion ('+p.num+' '+p.name+')'});showToast('⬜ Carton blanc — '+p.name);break;
     case 'undo':undoPlayer(team,p);return;
