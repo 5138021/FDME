@@ -79,16 +79,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .player-card.gk{border-color:rgba(74,159,255,.3);background:rgba(74,159,255,.05);}
 .player-card.sanctioned{border-color:rgba(224,45,55,.3);}
 .player-card.excluded{opacity:.5;background:rgba(224,45,55,.08);}
-/* Cartons positionnés en haut à droite — style FDME FFHB */
-.pc-sanctions-corner{
-  position:absolute;
-  top:5px;right:5px;
-  display:flex;flex-direction:row;gap:3px;
-  align-items:flex-start;
-  z-index:2;
-}
-/* Ajustement de l'exclu-overlay pour ne pas chevaucher les cartons */
-.exclu-overlay{position:absolute;top:4px;left:5px;right:auto;background:var(--accent);border-radius:3px;padding:1px 4px;font-family:var(--font-mono);font-size:8px;font-weight:700;color:#fff;}
+.exclu-overlay{position:absolute;top:5px;right:6px;background:rgba(224,45,55,.85);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:#fff;letter-spacing:1px;}
 .pc-top{display:flex;align-items:center;gap:6px;}
 .pc-num{font-family:var(--font-mono);font-size:18px;font-weight:700;line-height:1;flex-shrink:0;}
 .pc-num.gk{color:var(--cyan);}
@@ -101,7 +92,8 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 /* Cartons visuels style FDME FFHB */
 .san{
   display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:19px;border-radius:2px;
+  min-width:14px;height:19px;border-radius:2px;
+  padding:0 2px;
   font-family:var(--font-mono);font-size:7px;font-weight:900;
   position:relative;flex-shrink:0;
   box-shadow:0 1px 3px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);
@@ -394,7 +386,7 @@ let chronoSeconds = 0;
 let chronoPeriod = 0;
 let chronoInterval = null;
 let currentModalPlayer = null;
-let excluTimers = {};
+let excluTimers = {}; // uid -> { secsAtStart: chronoSeconds quand exclusion déclenchée, totalSecs: 120 }
 
 // ═══════════ INIT ═══════════
 function init() {
@@ -438,6 +430,7 @@ function startChrono(){
   document.getElementById('chronoDisplay').className='chrono-time running';
   chronoInterval=setInterval(()=>{
     chronoSeconds++;updateChronoDisplay();
+    tickExcluTimers();
     const dur=(data.match.duree||30)*60;
     if((chronoPeriod===1||chronoPeriod===3)&&chronoSeconds>=dur)pauseChrono();
   },1000);
@@ -504,13 +497,12 @@ function buildPlayerCard(team,p,idx){
   let cls='player-card'+(isGK?' gk':'')+(hasSan?' sanctioned':'')+(p.excluActive?' excluded':'');
   let sans='';
   if(p.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
-  if(tot2>0)sans+=`<span class="san san-2min" title="Exclusion 2'">${tot2>1?`<span class="san-count">${tot2}</span>`:''}</span>`;
+  if(tot2>0)sans+=`<span class="san san-2min" title="Exclusion 2'">2'${tot2>1?`<span class="san-count">${tot2}</span>`:''}</span>`;
   if(p.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
   if(p.dis==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
   if(p.blanc)sans+='<span class="san san-blanc" title="Carton blanc"></span>';
   return `<div class="${cls}" onclick="openPlayerModal('${team}',${idx})">
     ${p.excluActive?`<div class="exclu-overlay" id="exclu-${team}-${idx}">2'00</div>`:''}
-    ${sans?`<div class="pc-sanctions-corner">${sans}</div>`:''}
     <div class="pc-top">
       <div class="pc-num ${isGK?'gk':'j'}">${p.num||'?'}</div>
       <div class="pc-name">${p.isCapt?'⚑ ':''}${p.name||'—'}</div>
@@ -519,6 +511,7 @@ function buildPlayerCard(team,p,idx){
       ${isGK?`<span class="pc-stat">🧤<b>${p.arrets||0}</b></span>`:`<span class="pc-stat">⚽<b>${p.goals||0}</b></span>`}
       ${!isGK?`<span class="pc-stat">🎯<b>${p.tirs||0}</b></span>`:''}
     </div>
+    ${sans?`<div class="pc-sanctions">${sans}</div>`:''}
   </div>`;
 }
 
@@ -532,13 +525,13 @@ function buildStaffCard(team,off,idx){
   const hasSan=off.av==='yellow'||off.exclu==='2min'||off.dis==='red'||off.rapport==='blue';
   let sans='';
   if(off.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
-  if(off.exclu==='2min')sans+="<span class='san san-2min' title=\"Exclusion 2'\"></span>";
+  if(off.exclu==='2min')sans+="<span class='san san-2min' title=\"Exclusion 2'\">2'</span>";
   if(off.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
   if(off.rapport==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
   return `<div class="staff-card${hasSan?' sanctioned':''}" onclick="openStaffModal('${team}',${idx})">
-    ${sans?`<div class="pc-sanctions-corner">${sans}</div>`:''}
     <div class="sc-role">${off.role}</div>
     <div class="sc-name">${off.nom}</div>
+    ${sans?`<div class="pc-sanctions">${sans}</div>`:''}
   </div>`;
 }
 
@@ -702,20 +695,51 @@ function doSA(action){
   renderStaff(team);closeStaffModal();saveData();
 }
 
-// ═══════════ TIMER EXCLU ═══════════
+// ═══════════ TIMER EXCLU (synchronisé avec le chrono du match) ═══════════
 function startExcluTimer(team,idx){
   const uid=team+'-'+idx;
-  if(excluTimers[uid])clearInterval(excluTimers[uid]);
-  let secs=120;
-  excluTimers[uid]=setInterval(()=>{
-    if(!data[team].players[idx].excluActive){clearInterval(excluTimers[uid]);return;}
-    secs--;
-    const el=document.getElementById('exclu-'+team+'-'+idx);
-    if(el){const m=Math.floor(secs/60),s=secs%60;el.textContent=`${m}:${String(s).padStart(2,'0')}`;}
-    if(secs<=0){clearInterval(excluTimers[uid]);data[team].players[idx].excluActive=false;renderPlayers(team);}
-  },1000);
+  // On enregistre le chrono au moment où l'exclusion est déclenchée
+  excluTimers[uid]={secsAtStart:chronoSeconds,totalSecs:120};
+  updateExcluDisplay(team,idx);
 }
-function stopExcluTimer(team,idx){const uid=team+'-'+idx;if(excluTimers[uid]){clearInterval(excluTimers[uid]);delete excluTimers[uid];}}
+
+function tickExcluTimers(){
+  // Appelé à chaque seconde du chrono principal
+  Object.keys(excluTimers).forEach(uid=>{
+    const[team,idxStr]=uid.split('-');
+    const idx=parseInt(idxStr);
+    const p=data[team]?.players[idx];
+    if(!p||!p.excluActive){delete excluTimers[uid];return;}
+    const elapsed=chronoSeconds-excluTimers[uid].secsAtStart;
+    const remaining=excluTimers[uid].totalSecs-elapsed;
+    if(remaining<=0){
+      // Fin de l'exclusion
+      delete excluTimers[uid];
+      p.excluActive=false;
+      renderPlayers(team);
+    } else {
+      updateExcluDisplay(team,idx,remaining);
+    }
+  });
+}
+
+function updateExcluDisplay(team,idx,remaining){
+  if(remaining===undefined){
+    const uid=team+'-'+idx;
+    if(!excluTimers[uid])return;
+    remaining=excluTimers[uid].totalSecs-(chronoSeconds-excluTimers[uid].secsAtStart);
+  }
+  const el=document.getElementById('exclu-'+team+'-'+idx);
+  if(el){
+    const m=Math.floor(remaining/60),s=remaining%60;
+    el.textContent=`${m}:${String(s).padStart(2,'0')}`;
+  }
+}
+
+function stopExcluTimer(team,idx){
+  const uid=team+'-'+idx;
+  delete excluTimers[uid];
+}
 
 // ═══════════ EVENTS ═══════════
 const EV_ICONS={but:'⚽',but7:'7️⃣',save:'🧤',av:'<span class="san san-av e-san-icon"></span>','2min':'<span class="san san-2min e-san-icon"></span>',dis:'<span class="san san-dis e-san-icon"></span>',rapport:'<span class="san san-rap e-san-icon"></span>',tir:'🎯',tmo:'⏸',blanc:'<span class="san san-blanc e-san-icon"></span>'};
