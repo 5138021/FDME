@@ -88,13 +88,30 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .pc-stats{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;}
 .pc-stat{display:flex;align-items:center;gap:2px;font-size:9px;color:var(--muted);}
 .pc-stat b{color:var(--white);font-family:var(--font-mono);}
-.pc-sanctions{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
-.san{padding:1px 4px;border-radius:3px;font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:.5px;}
-.san-av{background:rgba(245,166,35,.2);color:var(--gold);}
-.san-2min{background:rgba(224,45,55,.2);color:var(--accent);}
-.san-dis{background:rgba(224,45,55,.6);color:#fff;}
-.san-rap{background:rgba(74,159,255,.2);color:var(--cyan);}
-.san-blanc{background:rgba(255,255,255,.15);color:#fff;}
+.pc-sanctions{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;align-items:center;}
+/* Cartons visuels style FDME FFHB */
+.san{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:19px;border-radius:2px;
+  font-family:var(--font-mono);font-size:7px;font-weight:900;
+  position:relative;flex-shrink:0;
+  box-shadow:0 1px 3px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.san-av{background:linear-gradient(170deg,#f5c842,#e6a800);color:#7a4400;border:1px solid #c98800;}
+.san-2min{background:linear-gradient(170deg,#e84c3d,#b52020);color:#fff;border:1px solid #8c1a1a;}
+.san-dis{background:linear-gradient(170deg,#e02020,#8b0000);color:#fff;border:1px solid #660000;}
+.san-rap{background:linear-gradient(170deg,#2e9aff,#0060cc);color:#fff;border:1px solid #0040aa;}
+.san-blanc{background:linear-gradient(170deg,#ffffff,#d8e0ec);color:#334;border:1px solid #9aaccc;}
+/* Numéro de fois pour les 2min */
+.san-count{
+  position:absolute;top:-5px;right:-5px;
+  background:#111;color:#fff;
+  font-size:6px;font-weight:900;
+  width:9px;height:9px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.3);
+  line-height:1;
+}
 
 /* STAFF */
 .staff-sep{display:flex;align-items:center;gap:5px;margin:8px 0 6px;font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);}
@@ -161,7 +178,19 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .ab-blocked{opacity:.35;cursor:not-allowed !important;}
 .ab-blocked-lbl{font-size:7px;color:var(--accent);margin-top:1px;}
 
-/* FAB */
+/* Cartons grands dans les modals */
+.modal-san{
+  width:22px !important;height:30px !important;
+  border-radius:3px !important;
+  display:inline-flex !important;
+  box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2) !important;
+}
+/* Cartons dans la liste des événements */
+.e-san-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:24px;border-radius:2px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.5);
+}
 .fab-area{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(0deg,var(--blue-mid),rgba(18,32,56,.95));padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);z-index:50;}
 .fab-row{display:flex;gap:8px;}
 .fab-btn{flex:1;padding:12px 8px;border:none;border-radius:11px;font-family:var(--font-h);font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;}
@@ -465,11 +494,11 @@ function buildPlayerCard(team,p,idx){
   const hasSan=p.av==='yellow'||tot2>0||p.dis!=='empty'||p.blanc;
   let cls='player-card'+(isGK?' gk':'')+(hasSan?' sanctioned':'')+(p.excluActive?' excluded':'');
   let sans='';
-  if(p.av==='yellow')sans+='<span class="san san-av">AV</span>';
-  if(tot2>0)sans+=`<span class="san san-2min">2'×${tot2}</span>`;
-  if(p.dis==='red')sans+='<span class="san san-dis">🟥</span>';
-  if(p.dis==='blue')sans+='<span class="san san-rap">📝</span>';
-  if(p.blanc)sans+='<span class="san san-blanc">⬜CB</span>';
+  if(p.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
+  if(tot2>0)sans+=`<span class="san san-2min" title="Exclusion 2'">${tot2>1?`<span class="san-count">${tot2}</span>`:''}</span>`;
+  if(p.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
+  if(p.dis==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
+  if(p.blanc)sans+='<span class="san san-blanc" title="Carton blanc"></span>';
   return `<div class="${cls}" onclick="openPlayerModal('${team}',${idx})">
     ${p.excluActive?`<div class="exclu-overlay" id="exclu-${team}-${idx}">2'00</div>`:''}
     <div class="pc-top">
@@ -493,10 +522,10 @@ function renderStaff(team){
 function buildStaffCard(team,off,idx){
   const hasSan=off.av==='yellow'||off.exclu==='2min'||off.dis==='red'||off.rapport==='blue';
   let sans='';
-  if(off.av==='yellow')sans+='<span class="san san-av">AV</span>';
-  if(off.exclu==='2min')sans+="<span class='san san-2min'>2'</span>";
-  if(off.dis==='red')sans+='<span class="san san-dis">🟥</span>';
-  if(off.rapport==='blue')sans+='<span class="san san-rap">📝</span>';
+  if(off.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
+  if(off.exclu==='2min')sans+="<span class='san san-2min' title=\"Exclusion 2'\"></span>";
+  if(off.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
+  if(off.rapport==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
   return `<div class="staff-card${hasSan?' sanctioned':''}" onclick="openStaffModal('${team}',${idx})">
     <div class="sc-role">${off.role}</div>
     <div class="sc-name">${off.nom}</div>
@@ -521,11 +550,11 @@ function openPlayerModal(team,idx){
     <button class="action-btn ab-goal7" onclick="doPA('goal7')"><span class="ab-icon">7️⃣</span><span class="ab-label">But 7m</span></button>
     <button class="action-btn ab-tir" onclick="doPA('tir')"><span class="ab-icon">🎯</span><span class="ab-label">Tir</span></button>`;
   document.getElementById('sanctions-grid').innerHTML=`
-    <button class="action-btn ab-av" onclick="doPA('av')"><span class="ab-icon">⚠️</span><span class="ab-label">Avertissement</span></button>
-    <button class="action-btn ab-2min" onclick="doPA('2min')"><span class="ab-icon">⏱️</span><span class="ab-label">Exclusion 2'</span></button>
-    <button class="action-btn ab-dis" onclick="doPA('dis')"><span class="ab-icon">🟥</span><span class="ab-label">Disqualif.</span></button>
-    <button class="action-btn ab-rap" onclick="doPA('rapport')"><span class="ab-icon">📝</span><span class="ab-label">Rapport</span></button>
-    <button class="action-btn ab-blanc" onclick="doPA('blanc')"><span class="ab-icon">⬜</span><span class="ab-label">Carton blanc</span></button>
+    <button class="action-btn ab-av" onclick="doPA('av')"><span class="ab-icon"><span class="san san-av modal-san"></span></span><span class="ab-label">Avertissement</span></button>
+    <button class="action-btn ab-2min" onclick="doPA('2min')"><span class="ab-icon"><span class="san san-2min modal-san"></span></span><span class="ab-label">Exclusion 2'</span></button>
+    <button class="action-btn ab-dis" onclick="doPA('dis')"><span class="ab-icon"><span class="san san-dis modal-san"></span></span><span class="ab-label">Disqualif.</span></button>
+    <button class="action-btn ab-rap" onclick="doPA('rapport')"><span class="ab-icon"><span class="san san-rap modal-san"></span></span><span class="ab-label">Rapport</span></button>
+    <button class="action-btn ab-blanc" onclick="doPA('blanc')"><span class="ab-icon"><span class="san san-blanc modal-san"></span></span><span class="ab-label">Carton blanc</span></button>
     <button class="action-btn ab-undo" onclick="doPA('undo')"><span class="ab-icon">↩️</span><span class="ab-label">Annuler</span></button>`;
   document.getElementById('playerModal').classList.add('open');
 }
@@ -600,21 +629,21 @@ function openStaffModal(team,idx){
 
   document.getElementById('staff-grid').innerHTML=`
     <button class="action-btn ab-av${hasAv?' ab-on ab-on-av':''}${avBlocked?' ab-blocked':''}" onclick="doSA('av')" ${avBlocked?'disabled':''}>
-      <span class="ab-icon">⚠️</span>
+      <span class="ab-icon"><span class="san san-av modal-san"></span></span>
       <span class="ab-label">${hasAv?'✓ AV attrib.':'Avertissement'}</span>
       ${avBlocked?'<span class="ab-blocked-lbl">MAX ÉQUIPE</span>':''}
     </button>
     <button class="action-btn ab-2min${hasExclu?' ab-on ab-on-2min':''}${excluBlocked?' ab-blocked':''}" onclick="doSA('exclu')" ${excluBlocked?'disabled':''}>
-      <span class="ab-icon">⏱️</span>
+      <span class="ab-icon"><span class="san san-2min modal-san"></span></span>
       <span class="ab-label">${hasExclu?"✓ 2' attrib.":"Exclusion 2'"}</span>
       ${excluBlocked?'<span class="ab-blocked-lbl">MAX ÉQUIPE</span>':''}
     </button>
     <button class="action-btn ab-dis${hasDis?' ab-on ab-on-dis':''}" onclick="doSA('dis')">
-      <span class="ab-icon">🟥</span>
+      <span class="ab-icon"><span class="san san-dis modal-san"></span></span>
       <span class="ab-label">${hasDis?'✓ Disqualif.':'Disqualif.'}</span>
     </button>
     <button class="action-btn ab-rap${hasRap?' ab-on ab-on-rap':''}" onclick="doSA('rapport')">
-      <span class="ab-icon">📝</span>
+      <span class="ab-icon"><span class="san san-rap modal-san"></span></span>
       <span class="ab-label">${hasRap?'✓ Rapport':'Rapport écrit'}</span>
     </button>`;
   document.getElementById('staff-grid2').innerHTML=`
@@ -680,7 +709,7 @@ function startExcluTimer(team,idx){
 function stopExcluTimer(team,idx){const uid=team+'-'+idx;if(excluTimers[uid]){clearInterval(excluTimers[uid]);delete excluTimers[uid];}}
 
 // ═══════════ EVENTS ═══════════
-const EV_ICONS={but:'⚽',but7:'7️⃣',save:'🧤',av:'⚠️','2min':'⏱️',dis:'🟥',rapport:'📝',tir:'🎯',tmo:'⏸',blanc:'⬜'};
+const EV_ICONS={but:'⚽',but7:'7️⃣',save:'🧤',av:'<span class="san san-av e-san-icon"></span>','2min':'<span class="san san-2min e-san-icon"></span>',dis:'<span class="san san-dis e-san-icon"></span>',rapport:'<span class="san san-rap e-san-icon"></span>',tir:'🎯',tmo:'⏸',blanc:'<span class="san san-blanc e-san-icon"></span>'};
 const EV_CLS={but:'e-but',but7:'e-but7',save:'e-save',av:'e-av','2min':'e-2min',dis:'e-dis',rapport:'e-dis',tir:'e-tir',tmo:'e-tmo',blanc:'e-blanc'};
 
 function addEvent(ev){ev.id=Date.now();data.events.unshift(ev);renderEvents();}
