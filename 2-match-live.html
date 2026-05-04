@@ -573,12 +573,14 @@ function doPA(action){
     case 'tir':p.tirs=(p.tirs||0)+1;addEvent({type:'tir',team,time:t,player:p.num,desc:tn+' — Tir ('+p.num+' '+p.name+')'});showToast('🎯 Tir');break;
     case 'av':if(p.av==='yellow'){showToast('⚠️ Déjà attribué');return;}p.av='yellow';addEvent({type:'av',team,time:t,player:p.num,desc:tn+' — Avertissement ⚠️ ('+p.num+' '+p.name+')'});showToast('⚠️ Avert. — '+p.name);break;
     case '2min':{
+      let isDisq=false;
       if(!p.p1||p.p1==='empty'){p.p1='2min';}
       else if(!p.p2||p.p2==='empty'){p.p2='2min';}
-      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red';addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification auto (3e×2\') 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. auto (3e excl.) !');}
+      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red';isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
       else{showToast('❌ 3 exclusions déjà atteintes');return;}
       p.excluActive=true;startExcluTimer(team,idx);
-      addEvent({type:'2min',team,time:t,player:p.num,desc:tn+" — Exclusion 2' ⏱️ ("+p.num+' '+p.name+')'});showToast("⏱️ Exclusion 2' — "+p.name);break;}
+      addEvent({type:'2min',team,time:t,player:p.num,desc:tn+(isDisq?" — Exclusion 2' disqualifiante (3e×2') 🟥 (":" — Exclusion 2' ⏱️ (")+p.num+' '+p.name+')'});
+      if(!isDisq)showToast("⏱️ Exclusion 2' — "+p.name);break;}
     case 'dis':p.dis='red';p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
     case 'rapport':p.dis='blue';addEvent({type:'rapport',team,time:t,player:p.num,desc:tn+' — Rapport écrit 📝 ('+p.num+' '+p.name+')'});showToast('📝 Rapport — '+p.name);break;
     case 'blanc':p.blanc=true;addEvent({type:'blanc',team,time:t,player:p.num,desc:tn+' — Carton blanc ⬜ protocole commotion ('+p.num+' '+p.name+')'});showToast('⬜ Carton blanc — '+p.name);break;
