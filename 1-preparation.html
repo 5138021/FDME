@@ -208,6 +208,217 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 @media(max-width:380px){
   .players-header,.player-row{grid-template-columns:32px 1fr 46px 30px 30px 26px;}
 }
+
+/* ── BOUTON CHARGER ÉQUIPE ── */
+.load-team-btn{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.28);
+  border-radius:9px;padding:8px 13px;cursor:pointer;
+  font-family:var(--font-h);font-size:12px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold);transition:all .18s;margin-bottom:13px;width:100%;
+  justify-content:center;
+}
+.load-team-btn:hover{background:rgba(245,166,35,0.2);border-color:rgba(245,166,35,.5);}
+.load-team-btn.away-style{
+  color:var(--cyan);
+  background:rgba(74,159,255,0.1);border-color:rgba(74,159,255,0.28);
+}
+.load-team-btn.away-style:hover{background:rgba(74,159,255,0.2);}
+
+/* ── MODAL OVERLAY ── */
+.preset-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(5px);
+  align-items:flex-end;justify-content:center;
+}
+.preset-overlay.open{display:flex;}
+.preset-sheet{
+  background:var(--blue-mid);border-radius:22px 22px 0 0;
+  padding:0 0 32px;width:100%;max-width:500px;
+  max-height:88vh;display:flex;flex-direction:column;
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+.preset-header{
+  display:flex;align-items:center;padding:16px 16px 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;
+}
+.preset-header-icon{font-size:22px;margin-right:10px;}
+.preset-header-title{
+  font-family:var(--font-h);font-size:16px;font-weight:900;
+  letter-spacing:1px;text-transform:uppercase;flex:1;
+}
+.preset-header-close{
+  background:rgba(255,255,255,.08);border:none;color:var(--white);
+  width:32px;height:32px;border-radius:50%;font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+
+/* Scroll zone */
+.preset-list{overflow-y:auto;padding:10px 12px;flex:1;}
+
+/* Carte équipe */
+.preset-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;padding:12px 14px;margin-bottom:8px;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;
+}
+.preset-card:active{transform:scale(.98);}
+.preset-card:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
+.preset-badge{
+  width:40px;height:40px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-h);font-size:15px;font-weight:900;color:#fff;
+}
+.preset-info{flex:1;min-width:0;}
+.preset-name{
+  font-family:var(--font-h);font-size:15px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.preset-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+.preset-count{
+  font-family:var(--font-h);font-size:11px;font-weight:700;
+  color:var(--muted);background:rgba(255,255,255,.06);
+  padding:3px 8px;border-radius:8px;flex-shrink:0;
+}
+
+/* Toast confirmation */
+.load-toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:rgba(0,193,122,.95);border-radius:10px;
+  padding:10px 18px;font-family:var(--font-h);font-size:13px;font-weight:800;
+  letter-spacing:.5px;color:var(--blue);opacity:0;
+  transition:all .2s;z-index:400;pointer-events:none;white-space:nowrap;
+}
+.load-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── ÉDITEUR D'ÉQUIPES ── */
+.editor-overlay{
+  display:none;position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.editor-overlay.open{display:flex;}
+.editor-sheet{
+  background:var(--blue-mid);border-radius:22px 22px 0 0;
+  width:100%;max-width:500px;
+  max-height:93vh;display:flex;flex-direction:column;
+  animation:slideUp .22s ease;
+}
+.editor-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;
+}
+.editor-header-title{
+  font-family:var(--font-h);font-size:15px;font-weight:900;
+  letter-spacing:1px;text-transform:uppercase;flex:1;
+}
+.editor-header-close{
+  background:rgba(255,255,255,.08);border:none;color:var(--white);
+  width:32px;height:32px;border-radius:50%;font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.editor-tabs{
+  display:flex;gap:2px;padding:8px 12px 0;flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.editor-tab{
+  padding:6px 12px;border-radius:8px 8px 0 0;
+  font-family:var(--font-h);font-size:11px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  color:var(--muted);border:1px solid transparent;border-bottom:none;
+  transition:all .15s;
+}
+.editor-tab.active{
+  background:var(--blue-soft);color:var(--white);
+  border-color:rgba(255,255,255,.1);
+}
+.editor-body{
+  overflow-y:auto;padding:14px 13px;flex:1;
+}
+.editor-section{
+  font-family:var(--font-h);font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+  margin:14px 0 8px;display:flex;align-items:center;gap:8px;
+}
+.editor-section::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+/* mini input dans l'éditeur */
+.ei{
+  width:100%;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);border-radius:7px;
+  color:var(--white);font-family:var(--font-b);font-size:12px;
+  padding:8px 10px;outline:none;transition:border .15s;
+}
+.ei:focus{border-color:var(--cyan);background:rgba(74,159,255,.08);}
+.ei::placeholder{color:rgba(138,155,190,.55);}
+.ei-num{font-family:var(--font-mono);font-weight:700;color:var(--gold);}
+.ei-num.gk{color:var(--cyan);}
+/* ligne joueur dans l'éditeur */
+.ep-row{
+  display:grid;grid-template-columns:38px 1fr 54px 30px 28px 28px;
+  gap:5px;align-items:center;margin-bottom:6px;
+}
+.ep-row .pos-btn{font-size:9px;padding:6px 2px;}
+.ep-row .capt-btn{font-size:13px;padding:5px 2px;}
+.ep-row .del-btn{font-size:14px;}
+.ep-header{
+  display:grid;grid-template-columns:38px 1fr 54px 30px 28px 28px;
+  gap:5px;padding:0 2px 6px;border-bottom:1px solid rgba(255,255,255,.06);
+  margin-bottom:8px;
+}
+.ep-header span{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:center;}
+.ep-header span:nth-child(2){text-align:left;}
+/* off row */
+.eo-row{display:grid;grid-template-columns:90px 1fr 100px;gap:7px;margin-bottom:7px;align-items:center;}
+.eo-role{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+/* footer éditeur */
+.editor-footer{
+  display:flex;gap:8px;padding:10px 13px 28px;flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.editor-btn{
+  flex:1;padding:11px;border:none;border-radius:10px;
+  font-family:var(--font-h);font-size:13px;font-weight:900;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;
+}
+.editor-btn:active{transform:scale(.97);}
+.btn-save-preset{background:linear-gradient(135deg,var(--green),#00a066);color:var(--blue);}
+.btn-del-preset{background:rgba(224,45,55,.15);color:var(--accent);border:1px solid rgba(224,45,55,.3);}
+.btn-new-preset{background:rgba(74,159,255,.15);color:var(--cyan);border:1px solid rgba(74,159,255,.3);}
+/* couleurs mini dans éditeur */
+.editor-colors{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+.ec-dot{
+  width:26px;height:26px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:all .15s;flex-shrink:0;
+}
+.ec-dot.sel{border-color:var(--white);transform:scale(1.2);}
+/* badge d'index d'équipe en cours */
+.editor-team-idx{
+  font-family:var(--font-mono);font-size:11px;color:var(--muted);
+  background:rgba(255,255,255,.06);padding:2px 8px;border-radius:6px;
+}
+/* bouton éditer dans la preset-card */
+.preset-edit-btn{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  color:var(--muted);border-radius:8px;padding:6px 10px;font-size:13px;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.preset-edit-btn:hover{background:rgba(245,166,35,.2);color:var(--gold);border-color:rgba(245,166,35,.4);}
+/* bouton nouvelle équipe dans la liste */
+.preset-new-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:rgba(74,159,255,.08);border:1px dashed rgba(74,159,255,.3);
+  border-radius:12px;padding:12px;cursor:pointer;
+  font-family:var(--font-h);font-size:12px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;color:var(--cyan);
+  transition:all .18s;margin-top:4px;
+}
+.preset-new-btn:hover{background:rgba(74,159,255,.15);}
+
 </style>
 </head>
 <body>
@@ -299,6 +510,9 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 
     <!-- PANEL HOME -->
     <div id="panel-home">
+      <button class="load-team-btn" onclick="openPresetModal('home')">
+        📂 Charger une équipe préenregistrée
+      </button>
       <div class="section-title gold"><span class="dot"></span>Équipe Domicile</div>
       <div class="form-row">
         <div class="form-group"><label>Nom de l'équipe</label><input id="home-nom" placeholder="Ex: HBC Nantes" type="text"></div>
@@ -324,6 +538,9 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 
     <!-- PANEL AWAY -->
     <div id="panel-away" style="display:none;">
+      <button class="load-team-btn away-style" onclick="openPresetModal('away')">
+        📂 Charger une équipe préenregistrée
+      </button>
       <div class="section-title cyan"><span class="dot"></span>Équipe Extérieur</div>
       <div class="form-row">
         <div class="form-group"><label>Nom de l'équipe</label><input id="away-nom" placeholder="Ex: PSG Handball" type="text"></div>
@@ -357,6 +574,43 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
   </div>
 
 </div>
+
+<!-- ── MODAL ÉQUIPES PRÉENREGISTRÉES ── -->
+<div class="preset-overlay" id="presetModal">
+  <div class="preset-sheet">
+    <div class="preset-header">
+      <span class="preset-header-icon">📂</span>
+      <div class="preset-header-title" id="preset-modal-title">Charger une équipe</div>
+      <button class="preset-header-close" onclick="closePresetModal()">✕</button>
+    </div>
+    <div class="preset-list" id="preset-list"></div>
+  </div>
+</div>
+
+<!-- ── MODAL ÉDITEUR D'ÉQUIPE ── -->
+<div class="editor-overlay" id="editorModal">
+  <div class="editor-sheet">
+    <div class="editor-header">
+      <span style="font-size:20px;">✏️</span>
+      <div class="editor-header-title" id="editor-title">Modifier l'équipe</div>
+      <span class="editor-team-idx" id="editor-idx-badge"></span>
+      <button class="editor-header-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="editor-tabs">
+      <div class="editor-tab active" id="etab-infos"    onclick="switchEditorTab('infos')">Infos</div>
+      <div class="editor-tab"        id="etab-joueurs"  onclick="switchEditorTab('joueurs')">Joueurs</div>
+      <div class="editor-tab"        id="etab-officiels" onclick="switchEditorTab('officiels')">Officiels</div>
+    </div>
+    <div class="editor-body" id="editor-body"></div>
+    <div class="editor-footer">
+      <button class="editor-btn btn-del-preset" onclick="deletePreset()" id="btn-del-preset">🗑 Supprimer</button>
+      <button class="editor-btn btn-save-preset" onclick="savePreset()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast confirmation -->
+<div class="load-toast" id="loadToast"></div>
 
 <!-- BOTTOM BAR -->
 <div class="bottom-bar">
@@ -686,6 +940,388 @@ function startMatch() {
   localStorage.setItem('ffhb_prep_data', JSON.stringify(data));
   // Navigate to match live
   window.location.href = '2-match-live.html';
+}
+
+// ═══════════════════════════════════
+// ÉQUIPES PRÉENREGISTRÉES
+// Les équipes de base sont dans PRESET_TEAMS_DEFAULT.
+// Les modifications sont sauvegardées dans localStorage.
+// ═══════════════════════════════════
+const PRESET_TEAMS_DEFAULT = [
+  {
+    nom: 'Meylan Handball Club',
+    abr: 'MHB',
+    code: 'MHB38',
+    color: '#E02D37',
+    players: [
+      { num:'1',  name:'DUPONT Alexis',    lic:'123001', isGK:true,  isCapt:false },
+      { num:'2',  name:'MARTIN Léo',       lic:'123002', isGK:false, isCapt:false },
+      { num:'3',  name:'BERNARD Théo',     lic:'123003', isGK:false, isCapt:false },
+      { num:'4',  name:'ROBERT Lucas',     lic:'123004', isGK:false, isCapt:true  },
+      { num:'5',  name:'PETIT Antoine',    lic:'123005', isGK:false, isCapt:false },
+      { num:'6',  name:'DURAND Mathieu',   lic:'123006', isGK:false, isCapt:false },
+      { num:'7',  name:'LEROY Clément',    lic:'123007', isGK:false, isCapt:false },
+      { num:'8',  name:'MOREAU Nathan',    lic:'123008', isGK:false, isCapt:false },
+      { num:'9',  name:'SIMON Hugo',       lic:'123009', isGK:false, isCapt:false },
+      { num:'10', name:'LAURENT Baptiste', lic:'123010', isGK:false, isCapt:false },
+      { num:'11', name:'LEFEBVRE Enzo',    lic:'123011', isGK:false, isCapt:false },
+      { num:'16', name:'GARCIA Maxime',    lic:'123016', isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'ROUSSEAU Pierre', lic:'OFF001' },
+      { role:'Entraîneur adj. 1', nom:'BLANC Nicolas',   lic:'OFF002' },
+      { role:'Entraîneur adj. 2', nom:'',                lic:'' },
+      { role:'Entraîneur adj. 3', nom:'',                lic:'' },
+    ]
+  },
+  {
+    nom: 'Grenoble Métropole HB',
+    abr: 'GRE',
+    code: 'GMH38',
+    color: '#4A9FFF',
+    players: [
+      { num:'1',  name:'FONTAINE Tom',    lic:'234001', isGK:true,  isCapt:false },
+      { num:'2',  name:'GUERIN Paul',     lic:'234002', isGK:false, isCapt:false },
+      { num:'3',  name:'CHEVALIER Jules', lic:'234003', isGK:false, isCapt:false },
+      { num:'4',  name:'FAURE Victor',    lic:'234004', isGK:false, isCapt:true  },
+      { num:'5',  name:'MASSON Romain',   lic:'234005', isGK:false, isCapt:false },
+      { num:'6',  name:'PERRIN Arthur',   lic:'234006', isGK:false, isCapt:false },
+      { num:'7',  name:'RENARD Louis',    lic:'234007', isGK:false, isCapt:false },
+      { num:'8',  name:'MEYER Julien',    lic:'234008', isGK:false, isCapt:false },
+      { num:'9',  name:'HUBERT Axel',     lic:'234009', isGK:false, isCapt:false },
+      { num:'10', name:'CARON Samuel',    lic:'234010', isGK:false, isCapt:false },
+      { num:'16', name:'LACROIX Florian', lic:'234016', isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'DENIS Stéphane',  lic:'OFF101' },
+      { role:'Entraîneur adj. 1', nom:'ADAM Frédéric',   lic:'OFF102' },
+      { role:'Entraîneur adj. 2', nom:'',                lic:'' },
+      { role:'Entraîneur adj. 3', nom:'',                lic:'' },
+    ]
+  },
+];
+
+// ── Chargement / sauvegarde des presets ──
+function loadPresets() {
+  const raw = localStorage.getItem('ffhb_preset_teams');
+  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
+  return JSON.parse(JSON.stringify(PRESET_TEAMS_DEFAULT)); // deep copy
+}
+function savePresets(arr) {
+  localStorage.setItem('ffhb_preset_teams', JSON.stringify(arr));
+}
+
+// ── Sélection ──
+let _presetTeam = null;
+
+function openPresetModal(team) {
+  _presetTeam = team;
+  document.getElementById('preset-modal-title').textContent =
+    team === 'away' ? 'Charger — Équipe Extérieur' : 'Charger — Équipe Domicile';
+  renderPresetList();
+  document.getElementById('presetModal').classList.add('open');
+}
+function closePresetModal() {
+  document.getElementById('presetModal').classList.remove('open');
+  _presetTeam = null;
+}
+function renderPresetList() {
+  const teams = loadPresets();
+  const list  = document.getElementById('preset-list');
+  list.innerHTML = teams.map((t, i) => {
+    const pc = t.players.length;
+    const oc = (t.officials||[]).filter(o=>o.nom).length;
+    return `<div class="preset-card" style="cursor:default;">
+      <div class="preset-badge" style="background:${t.color||'#555'};">${t.abr||'?'}</div>
+      <div class="preset-info" style="cursor:pointer;" onclick="applyPresetTeam(${i})">
+        <div class="preset-name">${t.nom||'Sans nom'}</div>
+        <div class="preset-meta">Code : ${t.code||'—'} &nbsp;·&nbsp; ${oc} officiel${oc>1?'s':''}</div>
+      </div>
+      <div class="preset-count" style="cursor:pointer;" onclick="applyPresetTeam(${i})">${pc} joueur${pc>1?'s':''}</div>
+      <button class="preset-edit-btn" onclick="openEditor(${i})" title="Modifier cette équipe">✏️</button>
+    </div>`;
+  }).join('') +
+  `<div class="preset-new-btn" onclick="openEditor(-1)">＋ Nouvelle équipe</div>`;
+}
+
+function applyPresetTeam(index) {
+  const team = _presetTeam;
+  const t = loadPresets()[index];
+  if (!t || !team) return;
+  document.getElementById(team+'-nom').value  = t.nom  || '';
+  document.getElementById(team+'-abr').value  = t.abr  || '';
+  document.getElementById(team+'-code').value = t.code || '';
+  if (t.color) {
+    if (team === 'home') homeColor = t.color; else awayColor = t.color;
+    initColors(team, t.color);
+  }
+  document.getElementById(team+'-players-list').innerHTML = '';
+  if (team === 'home') { homePlayerCount = 0; homeCaptain = null; }
+  else                 { awayPlayerCount = 0; awayCaptain = null; }
+  (t.players||[]).forEach(p => {
+    addPlayer(team, p.isGK);
+    const id  = team === 'home' ? homePlayerCount : awayPlayerCount;
+    const uid = team+'-p-'+id;
+    document.getElementById(uid+'-num').value  = p.num  || '';
+    document.getElementById(uid+'-name').value = p.name || '';
+    document.getElementById(uid+'-lic').value  = p.lic  || '';
+    if (p.isCapt) toggleCapt(team, uid);
+  });
+  (t.officials||[]).forEach((off, i) => {
+    const n = document.getElementById(team+'-off-nom-'+i);
+    const l = document.getElementById(team+'-off-lic-'+i);
+    if (n) n.value = off.nom || '';
+    if (l) l.value = off.lic || '';
+  });
+  closePresetModal();
+  showLoadToast('✅ ' + (t.nom||'Équipe') + ' chargée !');
+}
+
+// ══════════════════════════════════════════
+// ÉDITEUR D'ÉQUIPE
+// ══════════════════════════════════════════
+let _editIdx      = -1;       // -1 = nouvelle équipe
+let _editTeam     = null;     // copie de travail en cours d'édition
+let _editColor    = '#E02D37';
+let _editTab      = 'infos';
+let _editCaptIdx  = -1;       // index joueur capitaine dans _editTeam.players
+
+function openEditor(index) {
+  const teams = loadPresets();
+  _editIdx  = index;
+  if (index === -1) {
+    // Nouvelle équipe vide
+    _editTeam = {
+      nom:'', abr:'', code:'', color:'#E02D37',
+      players: [],
+      officials: OFFICIALS_ROLES.map(r => ({ role:r, nom:'', lic:'' }))
+    };
+  } else {
+    _editTeam = JSON.parse(JSON.stringify(teams[index])); // deep copy
+    // S'assurer que officials a 4 entrées
+    if (!_editTeam.officials || _editTeam.officials.length < 4) {
+      _editTeam.officials = OFFICIALS_ROLES.map((r, i) => {
+        const ex = (_editTeam.officials||[])[i];
+        return ex ? ex : { role:r, nom:'', lic:'' };
+      });
+    }
+  }
+  _editColor   = _editTeam.color || '#E02D37';
+  _editCaptIdx = (_editTeam.players||[]).findIndex(p => p.isCapt);
+  _editTab     = 'infos';
+
+  document.getElementById('editor-title').textContent =
+    index === -1 ? 'Nouvelle équipe' : 'Modifier l\'équipe';
+  document.getElementById('editor-idx-badge').textContent =
+    index === -1 ? 'Nouveau' : `Équipe ${index+1}/${teams.length}`;
+  document.getElementById('btn-del-preset').style.display = index === -1 ? 'none' : '';
+
+  renderEditorTab('infos');
+  document.getElementById('editorModal').classList.add('open');
+}
+
+function closeEditor() {
+  document.getElementById('editorModal').classList.remove('open');
+  _editTeam = null;
+}
+
+function switchEditorTab(tab) {
+  // Sauvegarder onglet courant avant de changer
+  collectEditorTab(_editTab);
+  _editTab = tab;
+  ['infos','joueurs','officiels'].forEach(t => {
+    document.getElementById('etab-'+t).classList.toggle('active', t===tab);
+  });
+  renderEditorTab(tab);
+}
+
+// ── Collecte des valeurs de l'onglet courant avant changement ──
+function collectEditorTab(tab) {
+  if (!_editTeam) return;
+  if (tab === 'infos') {
+    _editTeam.nom   = document.getElementById('ei-nom')?.value  || '';
+    _editTeam.abr   = document.getElementById('ei-abr')?.value  || '';
+    _editTeam.code  = document.getElementById('ei-code')?.value || '';
+    _editTeam.color = _editColor;
+  } else if (tab === 'joueurs') {
+    const rows = document.querySelectorAll('.ep-row[data-ep-idx]');
+    const players = [];
+    rows.forEach(row => {
+      const i = parseInt(row.dataset.epIdx);
+      const numEl  = document.getElementById('ep-num-'+i);
+      const nameEl = document.getElementById('ep-name-'+i);
+      const licEl  = document.getElementById('ep-lic-'+i);
+      const posBtn = document.getElementById('ep-pos-'+i);
+      const captBtn= document.getElementById('ep-capt-'+i);
+      players.push({
+        num:   numEl?.value  || '',
+        name:  nameEl?.value || '',
+        lic:   licEl?.value  || '',
+        isGK:  posBtn?.classList.contains('is-gk')   || false,
+        isCapt:captBtn?.classList.contains('is-capt')|| false,
+      });
+    });
+    _editTeam.players = players;
+    _editCaptIdx = players.findIndex(p => p.isCapt);
+  } else if (tab === 'officiels') {
+    OFFICIALS_ROLES.forEach((_, i) => {
+      const n = document.getElementById('eo-nom-'+i);
+      const l = document.getElementById('eo-lic-'+i);
+      if (_editTeam.officials[i]) {
+        _editTeam.officials[i].nom = n?.value || '';
+        _editTeam.officials[i].lic = l?.value || '';
+      }
+    });
+  }
+}
+
+// ── Rendu de chaque onglet ──
+function renderEditorTab(tab) {
+  const body = document.getElementById('editor-body');
+  if (tab === 'infos') {
+    body.innerHTML = `
+      <div class="editor-section">Identité</div>
+      <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;">
+        <div><label style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px;">Nom de l'équipe</label>
+          <input class="ei" id="ei-nom" placeholder="Ex: Meylan HB" value="${esc(_editTeam.nom)}"></div>
+        <div><label style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px;">Abrév.</label>
+          <input class="ei" id="ei-abr" placeholder="MHB" maxlength="4" value="${esc(_editTeam.abr)}"></div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px;">Code équipe / Licence club</label>
+        <input class="ei" id="ei-code" placeholder="Ex: MHB38" value="${esc(_editTeam.code)}">
+      </div>
+      <div class="editor-section">Couleur tenue</div>
+      <div class="editor-colors" id="editor-colors"></div>
+    `;
+    renderEditorColors();
+  } else if (tab === 'joueurs') {
+    const ps = _editTeam.players || [];
+    let rows = ps.map((p, i) => buildEditorPlayerRow(p, i)).join('');
+    body.innerHTML = `
+      <div class="ep-header">
+        <span>N°</span><span>Nom / Prénom</span><span>Licence</span><span>Pos</span><span>Cap</span><span></span>
+      </div>
+      <div id="ep-list">${rows}</div>
+      <button class="add-player-btn" onclick="editorAddPlayer()" style="margin-top:6px;">＋ Ajouter un joueur</button>
+    `;
+  } else if (tab === 'officiels') {
+    body.innerHTML = `
+      <div class="editor-section">Officiels</div>
+      ${OFFICIALS_ROLES.map((role, i) => {
+        const off = _editTeam.officials[i] || { nom:'', lic:'' };
+        return `<div class="eo-row">
+          <div class="eo-role">${role}</div>
+          <input class="ei" id="eo-nom-${i}" placeholder="Nom Prénom" value="${esc(off.nom)}">
+          <input class="ei" id="eo-lic-${i}" placeholder="N° Licence" value="${esc(off.lic)}">
+        </div>`;
+      }).join('')}
+    `;
+  }
+}
+
+function buildEditorPlayerRow(p, i) {
+  const gkCls  = p.isGK   ? ' is-gk'   : '';
+  const capCls = p.isCapt ? ' is-capt' : '';
+  const numCls = p.isGK   ? ' gk'      : '';
+  return `<div class="ep-row" data-ep-idx="${i}">
+    <input class="ei ei-num${numCls}" id="ep-num-${i}"  value="${esc(p.num)}"  placeholder="#">
+    <input class="ei"                 id="ep-name-${i}" value="${esc(p.name)}" placeholder="Nom Prénom">
+    <input class="ei"                 id="ep-lic-${i}"  value="${esc(p.lic)}"  placeholder="Licence">
+    <button class="pos-btn${gkCls}"   id="ep-pos-${i}"  onclick="editorTogglePos(${i})">${p.isGK?'GK':'J'}</button>
+    <button class="capt-btn${capCls}" id="ep-capt-${i}" onclick="editorToggleCapt(${i})" title="Capitaine">⚑</button>
+    <button class="del-btn"           onclick="editorDelPlayer(${i})" title="Supprimer">✕</button>
+  </div>`;
+}
+
+function renderEditorColors() {
+  document.getElementById('editor-colors').innerHTML = COLORS.map(c =>
+    `<div class="ec-dot${c===_editColor?' sel':''}" style="background:${c};" onclick="editorSelectColor('${c}',this)"></div>`
+  ).join('');
+}
+
+function editorSelectColor(c, el) {
+  _editColor = c;
+  document.querySelectorAll('.ec-dot').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function editorAddPlayer() {
+  collectEditorTab('joueurs');
+  _editTeam.players.push({ num:'', name:'', lic:'', isGK:false, isCapt:false });
+  renderEditorTab('joueurs');
+}
+
+function editorDelPlayer(i) {
+  collectEditorTab('joueurs');
+  _editTeam.players.splice(i, 1);
+  if (_editCaptIdx === i) _editCaptIdx = -1;
+  else if (_editCaptIdx > i) _editCaptIdx--;
+  renderEditorTab('joueurs');
+}
+
+function editorTogglePos(i) {
+  const btn = document.getElementById('ep-pos-'+i);
+  const num = document.getElementById('ep-num-'+i);
+  const isGK = btn.classList.toggle('is-gk');
+  btn.textContent = isGK ? 'GK' : 'J';
+  num.classList.toggle('gk', isGK);
+}
+
+function editorToggleCapt(i) {
+  // Retirer ancien capitaine
+  if (_editCaptIdx !== -1 && _editCaptIdx !== i) {
+    const old = document.getElementById('ep-capt-'+_editCaptIdx);
+    if (old) old.classList.remove('is-capt');
+  }
+  const btn = document.getElementById('ep-capt-'+i);
+  const nowCapt = btn.classList.toggle('is-capt');
+  _editCaptIdx = nowCapt ? i : -1;
+}
+
+// ── Sauvegarder l'équipe en localStorage ──
+function savePreset() {
+  collectEditorTab(_editTab);
+  if (!_editTeam.nom.trim()) {
+    showLoadToast('⚠️ Donne un nom à l\'équipe !');
+    switchEditorTab('infos');
+    return;
+  }
+  _editTeam.color = _editColor;
+  const teams = loadPresets();
+  if (_editIdx === -1) {
+    teams.push(_editTeam);
+  } else {
+    teams[_editIdx] = _editTeam;
+  }
+  savePresets(teams);
+  closeEditor();
+  renderPresetList();
+  showLoadToast('💾 ' + _editTeam.nom + ' sauvegardée !');
+}
+
+function deletePreset() {
+  if (_editIdx === -1) return;
+  const teams = loadPresets();
+  const nom = teams[_editIdx]?.nom || 'cette équipe';
+  if (!confirm('Supprimer « ' + nom + ' » des équipes préenregistrées ?')) return;
+  teams.splice(_editIdx, 1);
+  savePresets(teams);
+  closeEditor();
+  renderPresetList();
+  showLoadToast('🗑 Équipe supprimée');
+}
+
+// ── Utilitaires ──
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+let _toastTimer = null;
+function showLoadToast(msg) {
+  const el = document.getElementById('loadToast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
 // ═══════════════════════════════════
