@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -231,7 +232,7 @@ body{background:#CBD5E4;font-family:var(--font-b);color:var(--blue);padding:16px
 /* Carton inline */
 .ev-san{display:inline-flex;align-items:center;justify-content:center;width:16px;height:21px;border-radius:2px;font-size:0;box-shadow:0 1px 3px rgba(0,0,0,.5);}
 .ev-san.av{background:linear-gradient(170deg,#f5c842,#e6a800);border:1px solid #c98800;}
-.ev-san.s2min{background:linear-gradient(170deg,#e84c3d,#b52020);border:1px solid #8c1a1a;}
+.ev-san.s2min{background:linear-gradient(170deg,#d97040,#b04020);border:1px solid #8c3010;}
 .ev-san.dis{background:linear-gradient(170deg,#e02020,#8b0000);border:1px solid #660000;}
 .ev-san.rap{background:linear-gradient(170deg,#2e9aff,#0060cc);border:1px solid #0040aa;}
 .ev-san.blanc{background:linear-gradient(170deg,#ffffff,#d8e0ec);border:1px solid #9aaccc;}
@@ -763,7 +764,7 @@ const EVENT_CLS = {
 const EVENT_LABELS = {
   but:'But', but7:'But 7m', save:'Arrêt', av:'Avertissement',
   '2min':"Exclusion 2'", dis:'Disqualification', rapport:'Rapport',
-  tir:'Tir', tmo:'Temps mort', blanc:'Protocole commotion'
+  tir:'Tir', tmo:'Temps mort', blanc:'Carton blanc'
 };
 function renderEvents(events, homeNom, awayNom) {
   const inner = document.getElementById('events-inner');
@@ -779,15 +780,18 @@ function renderEvents(events, homeNom, awayNom) {
     const icon = EVENT_ICONS[ev.type] || '•';
     const cls = EVENT_CLS[ev.type] || '';
     const label = EVENT_LABELS[ev.type] || ev.type;
-    return `<div class="ev-item ${cls}">
-      <div class="ev-icon">${icon}</div>
-      <div class="ev-body">
-        <div class="ev-title">${ev.desc || ''}</div>
-        <div class="ev-sub" style="color:${teamColor};">${teamName}</div>
-      </div>
-      <div class="ev-time-badge">${ev.time || '—'}</div>
-      <div class="ev-type-pill">${label}</div>
-    </div>`;
+    const player = [ev.playerNum ? '#'+ev.playerNum : '', ev.playerName || ''].filter(Boolean).join(' ');
+    const title = player ? `${label} - ${player}` : label;
+    const playerMatch = (ev.desc || '').match(/\(([^)]+)\)/);
+const playerStr = playerMatch ? playerMatch[1] : (ev.player || '');
+return `<div class="ev-item ${cls}">
+  <div class="ev-icon">${icon}</div>
+  <div class="ev-body">
+    <div class="ev-sub" style="color:${teamColor};margin-bottom:2px;">${teamName}</div>
+    <div class="ev-title">${label}${playerStr ? ' — ' + playerStr : ''}</div>
+  </div>
+  <div class="ev-time-badge">${ev.time || '—'}</div>
+</div>`;
   }).join('');
 }
 
