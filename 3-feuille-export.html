@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📋 Feuille de Match — Export FFHB</title>
+  <title>📋 Feuille de Match — Export</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600;700&display=swap"
@@ -1413,9 +1413,10 @@
 
   <!-- TOOLBAR -->
   <div class="toolbar">
-    <div class="toolbar-title">📋 Feuille de Match — Export FFHB</div>
+    <div class="toolbar-title">📋 Feuille de Match — Export</div>
     <span class="toolbar-hint">Données importées automatiquement · Cliquer pour modifier · Imprimer / PDF</span>
     <button class="btn btn-back" onclick="goBack()">← Match Live</button>
+    <a class="btn btn-back" href="0-matchs.html">← Match Live</a>
     <button class="btn btn-reset" onclick="resetPage()">↺ Vider</button>
     <button class="btn btn-print" onclick="exportPDF()">🖨️ Imprimer / PDF</button>
   </div>
@@ -1746,8 +1747,8 @@
 
     <!-- FOOTER -->
     <div class="footer">
-      <div class="footer-left" id="footer-left">Généré par FFHB Match App</div>
-      <div class="footer-center">FFHB — Feuille de Match</div>
+      <div class="footer-left" id="footer-left">Généré par 5138021</div>
+      <div class="footer-center">Feuille de Match</div>
       <div class="footer-right" id="footer-right">—</div>
     </div>
 
@@ -2164,7 +2165,7 @@ function init() {
 
   // Footer
   document.getElementById('footer-left').textContent = `Exporté le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
-  document.getElementById('footer-right').textContent = m.competition ? m.competition + (m.division ? ' · ' + m.division : '') : 'FFHB Match App';
+  document.getElementById('footer-right').textContent = m.competition ? m.competition + (m.division ? ' · ' + m.division : '') : 'Match App';
 }
 
 function goBack() { window.location.href = '2-match-live.html'; }
