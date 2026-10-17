@@ -22,9 +22,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 /* HEADER */
 .match-header{background:linear-gradient(180deg,rgba(18,32,56,.99),rgba(11,24,41,.97));padding:8px 12px 0;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);}
 .match-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.match-nav-tabs{display:flex;gap:3px;}
-.match-nav-tab{padding:5px 10px;border-radius:6px;font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .2s;}
-.match-nav-tab.active{background:rgba(255,255,255,.12);color:var(--white);}
 .btn-export{padding:6px 12px;border:none;border-radius:7px;background:linear-gradient(135deg,#1a6b2f,#27a045);color:var(--white);font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
 .btn-back{padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.06);color:var(--muted);font-family:var(--font-h);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
 
@@ -57,12 +54,12 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 
 /* BODY */
 .match-body{padding:10px 12px 80px;}
-.match-panel{display:none;}
-.match-panel.active{display:block;}
 
 /* DEUX ÉQUIPES CÔTE À CÔTE */
-.both-teams{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;}
+.both-teams{display:grid;grid-template-columns:1fr 128px 1fr;gap:6px;align-items:start;}
 .team-col{min-width:0;}
+.events-col{min-width:0;position:sticky;top:96px;}
+.events-col-title{font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;margin-bottom:8px;}
 
 /* HEADERS D'ÉQUIPE */
 .team-hdr{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:7px 10px;border-radius:9px;}
@@ -79,7 +76,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .player-card.gk{border-color:rgba(74,159,255,.3);background:rgba(74,159,255,.05);}
 .player-card.sanctioned{border-color:rgba(224,45,55,.3);}
 .player-card.excluded{opacity:.5;background:rgba(224,45,55,.08);}
-.exclu-overlay{position:absolute;top:5px;right:6px;background:rgba(224,45,55,.85);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:#fff;letter-spacing:1px;}
+.exclu-overlay{position:absolute;bottom:5px;right:6px;background:rgba(224,45,55,.85);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:#fff;letter-spacing:1px;z-index:5;}
 .pc-top{display:flex;align-items:center;gap:6px;}
 .pc-num{font-family:var(--font-mono);font-size:18px;font-weight:700;line-height:1;flex-shrink:0;}
 .pc-num.gk{color:var(--cyan);}
@@ -114,18 +111,28 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
   line-height:1;
 }
 
+/* RUBAN DE SANCTION (bannière diagonale dans le coin de la carte) */
+.corner-ribbon{position:absolute;top:10px;right:-32px;width:92px;height:18px;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;font-weight:900;letter-spacing:.5px;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.4);pointer-events:none;}
+.ribbon-yellow{background:linear-gradient(170deg,#f5c842,#e6a800);color:#5c3d00;}
+.ribbon-orange{background:linear-gradient(170deg,#ff9a3d,#d35400);color:#3a1900;}
+.ribbon-red{background:linear-gradient(170deg,#e84c3d,#b52020);color:#fff;}
+.ribbon-blue{background:linear-gradient(170deg,#2e9aff,#0060cc);color:#fff;}
+.ribbon-white{background:linear-gradient(170deg,#ffffff,#d8e0ec);color:#334;}
+
 /* STAFF */
 .staff-sep{display:flex;align-items:center;gap:5px;margin:8px 0 6px;font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);}
 .staff-sep::before,.staff-sep::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
-.staff-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:7px 10px;cursor:pointer;transition:all .15s;}
+.staff-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:7px 10px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
 .staff-card:active{transform:scale(.97);}
 .staff-card.sanctioned{border-color:rgba(224,45,55,.25);}
+.staff-card.excluded{opacity:.5;background:rgba(224,45,55,.08);}
 .sc-role{font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
 .sc-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 /* EVENTS */
-.event-list{display:flex;flex-direction:column;gap:6px;}
-.event-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border-radius:8px;padding:9px 12px;border-left:3px solid transparent;}
+.event-list{display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 170px);overflow-y:auto;padding:2px 1px 6px;}
+.ev-empty{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:9px;text-align:center;padding-top:20px;opacity:.6;}
+.event-item{position:relative;display:flex;align-items:flex-start;gap:6px;background:rgba(255,255,255,.04);border-radius:8px;padding:7px 18px 7px 8px;border-left:3px solid transparent;}
 .event-item.e-but{border-color:var(--green);}
 .event-item.e-but7{border-color:var(--green);opacity:.85;}
 .event-item.e-save{border-color:var(--cyan);}
@@ -135,6 +142,12 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .event-item.e-tmo{border-color:var(--purple);}
 .event-item.e-tir{border-color:rgba(255,255,255,.15);}
 .event-item.e-blanc{border-color:rgba(255,255,255,.5);}
+.e-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0;margin-top:1px;}
+.e-body{flex:1;min-width:0;}
+.e-title{font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:.2px;line-height:1.25;}
+.e-sub{font-size:8px;color:var(--muted);margin-top:2px;}
+.e-time{font-family:var(--font-mono);font-size:8px;font-weight:700;color:var(--muted);margin-top:2px;}
+.e-del{position:absolute;top:2px;right:2px;background:transparent;border:none;color:rgba(255,255,255,.25);font-size:11px;cursor:pointer;padding:3px;line-height:1;}
 .e-icon{font-size:18px;width:26px;text-align:center;}
 .e-body{flex:1;}
 .e-title{font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:.5px;}
@@ -154,7 +167,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .modal-num.staff{color:var(--purple);border:1px solid rgba(155,89,182,.3);font-size:20px;}
 .modal-name{font-family:var(--font-h);font-size:17px;font-weight:800;}
 .modal-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.modal-close{margin-left:auto;background:rgba(255,255,255,.08);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-close{margin-left:auto;background:rgba(255,255,255,.08);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .modal-sec{font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
 .action-btn{padding:12px 6px;border:none;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .15s;}
@@ -179,6 +192,25 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .ab-blocked{opacity:.35;cursor:not-allowed !important;}
 .ab-blocked-lbl{font-size:7px;color:var(--accent);margin-top:1px;}
 
+/* MENU D'ACTION (liste verticale style "palette de commandes") */
+.menu-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.menu-badge{font-family:var(--font-mono);font-size:16px;font-weight:800;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,.08);}
+.menu-badge.gk{color:var(--cyan);background:rgba(74,159,255,.15);border:1px solid rgba(74,159,255,.4);}
+.menu-badge.j{color:var(--gold);background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.4);}
+.menu-badge.staff{color:var(--purple);background:rgba(155,89,182,.15);border:1px solid rgba(155,89,182,.4);font-size:16px;}
+.menu-eyebrow{font-size:10px;color:var(--muted);font-weight:600;}
+.menu-title{font-family:var(--font-h);font-size:16px;font-weight:800;letter-spacing:.3px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.menu-list{margin-top:10px;max-height:60vh;overflow-y:auto;}
+.menu-item{display:flex;align-items:center;gap:10px;padding:10px 6px;cursor:pointer;border-radius:8px;transition:background .12s;}
+.menu-item:active{background:rgba(255,255,255,.08);}
+.menu-icon{width:22px;text-align:center;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.menu-label{flex:1;font-size:13px;font-weight:600;color:#fff;min-width:0;}
+.menu-key{font-size:9px;color:var(--muted);font-family:var(--font-mono);background:rgba(255,255,255,.06);padding:3px 7px;border-radius:5px;letter-spacing:.5px;flex-shrink:0;}
+.menu-sep{height:1px;background:rgba(255,255,255,.08);margin:6px 2px;}
+.menu-item.on .menu-label{color:var(--gold);font-weight:700;}
+.menu-item.blocked{opacity:.35;cursor:not-allowed;}
+.menu-note{font-size:9px;color:var(--muted);padding:0 6px 8px;line-height:1.5;}
+
 /* Cartons grands dans les modals */
 .modal-san{
   width:22px !important;height:30px !important;
@@ -196,7 +228,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .fab-row{display:flex;gap:8px;}
 .fab-btn{flex:1;padding:12px 8px;border:none;border-radius:11px;font-family:var(--font-h);font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;}
 .fab-btn:active{transform:scale(.97);}
-.fab-events{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--muted);}
 .fab-export{background:linear-gradient(135deg,#1a6b2f,#27a045);color:var(--white);}
 
 /* TOAST */
@@ -223,10 +254,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <div class="match-header">
   <div class="match-nav">
     <button class="btn-back" onclick="goBack()">← Prép.</button>
-    <div class="match-nav-tabs">
-      <div class="match-nav-tab active" onclick="switchPanel('players')" id="ntab-players">⚡ Live</div>
-      <div class="match-nav-tab" onclick="switchPanel('events')" id="ntab-events">📋 Faits</div>
-    </div>
     <button class="btn-export" onclick="exportResults()">📋 Export</button>
   </div>
   <div class="scoreboard">
@@ -253,42 +280,35 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <!-- BODY -->
 <div class="match-body">
 
-  <!-- PANEL LIVE -->
-  <div class="match-panel active" id="panel-players">
-    <div class="both-teams">
-      <!-- DOMICILE -->
-      <div class="team-col">
-        <div class="team-hdr hm">
-          <div class="team-hdr-name" id="ts-home-name">Domicile</div>
-          <span class="tmo-count" id="tmo-home-badge"></span>
-          <div class="team-hdr-score" id="ts-home-score" style="color:var(--gold)">0</div>
-        </div>
-        <div class="cards-list" id="grid-home"></div>
-        <div class="staff-sep">Staff</div>
-        <div class="cards-list" id="grid-staff-home"></div>
+  <div class="both-teams">
+    <!-- DOMICILE -->
+    <div class="team-col">
+      <div class="team-hdr hm">
+        <div class="team-hdr-name" id="ts-home-name">Domicile</div>
+        <span class="tmo-count" id="tmo-home-badge"></span>
+        <div class="team-hdr-score" id="ts-home-score" style="color:var(--gold)">0</div>
       </div>
-      <!-- EXTÉRIEUR -->
-      <div class="team-col">
-        <div class="team-hdr aw">
-          <div class="team-hdr-name" id="ts-away-name">Extérieur</div>
-          <span class="tmo-count" id="tmo-away-badge"></span>
-          <div class="team-hdr-score" id="ts-away-score" style="color:var(--cyan)">0</div>
-        </div>
-        <div class="cards-list" id="grid-away"></div>
-        <div class="staff-sep">Staff</div>
-        <div class="cards-list" id="grid-staff-away"></div>
+      <div class="cards-list" id="grid-home"></div>
+      <div class="staff-sep">Staff</div>
+      <div class="cards-list" id="grid-staff-home"></div>
+    </div>
+    <!-- FAITS DE MATCH (entre les 2 équipes) -->
+    <div class="events-col">
+      <div class="events-col-title">Faits</div>
+      <div class="event-list" id="event-list">
+        <div class="ev-empty">📋<span>Aucun fait</span></div>
       </div>
     </div>
-  </div>
-
-  <!-- PANEL FAITS -->
-  <div class="match-panel" id="panel-events">
-    <div class="event-list" id="event-list">
-      <div style="text-align:center;padding:40px 0;color:var(--muted);">
-        <div style="font-size:32px;margin-bottom:10px;">📋</div>
-        <div style="font-family:var(--font-h);font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Aucun fait de match</div>
-        <div style="font-size:11px;margin-top:4px;">Les actions apparaîtront ici</div>
+    <!-- EXTÉRIEUR -->
+    <div class="team-col">
+      <div class="team-hdr aw">
+        <div class="team-hdr-name" id="ts-away-name">Extérieur</div>
+        <span class="tmo-count" id="tmo-away-badge"></span>
+        <div class="team-hdr-score" id="ts-away-score" style="color:var(--cyan)">0</div>
       </div>
+      <div class="cards-list" id="grid-away"></div>
+      <div class="staff-sep">Staff</div>
+      <div class="cards-list" id="grid-staff-away"></div>
     </div>
   </div>
 </div>
@@ -296,7 +316,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <!-- FAB -->
 <div class="fab-area">
   <div class="fab-row">
-    <button class="fab-btn fab-events" onclick="switchPanel(currentPanel==='events'?'players':'events')" id="fab-events-btn">📋 Faits de match</button>
     <button class="fab-btn fab-export" onclick="exportResults()">📤 Exporter</button>
   </div>
 </div>
@@ -304,36 +323,32 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <!-- MODAL JOUEUR -->
 <div class="modal-overlay" id="playerModal">
   <div class="modal-sheet">
-    <div class="modal-hdr">
-      <div class="modal-num" id="modal-num">00</div>
-      <div>
-        <div class="modal-name" id="modal-name">Joueur</div>
+    <div class="menu-header">
+      <div class="menu-badge" id="modal-num">00</div>
+      <div style="flex:1;min-width:0;">
+        <div class="menu-eyebrow">Appliquer une action à</div>
+        <div class="menu-title" id="modal-name">Joueur</div>
         <div class="modal-sub" id="modal-sub"></div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-sec" id="modal-sec-stats">Statistiques</div>
-    <div class="action-grid" id="stats-grid"></div>
-    <div class="modal-sec">Sanctions</div>
-    <div class="action-grid" id="sanctions-grid"></div>
+    <div class="menu-list" id="menu-list-player"></div>
   </div>
 </div>
 
 <!-- MODAL STAFF -->
 <div class="modal-overlay" id="staffModal">
   <div class="modal-sheet">
-    <div class="modal-hdr">
-      <div class="modal-num staff">👤</div>
-      <div>
-        <div class="modal-name" id="smodal-name">Officiel</div>
+    <div class="menu-header">
+      <div class="menu-badge staff">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div class="menu-eyebrow">Appliquer une sanction à</div>
+        <div class="menu-title" id="smodal-name">Officiel</div>
         <div class="modal-sub" id="smodal-sub"></div>
       </div>
       <button class="modal-close" onclick="closeStaffModal()">✕</button>
     </div>
-    <div class="modal-sec">Sanctions officiels</div>
-    <div style="font-size:9px;color:var(--muted);margin:-10px 0 10px;line-height:1.5;">1 Av. max / équipe · 1×2' max / équipe · Disqualif. &amp; Rapport : individuel</div>
-    <div class="action-grid" id="staff-grid"></div>
-    <div class="action-grid" style="grid-template-columns:1fr 1fr;" id="staff-grid2"></div>
+    <div class="menu-list" id="menu-list-staff"></div>
   </div>
 </div>
 
@@ -380,7 +395,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <script>
 // ═══════════ STATE ═══════════
 let data = null;
-let currentPanel = 'players';
 let chronoRunning = false;
 let chronoSeconds = 0;
 let chronoPeriod = 0;
@@ -485,6 +499,17 @@ function updateTMOInfo(){
   document.getElementById('tmo-away-badge').textContent=at>0?`T.O.×${at}`:'';
 }
 
+// ═══════════ SANCTION VISUELLE (ruban diagonal dans le coin) ═══════════
+// Priorité d'affichage : disqualification (rouge) > rapport écrit (bleu) > 2 minutes cumulées (orange, avec compteur) > avertissement (jaune) > carton blanc (blanc)
+function getPlayerRibbon(p,tot2){
+  if(p.dis==='red'||p.dis==='red3x2')return{color:'red',text:''};
+  if(p.dis==='blue')return{color:'blue',text:''};
+  if(tot2>0)return{color:'orange',text:String(tot2)};
+  if(p.av==='yellow')return{color:'yellow',text:''};
+  if(p.blanc)return{color:'white',text:''};
+  return null;
+}
+
 // ═══════════ PLAYER CARDS ═══════════
 function renderPlayers(team){
   const g=document.getElementById('grid-'+team);
@@ -493,17 +518,14 @@ function renderPlayers(team){
 function buildPlayerCard(team,p,idx){
   const isGK=p.isGK;
   const tot2=(p.p1&&p.p1!=='empty'?1:0)+(p.p2&&p.p2!=='empty'?1:0)+(p.p3&&p.p3!=='empty'?1:0);
-  const hasSan=p.av==='yellow'||tot2>0||p.dis==='red'||p.dis==='red3x2'||p.dis==='blue'||p.blanc;
-  let cls='player-card'+(isGK?' gk':'')+(hasSan?' sanctioned':'')+(p.excluActive?' excluded':'');
-  let sans='';
-  if(p.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
-  if(tot2>0)sans+=`<span class="san san-2min" title="Exclusion 2'">2'${tot2>1?`<span class="san-count">${tot2}</span>`:''}</span>`;
-  if(p.dis==='red')sans+='<span class="san san-dis" title="Disqualification directe"></span>';
-  if(p.dis==='red3x2')sans+='<span class="san san-dis" title="2\' + Disqualification"></span>';
-  if(p.dis==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
-  if(p.blanc)sans+='<span class="san san-blanc" title="Carton blanc"></span>';
+  const ribbon=getPlayerRibbon(p,tot2);
+  const hasSan=!!ribbon;
+  let cls='player-card'+(isGK?' gk':'')+(hasSan?' sanctioned':'')+((p.excluActive||p.outOfGame)?' excluded':'');
+  let overlayHtml='';
+  if(p.excluActive){overlayHtml=`<div class="exclu-overlay" id="exclu-p-${team}-${idx}">2'00</div>`;}
   return `<div class="${cls}" onclick="openPlayerModal('${team}',${idx})">
-    ${p.excluActive?`<div class="exclu-overlay" id="exclu-${team}-${idx}">2'00</div>`:''}
+    ${ribbon?`<div class="corner-ribbon ribbon-${ribbon.color}">${ribbon.text}</div>`:''}
+    ${overlayHtml}
     <div class="pc-top">
       <div class="pc-num ${isGK?'gk':'j'}">${p.num||'?'}</div>
       <div class="pc-name">${p.isCapt?'⚑ ':''}${p.name||'—'}</div>
@@ -512,29 +534,41 @@ function buildPlayerCard(team,p,idx){
       ${isGK?`<span class="pc-stat">🧤<b>${p.arrets||0}</b></span>`:`<span class="pc-stat">⚽<b>${p.goals||0}</b></span>`}
       ${!isGK?`<span class="pc-stat">🎯<b>${p.tirs||0}</b></span>`:''}
     </div>
-    ${sans?`<div class="pc-sanctions">${sans}</div>`:''}
   </div>`;
 }
 
 // ═══════════ STAFF CARDS ═══════════
 function renderStaff(team){
   const g=document.getElementById('grid-staff-'+team);
-  const offs=(data[team].officials||[]).filter(o=>o.nom);
-  g.innerHTML=offs.map((o,i)=>buildStaffCard(team,o,i)).join('');
+  const offs=(data[team].officials||[]).map((o,i)=>({...o,_real:i})).filter(o=>o.nom);
+  g.innerHTML=offs.map((o,i)=>buildStaffCard(team,o,i,o._real)).join('');
 }
-function buildStaffCard(team,off,idx){
-  const hasSan=off.av==='yellow'||off.exclu==='2min'||off.dis==='red'||off.rapport==='blue';
-  let sans='';
-  if(off.av==='yellow')sans+='<span class="san san-av" title="Avertissement"></span>';
-  if(off.exclu==='2min')sans+="<span class='san san-2min' title=\"Exclusion 2'\">2'</span>";
-  if(off.dis==='red')sans+='<span class="san san-dis" title="Disqualification"></span>';
-  if(off.rapport==='blue')sans+='<span class="san san-rap" title="Rapport écrit"></span>';
-  return `<div class="staff-card${hasSan?' sanctioned':''}" onclick="openStaffModal('${team}',${idx})">
+function buildStaffCard(team,off,idx,realIdx){
+  let ribbon=null;
+  if(off.dis==='red')ribbon={color:'red',text:''};
+  else if(off.rapport==='blue')ribbon={color:'blue',text:''};
+  else if(off.exclu==='2min')ribbon={color:'orange',text:'1'};
+  else if(off.av==='yellow')ribbon={color:'yellow',text:''};
+  const hasSan=!!ribbon;
+  const cls='staff-card'+(hasSan?' sanctioned':'')+((off.excluActive||off.outOfGame)?' excluded':'');
+  const overlayHtml=off.excluActive?`<div class="exclu-overlay" id="exclu-s-${team}-${realIdx}">2'00</div>`:'';
+  return `<div class="${cls}" onclick="openStaffModal('${team}',${idx})">
+    ${ribbon?`<div class="corner-ribbon ribbon-${ribbon.color}">${ribbon.text}</div>`:''}
+    ${overlayHtml}
     <div class="sc-role">${off.role}</div>
     <div class="sc-name">${off.nom}</div>
-    ${sans?`<div class="pc-sanctions">${sans}</div>`:''}
   </div>`;
 }
+
+// ═══════════ MENU D'ACTION — HELPERS ═══════════
+function menuItemHTML(icon,label,key,onclick,on,blocked){
+  return `<div class="menu-item${on?' on':''}${blocked?' blocked':''}" ${blocked?'':`onclick="${onclick}"`}>
+    <span class="menu-icon">${icon}</span>
+    <span class="menu-label">${on?'✓ ':''}${label}</span>
+    ${blocked?'<span class="menu-key" style="color:var(--accent)">Max</span>':(key?`<span class="menu-key">${key}</span>`:'')}
+  </div>`;
+}
+function sanIcon(cls){return `<span class="san ${cls}"></span>`;}
 
 // ═══════════ MODAL JOUEUR ═══════════
 function openPlayerModal(team,idx){
@@ -542,23 +576,42 @@ function openPlayerModal(team,idx){
   const p=data[team].players[idx];
   const isGK=p.isGK;
   document.getElementById('modal-num').textContent=p.num||'?';
-  document.getElementById('modal-num').className='modal-num '+(isGK?'gk':'j');
-  document.getElementById('modal-name').textContent=(p.isCapt?'⚑ ':'')+( p.name||'—');
+  document.getElementById('modal-num').className='menu-badge '+(isGK?'gk':'j');
+  document.getElementById('modal-name').textContent=(p.isCapt?'⚑ ':'')+(p.name||'—');
   document.getElementById('modal-sub').textContent=(isGK?'Gardien':'Joueur')+' · '+data[team].nom;
-  document.getElementById('stats-grid').innerHTML=isGK?`
-    <button class="action-btn ab-save" onclick="doPA('save')"><span class="ab-icon">🧤</span><span class="ab-label">Arrêt</span></button>
-    <button class="action-btn ab-goal" onclick="doPA('goal')"><span class="ab-icon">⚽</span><span class="ab-label">But encaissé</span></button>
-    <button class="action-btn ab-tir" onclick="doPA('tir')"><span class="ab-icon">🎯</span><span class="ab-label">Tir</span></button>`:`
-    <button class="action-btn ab-goal" onclick="doPA('goal')"><span class="ab-icon">⚽</span><span class="ab-label">But</span></button>
-    <button class="action-btn ab-goal7" onclick="doPA('goal7')"><span class="ab-icon">7️⃣</span><span class="ab-label">But 7m</span></button>
-    <button class="action-btn ab-tir" onclick="doPA('tir')"><span class="ab-icon">🎯</span><span class="ab-label">Tir</span></button>`;
-  document.getElementById('sanctions-grid').innerHTML=`
-    <button class="action-btn ab-av" onclick="doPA('av')"><span class="ab-icon"><span class="san san-av modal-san"></span></span><span class="ab-label">Avertissement</span></button>
-    <button class="action-btn ab-2min" onclick="doPA('2min')"><span class="ab-icon"><span class="san san-2min modal-san"></span></span><span class="ab-label">Exclusion 2'</span></button>
-    <button class="action-btn ab-dis" onclick="doPA('dis')"><span class="ab-icon"><span class="san san-dis modal-san"></span></span><span class="ab-label">Disqualif.</span></button>
-    <button class="action-btn ab-rap" onclick="doPA('rapport')"><span class="ab-icon"><span class="san san-rap modal-san"></span></span><span class="ab-label">Rapport</span></button>
-    <button class="action-btn ab-blanc" onclick="doPA('blanc')"><span class="ab-icon"><span class="san san-blanc modal-san"></span></span><span class="ab-label">Carton blanc</span></button>
-    <button class="action-btn ab-undo" onclick="doPA('undo')"><span class="ab-icon">↩️</span><span class="ab-label">Annuler</span></button>`;
+
+  const statItems=isGK?[
+    ['🧤','Arrêt','A','save'],
+    ['⚽','But encaissé','Ctrl+B','goal'],
+    ['🎯','Tir','Maj+T','tir']
+  ]:[
+    ['⚽','But','Ctrl+B','goal'],
+    ['7️⃣','But 7m','Alt+7','goal7'],
+    ['🎯','Tir','Maj+T','tir'],
+    ['🧤','Tir et arrêt du gardien','Alt+S','tirarret']
+  ];
+  const roleItems=isGK?[]:[['🧤','Nommer gardien','G','setgk']];
+  const disOn=(p.dis==='red'||p.dis==='red3x2');
+  const rapOn=p.dis==='blue';
+  const sancItems=[
+    [sanIcon('san-av'),'Avertissement','J','av',p.av==='yellow'],
+    [sanIcon('san-2min'),"2 minutes",'2','2min',false],
+    [sanIcon('san-dis'),'Disqualification','D','dis',disOn],
+    [sanIcon('san-rap'),'Disqual. rapport','R','rapport',rapOn]
+  ];
+
+  const html=[
+    ...statItems.map(it=>menuItemHTML(it[0],it[1],it[2],`doPA('${it[3]}')`)),
+    ...(roleItems.length?['<div class="menu-sep"></div>',...roleItems.map(it=>menuItemHTML(it[0],it[1],it[2],`doPA('${it[3]}')`))]:[]),
+    '<div class="menu-sep"></div>',
+    ...sancItems.map(it=>menuItemHTML(it[0],it[1],it[2],`doPA('${it[3]}')`,it[4])),
+    '<div class="menu-sep"></div>',
+    menuItemHTML('➕','Commotion cérébrale','C',`doPA('blanc')`,!!p.blanc),
+    '<div class="menu-sep"></div>',
+    menuItemHTML('↩️','Annuler dernière action','⌫',`doPA('undo')`),
+    menuItemHTML('✕','Fermer','Échap',`closeModal()`)
+  ].join('');
+  document.getElementById('menu-list-player').innerHTML=html;
   document.getElementById('playerModal').classList.add('open');
 }
 function closeModal(){document.getElementById('playerModal').classList.remove('open');}
@@ -572,22 +625,40 @@ function doPA(action){
     case 'goal7':p.goals=(p.goals||0)+1;p.m7=(p.m7||0)+1;p.tirs=(p.tirs||0)+1;data.match['score'+(team==='home'?'Home':'Away')]++;updateScore();addEvent({type:'but7',team,time:t,player:p.num,desc:tn+' — But 7m 7️⃣ ('+p.num+' '+p.name+')'});showToast('7️⃣ But 7m !');break;
     case 'save':p.arrets=(p.arrets||0)+1;addEvent({type:'save',team,time:t,player:p.num,desc:tn+' — Arrêt 🧤 ('+p.num+' '+p.name+')'});showToast('🧤 Arrêt de '+p.name);break;
     case 'tir':p.tirs=(p.tirs||0)+1;addEvent({type:'tir',team,time:t,player:p.num,desc:tn+' — Tir ('+p.num+' '+p.name+')'});showToast('🎯 Tir');break;
+    case 'tirarret':{
+      const oppTeam=team==='home'?'away':'home';
+      const gk=data[oppTeam].players.find(pl=>pl.isGK);
+      p.tirs=(p.tirs||0)+1;
+      addEvent({type:'tir',team,time:t,player:p.num,desc:tn+' — Tir ('+p.num+' '+p.name+')'});
+      if(gk){
+        gk.arrets=(gk.arrets||0)+1;
+        addEvent({type:'save',team:oppTeam,time:t,player:gk.num,desc:data[oppTeam].nom+' — Arrêt 🧤 ('+gk.num+' '+gk.name+')'});
+      }
+      showToast('🧤 Tir arrêté'+(gk?' — '+gk.name:''));
+      break;}
+    case 'setgk':{
+      if(p.isGK){showToast('⚠️ Déjà gardien');return;}
+      const prevGk=data[team].players.find(pl=>pl.isGK);
+      if(prevGk)prevGk.isGK=false;
+      p.isGK=true;
+      showToast('🧤 '+p.name+' nommé gardien');
+      break;}
     case 'av':if(p.av==='yellow'){showToast('⚠️ Déjà attribué');return;}p.av='yellow';addEvent({type:'av',team,time:t,player:p.num,desc:tn+' — Avertissement ⚠️ ('+p.num+' '+p.name+')'});showToast('⚠️ Avert. — '+p.name);break;
     case '2min':{
       let isDisq=false;
       if(!p.p1||p.p1==='empty'){p.p1='2min';}
       else if(!p.p2||p.p2==='empty'){p.p2='2min';}
-      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red3x2';isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
+      else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red3x2';p.outOfGame=true;isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
       else{showToast('❌ 3 exclusions déjà atteintes');return;}
       p.excluActive=true;startExcluTimer(team,idx);
       addEvent({type:'2min',team,time:t,player:p.num,disq3x2:isDisq,desc:tn+(isDisq?" — Exclusion 2' disqualifiante (3e×2') 🟥 (":" — Exclusion 2' ⏱️ (")+p.num+' '+p.name+')'});
       if(!isDisq)showToast("⏱️ Exclusion 2' — "+p.name);break;}
-    case 'dis':p.dis='red';p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
-    case 'rapport':p.dis='blue';addEvent({type:'rapport',team,time:t,player:p.num,desc:tn+' — Rapport écrit 📝 ('+p.num+' '+p.name+')'});showToast('📝 Rapport — '+p.name);break;
+    case 'dis':p.dis='red';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:tn+' — Disqualification 🟥 ('+p.num+' '+p.name+')'});showToast('🟥 Disqualif. — '+p.name);break;
+    case 'rapport':p.dis='blue';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'rapport',team,time:t,player:p.num,desc:tn+' — Disqualification avec rapport 📝 ('+p.num+' '+p.name+')'});showToast('📝 Disqualif. + rapport — '+p.name);break;
     case 'blanc':p.blanc=true;addEvent({type:'blanc',team,time:t,player:p.num,desc:tn+' — Carton blanc ⬜ protocole commotion ('+p.num+' '+p.name+')'});showToast('⬜ Carton blanc — '+p.name);break;
     case 'undo':undoPlayer(team,p);return;
   }
-  renderPlayers(team);closeModal();saveData();
+  renderPlayers('home');renderPlayers('away');closeModal();saveData();
 }
 
 function undoPlayer(team,p){
@@ -599,12 +670,12 @@ function undoPlayer(team,p){
         case 'save':p.arrets=Math.max(0,(p.arrets||1)-1);break;
         case 'tir':p.tirs=Math.max(0,(p.tirs||1)-1);break;
         case 'av':p.av='empty';break;
-        case '2min':if(p.p3&&p.p3!=='empty'){p.p3='empty';if(p.dis==='red3x2')p.dis='empty';}else if(p.p2&&p.p2!=='empty')p.p2='empty';else if(p.p1&&p.p1!=='empty')p.p1='empty';p.excluActive=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
-        case 'dis':p.dis='empty';p.excluActive=false;break;
-        case 'rapport':p.dis='empty';break;
+        case '2min':if(p.p3&&p.p3!=='empty'){p.p3='empty';if(p.dis==='red3x2'){p.dis='empty';p.outOfGame=false;}}else if(p.p2&&p.p2!=='empty')p.p2='empty';else if(p.p1&&p.p1!=='empty')p.p1='empty';p.excluActive=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
+        case 'dis':p.dis='empty';p.excluActive=false;p.outOfGame=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
+        case 'rapport':p.dis='empty';p.excluActive=false;p.outOfGame=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
         case 'blanc':p.blanc=false;break;
       }
-      data.events.splice(i,1);showToast('↩️ Annulé');renderPlayers(team);renderEvents();saveData();closeModal();return;
+      data.events.splice(i,1);showToast('↩️ Annulé');renderPlayers('home');renderPlayers('away');renderEvents();saveData();closeModal();return;
     }
   }
   showToast('Rien à annuler');closeModal();
@@ -622,38 +693,30 @@ function openStaffModal(team,idx){
   document.getElementById('smodal-sub').textContent=off.role+' · '+data[team].nom;
 
   const teamOffs=data[team].officials||[];
-  const teamHasAv=teamOffs.some(o=>o.av==='yellow');
-  const teamHasExclu=teamOffs.some(o=>o.exclu==='2min');
+  const teamHasAv=teamOffs.some((o,i)=>i!==realIdx&&o.av==='yellow');
+  const teamHasExclu=teamOffs.some((o,i)=>i!==realIdx&&o.exclu==='2min');
   const hasAv=off.av==='yellow';
   const hasExclu=off.exclu==='2min';
   const hasDis=off.dis==='red';
   const hasRap=off.rapport==='blue';
-
   const avBlocked=teamHasAv&&!hasAv;
   const excluBlocked=teamHasExclu&&!hasExclu;
 
-  document.getElementById('staff-grid').innerHTML=`
-    <button class="action-btn ab-av${hasAv?' ab-on ab-on-av':''}${avBlocked?' ab-blocked':''}" onclick="doSA('av')" ${avBlocked?'disabled':''}>
-      <span class="ab-icon"><span class="san san-av modal-san"></span></span>
-      <span class="ab-label">${hasAv?'✓ AV attrib.':'Avertissement'}</span>
-      ${avBlocked?'<span class="ab-blocked-lbl">MAX ÉQUIPE</span>':''}
-    </button>
-    <button class="action-btn ab-2min${hasExclu?' ab-on ab-on-2min':''}${excluBlocked?' ab-blocked':''}" onclick="doSA('exclu')" ${excluBlocked?'disabled':''}>
-      <span class="ab-icon"><span class="san san-2min modal-san"></span></span>
-      <span class="ab-label">${hasExclu?"✓ 2' attrib.":"Exclusion 2'"}</span>
-      ${excluBlocked?'<span class="ab-blocked-lbl">MAX ÉQUIPE</span>':''}
-    </button>
-    <button class="action-btn ab-dis${hasDis?' ab-on ab-on-dis':''}" onclick="doSA('dis')">
-      <span class="ab-icon"><span class="san san-dis modal-san"></span></span>
-      <span class="ab-label">${hasDis?'✓ Disqualif.':'Disqualif.'}</span>
-    </button>
-    <button class="action-btn ab-rap${hasRap?' ab-on ab-on-rap':''}" onclick="doSA('rapport')">
-      <span class="ab-icon"><span class="san san-rap modal-san"></span></span>
-      <span class="ab-label">${hasRap?'✓ Rapport':'Rapport écrit'}</span>
-    </button>`;
-  document.getElementById('staff-grid2').innerHTML=`
-    <button class="action-btn ab-undo" onclick="doSA('undo')"><span class="ab-icon">↩️</span><span class="ab-label">Annuler dernier</span></button>
-    <button class="action-btn ab-undo" onclick="closeStaffModal()"><span class="ab-icon">✕</span><span class="ab-label">Fermer</span></button>`;
+  const items=[
+    [sanIcon('san-av'),'Avertissement','J','av',hasAv,avBlocked],
+    [sanIcon('san-2min'),"Exclusion 2'",'2','exclu',hasExclu,excluBlocked],
+    [sanIcon('san-dis'),'Disqualification','D','dis',hasDis,false],
+    [sanIcon('san-rap'),'Rapport écrit','R','rapport',hasRap,false]
+  ];
+
+  const html=[
+    `<div class="menu-note">1 Av. max / équipe · 1×2' max / équipe · Disqualif. &amp; Rapport : individuel</div>`,
+    ...items.map(it=>menuItemHTML(it[0],it[1],it[2],`doSA('${it[3]}')`,it[4],it[5])),
+    '<div class="menu-sep"></div>',
+    menuItemHTML('↩️','Annuler dernier','⌫',`doSA('undo')`),
+    menuItemHTML('✕','Fermer','Échap',`closeStaffModal()`)
+  ].join('');
+  document.getElementById('menu-list-staff').innerHTML=html;
   document.getElementById('staffModal').classList.add('open');
 }
 function closeStaffModal(){document.getElementById('staffModal').classList.remove('open');}
@@ -671,25 +734,25 @@ function doSA(action){
         off.av='yellow';addEvent({type:'av',team,time:t,player:off.nom,desc:tn+' — Officiel '+off.role+' '+off.nom+' — Avertissement ⚠️'});showToast('⚠️ AV Officiel — '+off.nom);
       }break;
     case 'exclu':
-      if(off.exclu==='2min'){off.exclu='empty';showToast("↩️ Exclusion 2' retirée");}
+      if(off.exclu==='2min'){off.exclu='empty';off.excluActive=false;stopExcluTimer(team,idx,'s');showToast("↩️ Exclusion 2' retirée");}
       else{
         if(teamOffs.some((o,i)=>i!==idx&&o.exclu==='2min')){showToast("⛔ 1 seule exclusion 2' autorisée !");closeStaffModal();return;}
-        off.exclu='2min';addEvent({type:'2min',team,time:t,player:off.nom,desc:tn+" — Officiel "+off.role+' '+off.nom+" — Exclusion 2' ⏱️"});showToast("⏱️ Exclusion 2' Officiel — "+off.nom);
+        off.exclu='2min';off.excluActive=true;startExcluTimer(team,idx,'s');addEvent({type:'2min',team,time:t,player:off.nom,desc:tn+" — Officiel "+off.role+' '+off.nom+" — Exclusion 2' ⏱️"});showToast("⏱️ Exclusion 2' Officiel — "+off.nom);
       }break;
     case 'dis':
-      if(off.dis==='red'){off.dis='empty';showToast('↩️ Disqualif. retirée');}
-      else{off.dis='red';addEvent({type:'dis',team,time:t,player:off.nom,desc:tn+' — Officiel '+off.role+' '+off.nom+' — Disqualification 🟥'});showToast('🟥 Disqualif. Officiel — '+off.nom);}break;
+      if(off.dis==='red'){off.dis='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');showToast('↩️ Disqualif. retirée');}
+      else{off.dis='red';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({type:'dis',team,time:t,player:off.nom,desc:tn+' — Officiel '+off.role+' '+off.nom+' — Disqualification 🟥'});showToast('🟥 Disqualif. Officiel — '+off.nom);}break;
     case 'rapport':
-      if(off.rapport==='blue'){off.rapport='empty';showToast('↩️ Rapport retiré');}
-      else{off.rapport='blue';addEvent({type:'rapport',team,time:t,player:off.nom,desc:tn+' — Officiel '+off.role+' '+off.nom+' — Rapport écrit 📝'});showToast('📝 Rapport Officiel — '+off.nom);}break;
+      if(off.rapport==='blue'){off.rapport='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');showToast('↩️ Rapport retiré');}
+      else{off.rapport='blue';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({type:'rapport',team,time:t,player:off.nom,desc:tn+' — Officiel '+off.role+' '+off.nom+' — Disqualification avec rapport 📝'});showToast('📝 Disqualif. + rapport Officiel — '+off.nom);}break;
     case 'undo':
       for(let i=data.events.length-1;i>=0;i--){
         const ev=data.events[i];
         if(ev.team===team&&ev.player===off.nom){
           if(ev.type==='av')off.av='empty';
-          else if(ev.type==='2min')off.exclu='empty';
-          else if(ev.type==='dis')off.dis='empty';
-          else if(ev.type==='rapport')off.rapport='empty';
+          else if(ev.type==='2min'){off.exclu='empty';off.excluActive=false;stopExcluTimer(team,idx,'s');}
+          else if(ev.type==='dis'){off.dis='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');}
+          else if(ev.type==='rapport'){off.rapport='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');}
           data.events.splice(i,1);showToast('↩️ Annulé');renderStaff(team);renderEvents();saveData();closeStaffModal();return;
         }
       }
@@ -698,51 +761,85 @@ function doSA(action){
   renderStaff(team);closeStaffModal();saveData();
 }
 
-// ═══════════ TIMER EXCLU (synchronisé avec le chrono du match) ═══════════
-function startExcluTimer(team,idx){
-  const uid=team+'-'+idx;
+
+// ═══════════ RACCOURCIS CLAVIER (modal ouverte) ═══════════
+document.addEventListener('keydown', function(e){
+  const pmOpen=document.getElementById('playerModal').classList.contains('open');
+  const smOpen=document.getElementById('staffModal').classList.contains('open');
+  if(!pmOpen&&!smOpen)return;
+  if(e.key==='Escape'){if(pmOpen)closeModal();if(smOpen)closeStaffModal();return;}
+  if(e.key==='Backspace'){e.preventDefault();if(pmOpen)doPA('undo');else doSA('undo');return;}
+  const key=e.key.toLowerCase();
+  if(pmOpen){
+    const p=data[currentModalPlayer.team].players[currentModalPlayer.idx];
+    if(e.ctrlKey&&key==='b'){e.preventDefault();doPA('goal');}
+    else if(e.altKey&&e.key==='7'){e.preventDefault();doPA(p.isGK?'goal':'goal7');}
+    else if(e.altKey&&key==='s'&&!p.isGK){e.preventDefault();doPA('tirarret');}
+    else if(e.shiftKey&&key==='t'){e.preventDefault();doPA('tir');}
+    else if(key==='a'&&p.isGK){doPA('save');}
+    else if(key==='g'&&!p.isGK){doPA('setgk');}
+    else if(key==='j'){doPA('av');}
+    else if(key==='2'){doPA('2min');}
+    else if(key==='d'){doPA('dis');}
+    else if(key==='r'){doPA('rapport');}
+    else if(key==='c'){doPA('blanc');}
+  }else if(smOpen){
+    if(key==='j'){doSA('av');}
+    else if(key==='2'){doSA('exclu');}
+    else if(key==='d'){doSA('dis');}
+    else if(key==='r'){doSA('rapport');}
+  }
+});
+
+// ═══════════ TIMER EXCLU (synchronisé avec le chrono du match) — joueurs (p) et staff (s) ═══════════
+function startExcluTimer(team,idx,kind){
+  kind=kind||'p';
+  const uid=team+'-'+kind+'-'+idx;
   // On enregistre le chrono au moment où l'exclusion est déclenchée
   excluTimers[uid]={secsAtStart:chronoSeconds,totalSecs:120};
-  updateExcluDisplay(team,idx);
+  updateExcluDisplay(team,idx,undefined,kind);
 }
 
 function tickExcluTimers(){
   // Appelé à chaque seconde du chrono principal
   Object.keys(excluTimers).forEach(uid=>{
-    const[team,idxStr]=uid.split('-');
-    const idx=parseInt(idxStr);
-    const p=data[team]?.players[idx];
-    if(!p||!p.excluActive){delete excluTimers[uid];return;}
+    const parts=uid.split('-');
+    const team=parts[0],kind=parts[1],idx=parseInt(parts[2]);
+    const entity=kind==='s'?data[team]?.officials[idx]:data[team]?.players[idx];
+    if(!entity||!entity.excluActive){delete excluTimers[uid];return;}
     const elapsed=chronoSeconds-excluTimers[uid].secsAtStart;
     const remaining=excluTimers[uid].totalSecs-elapsed;
     if(remaining<=0){
-      // Fin de l'exclusion
+      // Fin du décompte (la carte reste grisée si l'entité est définitivement sortie)
       delete excluTimers[uid];
-      p.excluActive=false;
-      renderPlayers(team);
+      entity.excluActive=false;
+      if(kind==='s')renderStaff(team);else renderPlayers(team);
     } else {
-      updateExcluDisplay(team,idx,remaining);
+      updateExcluDisplay(team,idx,remaining,kind);
     }
   });
 }
 
-function updateExcluDisplay(team,idx,remaining){
+function updateExcluDisplay(team,idx,remaining,kind){
+  kind=kind||'p';
+  const uid=team+'-'+kind+'-'+idx;
   if(remaining===undefined){
-    const uid=team+'-'+idx;
     if(!excluTimers[uid])return;
     remaining=excluTimers[uid].totalSecs-(chronoSeconds-excluTimers[uid].secsAtStart);
   }
-  const el=document.getElementById('exclu-'+team+'-'+idx);
+  const el=document.getElementById('exclu-'+kind+'-'+team+'-'+idx);
   if(el){
     const m=Math.floor(remaining/60),s=remaining%60;
     el.textContent=`${m}:${String(s).padStart(2,'0')}`;
   }
 }
 
-function stopExcluTimer(team,idx){
-  const uid=team+'-'+idx;
+function stopExcluTimer(team,idx,kind){
+  kind=kind||'p';
+  const uid=team+'-'+kind+'-'+idx;
   delete excluTimers[uid];
 }
+
 
 // ═══════════ EVENTS ═══════════
 const EV_ICONS={but:'⚽',but7:'7️⃣',save:'🧤',av:'<span class="san san-av e-san-icon"></span>','2min':'<span class="san san-2min e-san-icon"></span>',dis:'<span class="san san-dis e-san-icon"></span>',rapport:'<span class="san san-rap e-san-icon"></span>',tir:'🎯',tmo:'⏸',blanc:'<span class="san san-blanc e-san-icon"></span>'};
@@ -751,26 +848,19 @@ const EV_CLS={but:'e-but',but7:'e-but7',save:'e-save',av:'e-av','2min':'e-2min',
 function addEvent(ev){ev.id=Date.now();data.events.unshift(ev);renderEvents();}
 function renderEvents(){
   const list=document.getElementById('event-list');
-  if(!data.events.length){list.innerHTML=`<div style="text-align:center;padding:40px 0;color:var(--muted);"><div style="font-size:32px;margin-bottom:10px;">📋</div><div style="font-family:var(--font-h);font-size:14px;font-weight:700;text-transform:uppercase;">Aucun fait de match</div></div>`;return;}
+  if(!data.events.length){list.innerHTML=`<div class="ev-empty"><span style="font-size:20px;">📋</span><span>Aucun fait</span></div>`;return;}
   list.innerHTML=data.events.map(ev=>`
     <div class="event-item ${EV_CLS[ev.type]||''}">
       <div class="e-icon">${EV_ICONS[ev.type]||'•'}</div>
-      <div class="e-body"><div class="e-title">${ev.desc}</div><div class="e-sub">${ev.team==='home'?data.home.nom:data.away.nom}</div></div>
-      <div class="e-time">${ev.time}</div>
+      <div class="e-body">
+        <div class="e-title">${ev.desc}</div>
+        <div class="e-sub">${ev.team==='home'?data.home.nom:data.away.nom}</div>
+        <div class="e-time">${ev.time}</div>
+      </div>
       <button class="e-del" onclick="deleteEvent(${ev.id})">✕</button>
     </div>`).join('');
 }
 function deleteEvent(id){data.events=data.events.filter(e=>e.id!==id);renderEvents();saveData();}
-
-// ═══════════ NAVIGATION ═══════════
-function switchPanel(panel){
-  ['players','events'].forEach(p=>{
-    document.getElementById('panel-'+p).className='match-panel'+(p===panel?' active':'');
-    document.getElementById('ntab-'+p).className='match-nav-tab'+(p===panel?' active':'');
-  });
-  currentPanel=panel;
-  document.getElementById('fab-events-btn').textContent=panel==='events'?'⚡ Retour Live':'📋 Faits de match';
-}
 
 function showEndModal(){
   const m=data.match;
