@@ -582,13 +582,13 @@ function openPlayerModal(team,idx){
 
   const statItems=isGK?[
     ['🧤','Arrêt','A','save'],
-    ['⚽','But encaissé','Ctrl+B','goal'],
-    ['🎯','Tir','Maj+T','tir']
+    ['⚽','But encaissé','B','goal'],
+    ['🎯','Tir','T','tir']
   ]:[
-    ['⚽','But','Ctrl+B','goal'],
-    ['7️⃣','But 7m','Alt+7','goal7'],
-    ['🎯','Tir','Maj+T','tir'],
-    ['🧤','Tir et arrêt du gardien','Alt+S','tirarret']
+    ['⚽','But','B','goal'],
+    ['7️⃣','But 7m','7','goal7'],
+    ['🎯','Tir','T','tir'],
+    ['🧤','Tir et arrêt du gardien','S','tirarret']
   ];
   const roleItems=isGK?[]:[['🧤','Nommer gardien','G','setgk']];
   const disOn=(p.dis==='red'||p.dis==='red3x2');
@@ -772,10 +772,10 @@ document.addEventListener('keydown', function(e){
   const key=e.key.toLowerCase();
   if(pmOpen){
     const p=data[currentModalPlayer.team].players[currentModalPlayer.idx];
-    if(e.ctrlKey&&key==='b'){e.preventDefault();doPA('goal');}
-    else if(e.altKey&&e.key==='7'){e.preventDefault();doPA(p.isGK?'goal':'goal7');}
-    else if(e.altKey&&key==='s'&&!p.isGK){e.preventDefault();doPA('tirarret');}
-    else if(e.shiftKey&&key==='t'){e.preventDefault();doPA('tir');}
+    if(key==='b'){e.preventDefault();doPA('goal');}
+    else if(key==='7'){e.preventDefault();doPA(p.isGK?'goal':'goal7');}
+    else if(key==='s'&&!p.isGK){e.preventDefault();doPA('tirarret');}
+    else if(key==='t'){e.preventDefault();doPA('tir');}
     else if(key==='a'&&p.isGK){doPA('save');}
     else if(key==='g'&&!p.isGK){doPA('setgk');}
     else if(key==='j'){doPA('av');}
