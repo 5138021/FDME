@@ -976,10 +976,10 @@ function getAnomalies() {
 
   // — Match —
   if (!fval('f-arb1') && !fval('f-arb2')) {
-    a.push({ group:'Match', text:'Aucun arbitre renseigné (minimum 1 requis)', target:'f-arb1' });
+    a.push({ group:'Match', text:'Aucun arbitre n\'est renseigné sur la FDME', target:'f-arb1' });
   }
   if (!fval('f-chrono')) {
-    a.push({ group:'Match', text:'Secrétaire / chronométreur manquant', target:'f-chrono' });
+    a.push({ group:'Match', text:'Secrétaire / chronométreur non renseigné sur la FDME', target:'f-chrono' });
   }
 
   // — Équipes —
@@ -993,7 +993,7 @@ function getAnomalies() {
     if (!filled.length) {
       a.push({
         group:'Équipe '+label, team,
-        text:`Aucun joueur renseigné pour l'équipe ${label} (minimum 1 requis)`,
+        text:`L'équipe ${label} n\a pas le nombre de joueurs minimal`,
         target: rows.length ? rows[0].id+'-name' : null
       });
     }
@@ -1003,7 +1003,7 @@ function getAnomalies() {
     if (!offCount) {
       a.push({
         group:'Équipe '+label, team,
-        text:`Aucun officiel renseigné pour l'équipe ${label} (minimum 1 requis)`,
+        text:`Aucun officiel A renseigné pour l'équipe ${label}`,
         target: team+'-off-nom-0'
       });
     }
