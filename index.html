@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏆 Feuilles de match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blue:#0B1829;--blue-mid:#122038;--blue-soft:#1C3256;
+  --accent:#E02D37;--gold:#F5A623;--green:#00C17A;
+  --cyan:#4A9FFF;--white:#FFFFFF;
+  --muted:#8A9BBE;--border:rgba(255,255,255,0.09);
+  --font-h:'Barlow Condensed',sans-serif;
+  --font-b:'Barlow',sans-serif;
+}
+html,body{height:100%;}
+body{
+  font-family:var(--font-b);color:var(--white);
+  background:
+    radial-gradient(circle at 50% 30%,rgba(245,166,35,0.12),transparent 55%),
+    linear-gradient(160deg,#0B1829 0%,#1a0a2e 100%);
+  min-height:100vh;min-height:100dvh;overflow:hidden;
+}
+
+.home{
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 24px;text-align:center;
+}
+
+/* LOGO */
+.logo-wrap{
+  position:relative;width:min(62vw,260px);aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:28px;
+  animation:float 4s ease-in-out infinite;
+}
+.logo-wrap::before{
+  content:'';position:absolute;inset:-14%;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,0.35),transparent 65%);
+  filter:blur(22px);z-index:0;
+}
+.logo-wrap img,.logo-wrap svg{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 28px rgba(245,166,35,0.35));}
+
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* TITRES */
+.title{
+  font-family:var(--font-h);font-size:clamp(44px,13vw,72px);font-weight:900;
+  letter-spacing:4px;text-transform:uppercase;line-height:1;
+  background:linear-gradient(135deg,var(--gold),#ff9900);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.subtitle{
+  font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:44px;
+}
+
+/* BOUTON */
+.btn-enter{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;max-width:340px;padding:18px 24px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--cyan),#2277cc);
+  color:var(--white);font-family:var(--font-h);font-size:20px;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 8px 28px rgba(74,159,255,0.35);transition:all .2s;
+}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(74,159,255,0.45);}
+.btn-enter:active{transform:scale(0.98);}
+</style>
+</head>
+<body>
+
+<div class="home">
+  <div class="logo-wrap">
+    <!-- Remplace par ton logo : place un fichier logo.png à côté de cette page.
+         S'il est absent, le logo SVG ci-dessous s'affiche automatiquement. -->
+    <img src="FDME logo final.png" alt="Logo" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block';">
+    <svg id="logo-fallback" style="display:none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F5A623"/><stop offset="1" stop-color="#ff9900"/>
+        </linearGradient>
+      </defs>
+      <circle cx="100" cy="100" r="92" fill="#122038" stroke="url(#g)" stroke-width="6"/>
+      <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="2"/>
+      <!-- Trophée -->
+      <path d="M68 52h64v34c0 18-14 32-32 32s-32-14-32-32V52z" fill="url(#g)"/>
+      <path d="M68 60H52c0 18 6 28 18 32M132 60h16c0 18-6 28-18 32" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"/>
+      <rect x="94" y="118" width="12" height="20" fill="url(#g)"/>
+      <rect x="76" y="138" width="48" height="12" rx="3" fill="url(#g)"/>
+      <path d="M100 64l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#0B1829"/>
+    </svg>
+  </div>
+
+  <h1 class="title">Feuilles<br>de match</h1>
+  <div class="subtitle">FDME — Feuille De Match Electronique</div>
+
+  <button class="btn-enter" onclick="window.location.href='0-matchs.html'">
+    Accéder aux matchs
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+</div>
+
+</body>
+</html>
