@@ -6,6 +6,7 @@
 <title>⏱️ Match Live</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/ico" href="FDME logo final.png"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -50,6 +51,38 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .btn-tmo{background:rgba(155,89,182,.25);color:var(--purple);border:1px solid rgba(155,89,182,.4);}
 .tmo-badge{font-size:8px;display:block;margin-top:1px;opacity:.7;}
 
+
+/* MENU D'UN FAIT DE MATCH */
+.event-item{flex-wrap:wrap;}
+.e-menu{position:absolute;top:1px;right:1px;background:transparent;border:none;color:rgba(255,255,255,.45);font-size:16px;font-weight:900;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px;letter-spacing:1px;}
+.e-menu:active,.event-item.menu-open .e-menu{background:rgba(255,255,255,.12);color:#fff;}
+.e-actions{flex-basis:100%;display:flex;flex-direction:column;gap:5px;margin-top:5px;}
+.e-act{width:100%;padding:7px 6px;border-radius:7px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;text-align:center;}
+.e-act.del{background:rgba(224,45,55,.16);border-color:rgba(224,45,55,.4);color:#ff7a80;}
+.e-act.edit{background:rgba(74,159,255,.14);border-color:rgba(74,159,255,.35);color:var(--cyan);}
+.e-act:active{transform:scale(.97);}
+
+/* MODAL MODIFIER UN FAIT */
+.ee-summary{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;margin:6px 0 4px;border-left:3px solid var(--purple);}
+.ee-summary .ee-t{font-family:var(--font-h);font-size:14px;font-weight:800;line-height:1.2;}
+.ee-summary .ee-s{font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:2px;}
+.mem-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mem{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;font-size:12px;font-weight:600;min-width:0;}
+.mem:active{transform:scale(.98);}
+.mem .mn{font-family:var(--font-mono);font-weight:700;color:var(--gold);min-width:20px;text-align:center;flex-shrink:0;}
+.mem.gk .mn{color:var(--cyan);}
+.mem .mt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mem.sel{border-color:var(--cyan);background:rgba(74,159,255,.2);}
+.mem.off .mn{color:var(--purple);font-size:13px;}
+
+/* BOUTON TME PAR ÉQUIPE */
+.tme-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-bottom:8px;padding:9px 6px;border-radius:9px;font-family:var(--font-h);font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.tme-btn:active{transform:scale(.97);}
+.tme-btn.hm{background:rgba(var(--home-rgb),.14);border:1px solid rgba(var(--home-rgb),.5);color:var(--home);}
+.tme-btn.aw{background:rgba(var(--away-rgb),.14);border:1px solid rgba(var(--away-rgb),.5);color:var(--away);}
+.tme-btn .tme-count{font-family:var(--font-mono);font-size:10px;font-weight:700;opacity:.75;letter-spacing:0;}
+.tme-btn.off{opacity:.4;}
+
 /* BANDEAU TEMPS MORT */
 .tmo-banner{display:none;align-items:center;gap:10px;margin:0 -12px;padding:7px 12px;background:rgba(155,89,182,.22);border-top:1px solid rgba(155,89,182,.4);font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
 .tmo-banner .tb-txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -57,6 +90,52 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .tmo-banner button{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:6px;padding:5px 10px;font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
 .tmo-banner.done{background:rgba(224,45,55,.28);border-top-color:rgba(224,45,55,.5);animation:tbFlash 1s ease-in-out 4;}
 @keyframes tbFlash{50%{background:rgba(224,45,55,.55);}}
+
+
+/* BOUTONS OUTILS (header) */
+.nav-tools{display:flex;gap:5px;}
+.btn-tool{padding:5px 9px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.08);color:var(--white);font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
+.btn-tool:active{transform:scale(.96);}
+
+/* MODALS RÉGLAGES / EFFECTIFS */
+.sheet-tall{max-height:92vh;overflow-y:auto;padding-bottom:26px;}
+.f-sec{font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
+.f-sec::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.f-row{display:grid;gap:8px;margin-bottom:8px;}
+.f-row.c1{grid-template-columns:1fr;}
+.f-row.c2{grid-template-columns:1fr 1fr;}
+.f-row.c3{grid-template-columns:1fr 1fr 1fr;}
+.f-row.cn{grid-template-columns:70px 1fr 58px;}
+.f-grp label{display:block;font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.f-grp input,.f-grp select{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:13px;padding:9px 11px;outline:none;-webkit-appearance:none;}
+.f-grp input:focus,.f-grp select:focus{border-color:var(--cyan);background:rgba(74,159,255,.08);}
+.f-grp input::placeholder{color:rgba(138,155,190,.6);}
+.f-grp select option{background:#1C3256;color:#fff;}
+.f-num{font-family:var(--font-mono);font-weight:700;text-align:center;color:var(--gold) !important;}
+.f-pos{align-self:end;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--muted);font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:1px;cursor:pointer;}
+.f-pos.is-gk{background:rgba(74,159,255,.2);border-color:var(--cyan);color:var(--cyan);}
+.f-btns{display:flex;gap:8px;margin-top:14px;}
+.f-btn{flex:1;padding:13px;border:none;border-radius:10px;font-family:var(--font-h);font-size:14px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.f-btn:active{transform:scale(.97);}
+.f-btn.ghost{flex:0 0 32%;background:rgba(255,255,255,.08);color:var(--white);}
+.f-btn.go{background:linear-gradient(135deg,var(--green),#00a066);color:var(--blue);}
+.f-btn.add{background:rgba(74,159,255,.16);border:1px solid rgba(74,159,255,.35);color:var(--cyan);margin-top:2px;}
+.f-note{font-size:10px;color:var(--muted);line-height:1.45;margin-top:4px;}
+.f-err{display:none;color:var(--accent);font-size:11px;font-weight:600;margin-top:10px;}
+.set-team{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.set-team-lbl{width:78px;flex-shrink:0;font-family:var(--font-h);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;line-height:1.15;}
+.set-team-lbl small{display:block;font-family:var(--font-b);font-size:10px;font-weight:500;color:var(--muted);letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.set-colors{display:flex;gap:7px;flex-wrap:wrap;align-items:center;flex:1;}
+.color-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;}
+.color-dot.sel{border-color:var(--white);transform:scale(1.2);}
+.cfg-custom{width:26px;height:26px;border-radius:50%;border:2px dashed rgba(255,255,255,.3);padding:0;background:transparent;cursor:pointer;overflow:hidden;flex-shrink:0;}
+.cfg-custom.sel{border:2px solid var(--white);}
+.cfg-custom::-webkit-color-swatch-wrapper{padding:0;}
+.cfg-custom::-webkit-color-swatch{border:none;border-radius:50%;}
+.team-switch{display:flex;background:rgba(255,255,255,.06);border-radius:10px;padding:3px;gap:3px;margin-bottom:4px;}
+.team-switch button{flex:1;padding:9px 6px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.team-switch button.on-home{background:rgba(var(--home-rgb),.25);color:var(--home);}
+.team-switch button.on-away{background:rgba(var(--away-rgb),.25);color:var(--away);}
 
 /* TABS */
 .match-tabs{display:flex;gap:2px;}
@@ -67,7 +146,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .match-body{padding:10px 12px 80px;}
 
 /* DEUX ÉQUIPES CÔTE À CÔTE */
-.both-teams{display:grid;grid-template-columns:1fr 128px 1fr;gap:6px;align-items:start;}
+.both-teams{display:grid;grid-template-columns:1fr 328px 1fr;gap:6px;align-items:start;}
 .team-col{min-width:0;}
 .events-col{min-width:0;position:sticky;top:96px;}
 .events-col-title{font-family:var(--font-h);font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;margin-bottom:8px;}
@@ -152,7 +231,8 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .event-item.e-tmo{border-color:var(--purple);}
 .event-item.e-tir{border-color:rgba(255,255,255,.15);}
 .event-item.e-blanc{border-color:rgba(255,255,255,.5);}
-.e-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0;margin-top:1px;}
+.e-icon{font-size:13px;min-width:16px;text-align:center;flex-shrink:0;margin-top:1px;}
+.ev-2min{font-family:var(--font-h);font-weight:900;font-size:13px;letter-spacing:.3px;color:#ff5a5f;line-height:1.1;}
 .e-body{flex:1;min-width:0;}
 .e-title{font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:.2px;line-height:1.25;}
 .e-sub{font-size:8px;color:var(--muted);margin-top:2px;}
@@ -207,7 +287,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 .menu-list{margin-top:10px;max-height:60vh;overflow-y:auto;}
 .menu-item{display:flex;align-items:center;gap:10px;padding:10px 6px;cursor:pointer;border-radius:8px;transition:background .12s;}
 .menu-item:active{background:rgba(255,255,255,.08);}
-.menu-icon{width:22px;text-align:center;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.menu-icon{min-width:22px;text-align:center;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .menu-label{flex:1;font-size:13px;font-weight:600;color:#fff;min-width:0;}
 .menu-key{font-size:9px;color:var(--muted);font-family:var(--font-mono);background:rgba(255,255,255,.06);padding:3px 7px;border-radius:5px;letter-spacing:.5px;flex-shrink:0;}
 .menu-sep{height:1px;background:rgba(255,255,255,.08);margin:6px 2px;}
@@ -256,6 +336,10 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 <div class="match-header">
   <div class="match-nav">
     <button class="btn-back" onclick="goBack()">← Prép.</button>
+    <div class="nav-tools">
+      <button class="btn-tool" onclick="openSettings()">⚙️ Réglages</button>
+      <button class="btn-tool" onclick="openRoster()">👥 Effectifs</button>
+    </div>
     <button class="btn-export" onclick="exportResults()">📋 Export</button>
   </div>
   <div class="scoreboard">
@@ -269,7 +353,6 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
       <div class="chrono-btns">
         <button class="btn-ch btn-play" id="btnPlay" onclick="toggleChrono()">▶ Start</button>
         <button class="btn-ch btn-per" onclick="endPeriod()" id="btnPer">Fin MT1 →</button>
-        <button class="btn-ch btn-tmo" onclick="showTMO()">⏸ T.O.<span class="tmo-badge" id="tmoInfo"></span></button>
       </div>
     </div>
     <div class="sb-team">
@@ -279,7 +362,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
   </div>
   <!-- Décompte du temps mort en cours -->
   <div class="tmo-banner" id="tmoBanner">
-    <span class="tb-txt" id="tmoBannerTxt">T.O.</span>
+    <span class="tb-txt" id="tmoBannerTxt">Temps Mort</span>
     <span class="tb-time" id="tmoBannerTime">1:00</span>
     <button onclick="endTMOCountdown()">Terminer</button>
   </div>
@@ -296,6 +379,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
         <span class="tmo-count" id="tmo-home-badge"></span>
         <div class="team-hdr-score" id="ts-home-score" style="color:var(--home)">0</div>
       </div>
+      <button class="tme-btn hm" id="tme-btn-home" title="Temps Mort d'Équipe" onclick="useTMO('home')">⏸ Temps Mort d'Equipe <span class="tme-count" id="tme-count-home"></span></button>
       <div class="cards-list" id="grid-home"></div>
       <div class="staff-sep">Staff</div>
       <div class="cards-list" id="grid-staff-home"></div>
@@ -314,6 +398,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
         <span class="tmo-count" id="tmo-away-badge"></span>
         <div class="team-hdr-score" id="ts-away-score" style="color:var(--away)">0</div>
       </div>
+      <button class="tme-btn aw" id="tme-btn-away" title="Temps Mort d'Équipe" onclick="useTMO('away')">⏸ Temps Mort d'Equipe <span class="tme-count" id="tme-count-away"></span></button>
       <div class="cards-list" id="grid-away"></div>
       <div class="staff-sep">Staff</div>
       <div class="cards-list" id="grid-staff-away"></div>
@@ -360,26 +445,113 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
   </div>
 </div>
 
-<!-- MODAL TMO -->
-<div class="modal-overlay" id="tmoModal">
-  <div class="modal-sheet">
-    <div class="modal-hdr">
-      <div style="font-size:30px;">⏸</div>
-      <div><div class="modal-name">Temps Mort</div><div class="modal-sub" id="tmo-modal-sub">Sélectionner l'équipe</div></div>
-      <button class="modal-close" onclick="document.getElementById('tmoModal').classList.remove('open')">✕</button>
+<!-- MODAL MODIFIER UN FAIT DE MATCH -->
+<div class="modal-overlay" id="evEditModal" onclick="if(event.target===this)closeEventEdit()">
+  <div class="modal-sheet sheet-tall">
+    <div class="modal-hdr" style="margin-bottom:4px;">
+      <div style="font-size:28px;">✏️</div>
+      <div><div class="modal-name">Modifier le fait de match</div><div class="modal-sub">Corriger l'équipe et/ou le joueur</div></div>
+      <button class="modal-close" onclick="closeEventEdit()">✕</button>
     </div>
-    <div class="action-grid" style="grid-template-columns:1fr 1fr;">
-      <button class="action-btn" id="tmo-btn-home" style="background:rgba(var(--home-rgb),.14);border:1px solid rgba(var(--home-rgb),.4);color:var(--home);" onclick="useTMO('home')">
-        <span class="ab-icon">⬤</span>
-        <span class="ab-label" id="tmo-btn-home-name">Domicile</span>
-        <span style="font-size:9px;color:var(--muted);" id="tmo-home-left"></span>
-      </button>
-      <button class="action-btn" id="tmo-btn-away" style="background:rgba(var(--away-rgb),.14);border:1px solid rgba(var(--away-rgb),.4);color:var(--away);" onclick="useTMO('away')">
-        <span class="ab-icon">⬤</span>
-        <span class="ab-label" id="tmo-btn-away-name">Extérieur</span>
-        <span style="font-size:9px;color:var(--muted);" id="tmo-away-left"></span>
-      </button>
+    <div class="ee-summary" id="ee-summary"></div>
+
+    <div class="f-sec">Équipe</div>
+    <div class="team-switch">
+      <button id="ee-home" onclick="setEvEditTeam('home')">Domicile</button>
+      <button id="ee-away" onclick="setEvEditTeam('away')">Extérieur</button>
     </div>
+
+    <div id="ee-members"></div>
+
+    <div class="f-err" id="ee-err"></div>
+    <div class="f-btns">
+      <button class="f-btn ghost" onclick="closeEventEdit()">Annuler</button>
+      <button class="f-btn go" onclick="saveEventEdit()">✔ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RÉGLAGES DU MATCH -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="modal-sheet sheet-tall">
+    <div class="modal-hdr" style="margin-bottom:4px;">
+      <div style="font-size:28px;">⚙️</div>
+      <div><div class="modal-name">Réglages du match</div><div class="modal-sub">Modifiables à tout moment pendant le match</div></div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="f-sec">Couleurs des équipes</div>
+    <div class="set-team">
+      <div class="set-team-lbl" style="color:var(--home);">Recevante<small id="set-home-name">Domicile</small></div>
+      <div class="set-colors" id="set-colors-home"></div>
+    </div>
+    <div class="set-team">
+      <div class="set-team-lbl" style="color:var(--away);">Visiteuse<small id="set-away-name">Extérieur</small></div>
+      <div class="set-colors" id="set-colors-away"></div>
+    </div>
+
+    <div class="f-sec">Périodes</div>
+    <div class="f-row c3">
+      <div class="f-grp"><label>Nb de périodes</label>
+        <select id="set-nbPeriods"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+      </div>
+      <div class="f-grp"><label>Durée (min)</label><input id="set-periodMin" type="number" inputmode="decimal" min="1" max="90" step="1"></div>
+      <div class="f-grp"><label>Pause (min)</label><input id="set-pauseMin" type="number" inputmode="decimal" min="0" max="30" step="1"></div>
+    </div>
+    <div class="f-note" id="set-per-note"></div>
+
+    <div class="f-sec">Exclusions</div>
+    <div class="f-row c1">
+      <div class="f-grp"><label>Durée d'une exclusion (min)</label><input id="set-excluMin" type="number" inputmode="decimal" min="0.5" max="10" step="0.5"></div>
+    </div>
+    <div class="f-note">Les exclusions déjà en cours gardent leur durée initiale ; le nouveau réglage s'applique aux suivantes.</div>
+
+    <div class="f-sec">Temps morts (TME)</div>
+    <div class="f-row c3">
+      <div class="f-grp"><label>Par équipe</label><input id="set-tmoTeam" type="number" inputmode="numeric" min="0" max="10" step="1"></div>
+      <div class="f-grp"><label>Max / période</label><input id="set-tmoPeriod" type="number" inputmode="numeric" min="0" max="10" step="1"></div>
+      <div class="f-grp"><label>Durée (sec)</label><input id="set-tmoSec" type="number" inputmode="numeric" min="10" max="300" step="5"></div>
+    </div>
+    <div class="f-note">Les temps morts déjà pris restent comptabilisés.</div>
+
+    <div class="f-err" id="set-err"></div>
+    <div class="f-btns">
+      <button class="f-btn ghost" onclick="closeSettings()">Annuler</button>
+      <button class="f-btn go" onclick="applySettings()">✔ Appliquer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EFFECTIFS (ajout joueurs / officiels) -->
+<div class="modal-overlay" id="rosterModal" onclick="if(event.target===this)closeRoster()">
+  <div class="modal-sheet sheet-tall">
+    <div class="modal-hdr" style="margin-bottom:10px;">
+      <div style="font-size:28px;">👥</div>
+      <div><div class="modal-name">Ajouter à l'effectif</div><div class="modal-sub" id="roster-count"></div></div>
+      <button class="modal-close" onclick="closeRoster()">✕</button>
+    </div>
+
+    <div class="team-switch">
+      <button id="rs-home" onclick="setRosterTeam('home')">Domicile</button>
+      <button id="rs-away" onclick="setRosterTeam('away')">Extérieur</button>
+    </div>
+
+    <div class="f-sec">Nouveau joueur</div>
+    <div class="f-row cn">
+      <div class="f-grp"><label>N°</label><input id="ad-num" class="f-num" type="text" inputmode="numeric" maxlength="3" placeholder="N°"></div>
+      <div class="f-grp"><label>Nom / Prénom</label><input id="ad-name" type="text" placeholder="Nom Prénom" autocomplete="off"></div>
+      <button class="f-pos" id="ad-pos" onclick="toggleNewPos()">J</button>
+    </div>
+    <button class="f-btn add" style="width:100%;" onclick="addRosterPlayer()">＋ Ajouter le joueur</button>
+
+    <div class="f-sec">Nouvel officiel</div>
+    <div class="f-row c2">
+      <div class="f-grp"><label>Fonction</label><select id="ad-role"></select></div>
+      <div class="f-grp"><label>Nom / Prénom</label><input id="ad-off-name" type="text" placeholder="Nom Prénom" autocomplete="off"></div>
+    </div>
+    <button class="f-btn add" style="width:100%;" onclick="addRosterOfficial()">＋ Ajouter l'officiel</button>
+
+    <div class="f-btns"><button class="f-btn ghost" style="flex:1;" onclick="closeRoster()">Fermer</button></div>
   </div>
 </div>
 
@@ -476,8 +648,6 @@ function renderScoreboard() {
   document.getElementById('sb-away-name').textContent=a.abr||a.nom;
   document.getElementById('ts-home-name').textContent=h.nom;
   document.getElementById('ts-away-name').textContent=a.nom;
-  document.getElementById('tmo-btn-home-name').textContent=h.abr||h.nom;
-  document.getElementById('tmo-btn-away-name').textContent=a.abr||a.nom;
   updateScore();
 }
 function updateScore() {
@@ -581,32 +751,31 @@ function tmoUsedPeriod(team,period){return (data[team].tmoByPeriod||{})[period]|
 function tmoLeftTeam(team){return Math.max(0,cfg.tmoTeam-data[team].tmo);}
 function tmoLeftPeriod(team){return Math.max(0,cfg.tmoPeriod-tmoUsedPeriod(team,periodIdx));}
 
-function showTMO(){
-  if(phase!=='play'){showToast('⏸ T.O. possible uniquement pendant une période');return;}
-  if(tmoCountdown){showToast('Un temps mort est déjà en cours');return;}
-  updateTMOInfo();
-  document.getElementById('tmoModal').classList.add('open');
-}
 function useTMO(team){
+  if(phase!=='play'){showToast('⏸ Temps Mort possible uniquement pendant une période');return;}
+  if(tmoCountdown){showToast('Un temps mort est déjà en cours');return;}
   if(tmoLeftTeam(team)<=0){showToast('❌ Plus de temps morts pour cette équipe !');return;}
-  if(tmoLeftPeriod(team)<=0){showToast('❌ Max. '+cfg.tmoPeriod+' T.O. atteint sur cette période');return;}
+  if(tmoLeftPeriod(team)<=0){showToast('❌ Max. '+cfg.tmoPeriod+' Temps Mort atteint sur cette période');return;}
   data[team].tmo++;
   data[team].tmoByPeriod[periodIdx]=tmoUsedPeriod(team,periodIdx)+1;
   addEvent({type:'tmo',team,time:getTime(),period:periodIdx,desc:'Temps mort'});
-  updateTMOInfo();document.getElementById('tmoModal').classList.remove('open');
+  updateTMOInfo();
   showToast('⏸ Temps Mort — '+data[team].nom);
   if(chronoRunning)pauseChrono();
   startTMOCountdown(team);
   saveData();
 }
 function updateTMOInfo(){
-  const ht=data.home.tmo,at=data.away.tmo;
-  document.getElementById('tmoInfo').textContent=`D:${ht}/${cfg.tmoTeam} E:${at}/${cfg.tmoTeam}`;
-  document.getElementById('tmo-home-left').textContent=`Restants : ${tmoLeftTeam('home')} · cette période : ${tmoLeftPeriod('home')}`;
-  document.getElementById('tmo-away-left').textContent=`Restants : ${tmoLeftTeam('away')} · cette période : ${tmoLeftPeriod('away')}`;
-  document.getElementById('tmo-modal-sub').textContent=`${cfg.tmoTeam} par équipe · max ${cfg.tmoPeriod} par période · ${cfg.tmoSec>=60&&cfg.tmoSec%60===0?(cfg.tmoSec/60)+' min':cfg.tmoSec+' s'}`;
-  document.getElementById('tmo-home-badge').textContent=ht>0?`T.O.×${ht}`:'';
-  document.getElementById('tmo-away-badge').textContent=at>0?`T.O.×${at}`:'';
+  ['home','away'].forEach(t=>{
+    const used=data[t].tmo;
+    const btn=document.getElementById('tme-btn-'+t);
+    if(btn){
+      document.getElementById('tme-count-'+t).textContent=used+'/'+cfg.tmoTeam;
+      btn.classList.toggle('off',tmoLeftTeam(t)<=0||(phase==='play'&&tmoLeftPeriod(t)<=0));
+      btn.title="Temps Mort d'Équipe — restants : "+tmoLeftTeam(t)+' · cette période : '+tmoLeftPeriod(t)+' · durée : '+(cfg.tmoSec>=60&&cfg.tmoSec%60===0?(cfg.tmoSec/60)+' min':cfg.tmoSec+' s');
+    }
+    document.getElementById('tmo-'+t+'-badge').textContent=used>0?`Temps Mort×${used}`:'';
+  });
 }
 
 // Décompte du temps mort
@@ -615,7 +784,7 @@ function startTMOCountdown(team){
   tmoCountdown={team,rem:Math.round(cfg.tmoSec),interval:null};
   const b=document.getElementById('tmoBanner');
   b.classList.remove('done');b.style.display='flex';
-  document.getElementById('tmoBannerTxt').textContent='⏸ T.O. — '+(data[team].abr||data[team].nom);
+  document.getElementById('tmoBannerTxt').textContent='⏸ Temps Mort — '+(data[team].abr||data[team].nom);
   renderTMOBanner();
   tmoCountdown.interval=setInterval(()=>{
     if(!tmoCountdown)return;
@@ -710,6 +879,7 @@ function menuItemHTML(icon,label,key,onclick,on,blocked){
   </div>`;
 }
 function sanIcon(cls){return `<span class="san ${cls}"></span>`;}
+function exIcon(){return `<span class="ev-2min">${exLbl()}</span>`;}
 
 // ═══════════ MODAL JOUEUR ═══════════
 function openPlayerModal(team,idx){
@@ -736,7 +906,7 @@ function openPlayerModal(team,idx){
   const rapOn=p.dis==='blue';
   const sancItems=[
     [sanIcon('san-av'),'Avertissement','J','av',p.av==='yellow'],
-    [sanIcon('san-2min'),'Exclusion '+exLbl(),'2','2min',false],
+    [exIcon(),'Exclusion '+exLbl(),'2','2min',false],
     [sanIcon('san-dis'),'Disqualification','D','dis',disOn],
     [sanIcon('san-rap'),'Disqual. rapport','R','rapport',rapOn]
   ];
@@ -763,18 +933,18 @@ function doPA(action){
   const t=getTime(),tn=data[team].nom;
   const nm=fullName(p);
   switch(action){
-    case 'goal':p.goals=(p.goals||0)+1;p.tirs=(p.tirs||0)+1;data.match['score'+(team==='home'?'Home':'Away')]++;updateScore();addEvent({type:'but',team,time:t,player:p.num,desc:'But — '+nm});showToast('⚽ But pour '+tn+' !');break;
-    case 'goal7':p.goals=(p.goals||0)+1;p.m7=(p.m7||0)+1;p.tirs=(p.tirs||0)+1;data.match['score'+(team==='home'?'Home':'Away')]++;updateScore();addEvent({type:'but7',team,time:t,player:p.num,desc:'But 7m — '+nm});showToast('7️⃣ But 7m !');break;
-    case 'save':p.arrets=(p.arrets||0)+1;addEvent({type:'save',team,time:t,player:p.num,desc:'Arrêt — '+nm});showToast('🧤 Arrêt de '+p.name);break;
-    case 'tir':p.tirs=(p.tirs||0)+1;addEvent({type:'tir',team,time:t,player:p.num,desc:'Tir — '+nm});showToast('🎯 Tir');break;
+    case 'goal':p.goals=(p.goals||0)+1;p.tirs=(p.tirs||0)+1;data.match['score'+(team==='home'?'Home':'Away')]++;updateScore();addEvent({kind:'p',idx,type:'but',team,time:t,player:p.num,desc:'But — '+nm});showToast('⚽ But pour '+tn+' !');break;
+    case 'goal7':p.goals=(p.goals||0)+1;p.m7=(p.m7||0)+1;p.tirs=(p.tirs||0)+1;data.match['score'+(team==='home'?'Home':'Away')]++;updateScore();addEvent({kind:'p',idx,type:'but7',team,time:t,player:p.num,desc:'But 7m — '+nm});showToast('7️⃣ But 7m !');break;
+    case 'save':p.arrets=(p.arrets||0)+1;addEvent({kind:'p',idx,type:'save',team,time:t,player:p.num,desc:'Arrêt — '+nm});showToast('🧤 Arrêt de '+p.name);break;
+    case 'tir':p.tirs=(p.tirs||0)+1;addEvent({kind:'p',idx,type:'tir',team,time:t,player:p.num,desc:'Tir — '+nm});showToast('🎯 Tir');break;
     case 'tirarret':{
       const oppTeam=team==='home'?'away':'home';
       const gk=data[oppTeam].players.find(pl=>pl.isGK);
       p.tirs=(p.tirs||0)+1;
-      addEvent({type:'tir',team,time:t,player:p.num,desc:'Tir — '+nm});
+      addEvent({kind:'p',idx,type:'tir',team,time:t,player:p.num,desc:'Tir — '+nm});
       if(gk){
         gk.arrets=(gk.arrets||0)+1;
-        addEvent({type:'save',team:oppTeam,time:t,player:gk.num,desc:'Arrêt — '+fullName(gk)});
+        addEvent({kind:'p',idx:data[oppTeam].players.indexOf(gk),type:'save',team:oppTeam,time:t,player:gk.num,desc:'Arrêt — '+fullName(gk)});
       }
       showToast('🧤 Tir arrêté'+(gk?' — '+gk.name:''));
       break;}
@@ -785,7 +955,7 @@ function doPA(action){
       p.isGK=true;
       showToast('🧤 '+p.name+' nommé gardien');
       break;}
-    case 'av':if(p.av==='yellow'){showToast('⚠️ Déjà attribué');return;}p.av='yellow';addEvent({type:'av',team,time:t,player:p.num,desc:'Avertissement — '+nm});showToast('⚠️ Avert. — '+p.name);break;
+    case 'av':if(p.av==='yellow'){showToast('⚠️ Déjà attribué');return;}p.av='yellow';addEvent({kind:'p',idx,type:'av',team,time:t,player:p.num,desc:'Avertissement — '+nm});showToast('⚠️ Avert. — '+p.name);break;
     case '2min':{
       let isDisq=false;
       if(!p.p1||p.p1==='empty'){p.p1='2min';}
@@ -793,11 +963,11 @@ function doPA(action){
       else if(!p.p3||p.p3==='empty'){p.p3='2min';p.dis='red3x2';p.outOfGame=true;isDisq=true;showToast('🟥 3e exclusion — Disqualification !');}
       else{showToast('❌ 3 exclusions déjà atteintes');return;}
       p.excluActive=true;startExcluTimer(team,idx);
-      addEvent({type:'2min',team,time:t,player:p.num,disq3x2:isDisq,desc:(isDisq?'Exclusion '+exLbl()+' disqualifiante (3e) — ':'Exclusion '+exLbl()+' — ')+nm});
+      addEvent({kind:'p',idx,type:'2min',team,time:t,player:p.num,disq3x2:isDisq,desc:'Exclusion '+exLbl()+' — '+nm});
       if(!isDisq)showToast('⏱️ Exclusion '+exLbl()+' — '+p.name);break;}
-    case 'dis':p.dis='red';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'dis',team,time:t,player:p.num,desc:'Disqualification — '+nm});showToast('🟥 Disqualif. — '+p.name);break;
-    case 'rapport':p.dis='blue';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({type:'rapport',team,time:t,player:p.num,desc:'Disqualification avec rapport — '+nm});showToast('📝 Disqualif. + rapport — '+p.name);break;
-    case 'blanc':p.blanc=true;addEvent({type:'blanc',team,time:t,player:p.num,desc:'Carton blanc — '+nm});showToast('⬜ Carton blanc — '+p.name);break;
+    case 'dis':p.dis='red';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({kind:'p',idx,type:'dis',team,time:t,player:p.num,desc:'Disqualification — '+nm});showToast('🟥 Disqualif. — '+p.name);break;
+    case 'rapport':p.dis='blue';p.outOfGame=true;p.excluActive=true;startExcluTimer(team,idx);addEvent({kind:'p',idx,type:'rapport',team,time:t,player:p.num,desc:'Disqualification avec rapport — '+nm});showToast('📝 Disqualif. + rapport — '+p.name);break;
+    case 'blanc':p.blanc=true;addEvent({kind:'p',idx,type:'blanc',team,time:t,player:p.num,desc:'Carton blanc — '+nm});showToast('⬜ Carton blanc — '+p.name);break;
     case 'undo':undoPlayer(team,p);return;
   }
   renderPlayers('home');renderPlayers('away');closeModal();saveData();
@@ -806,18 +976,8 @@ function doPA(action){
 function undoPlayer(team,p){
   for(let i=data.events.length-1;i>=0;i--){
     const ev=data.events[i];
-    if(ev.team===team&&String(ev.player)===String(p.num)){
-      switch(ev.type){
-        case 'but':case 'but7':p.goals=Math.max(0,(p.goals||1)-1);if(ev.type==='but7')p.m7=Math.max(0,(p.m7||1)-1);p.tirs=Math.max(0,(p.tirs||1)-1);data.match['score'+(team==='home'?'Home':'Away')]=Math.max(0,data.match['score'+(team==='home'?'Home':'Away')]-1);updateScore();break;
-        case 'save':p.arrets=Math.max(0,(p.arrets||1)-1);break;
-        case 'tir':p.tirs=Math.max(0,(p.tirs||1)-1);break;
-        case 'av':p.av='empty';break;
-        case '2min':if(p.p3&&p.p3!=='empty'){p.p3='empty';if(p.dis==='red3x2'){p.dis='empty';p.outOfGame=false;}}else if(p.p2&&p.p2!=='empty')p.p2='empty';else if(p.p1&&p.p1!=='empty')p.p1='empty';p.excluActive=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
-        case 'dis':p.dis='empty';p.excluActive=false;p.outOfGame=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
-        case 'rapport':p.dis='empty';p.excluActive=false;p.outOfGame=false;stopExcluTimer(team,data[team].players.indexOf(p));break;
-        case 'blanc':p.blanc=false;break;
-      }
-      data.events.splice(i,1);showToast('↩️ Annulé');renderPlayers('home');renderPlayers('away');renderEvents();saveData();closeModal();return;
+    if(ev.team===team&&ev.type!=='tmo'&&ev.kind!=='s'&&String(ev.player)===String(p.num)){
+      revertEvent(ev);data.events.splice(i,1);showToast('↩️ Annulé');refreshAll();saveData();closeModal();return;
     }
   }
   showToast('Rien à annuler');closeModal();
@@ -845,7 +1005,7 @@ function openStaffModal(team,idx){
 
   const items=[
     [sanIcon('san-av'),'Avertissement','J','av',hasAv,avBlocked],
-    [sanIcon('san-2min'),'Exclusion '+exLbl(),'2','exclu',hasExclu,excluBlocked],
+    [exIcon(),'Exclusion '+exLbl(),'2','exclu',hasExclu,excluBlocked],
     [sanIcon('san-dis'),'Disqualification','D','dis',hasDis,false],
     [sanIcon('san-rap'),'Rapport écrit','R','rapport',hasRap,false]
   ];
@@ -872,29 +1032,25 @@ function doSA(action){
       if(off.av==='yellow'){off.av='empty';showToast('↩️ AV officiel retiré');}
       else{
         if(teamOffs.some((o,i)=>i!==idx&&o.av==='yellow')){showToast('⛔ 1 seul AV autorisé pour l\'équipe !');closeStaffModal();return;}
-        off.av='yellow';addEvent({type:'av',team,time:t,player:off.nom,desc:'Avertissement — '+off.nom});showToast('⚠️ AV Officiel — '+off.nom);
+        off.av='yellow';addEvent({kind:'s',idx,type:'av',team,time:t,player:off.nom,desc:'Avertissement — '+off.nom});showToast('⚠️ AV Officiel — '+off.nom);
       }break;
     case 'exclu':
       if(off.exclu==='2min'){off.exclu='empty';off.excluActive=false;stopExcluTimer(team,idx,'s');showToast('↩️ Exclusion '+exLbl()+' retirée');}
       else{
         if(teamOffs.some((o,i)=>i!==idx&&o.exclu==='2min')){showToast('⛔ 1 seule exclusion '+exLbl()+' autorisée !');closeStaffModal();return;}
-        off.exclu='2min';off.excluActive=true;startExcluTimer(team,idx,'s');addEvent({type:'2min',team,time:t,player:off.nom,desc:'Exclusion '+exLbl()+' — '+off.nom});showToast('⏱️ Exclusion '+exLbl()+' Officiel — '+off.nom);
+        off.exclu='2min';off.excluActive=true;startExcluTimer(team,idx,'s');addEvent({kind:'s',idx,type:'2min',team,time:t,player:off.nom,desc:'Exclusion '+exLbl()+' — '+off.nom});showToast('⏱️ Exclusion '+exLbl()+' Officiel — '+off.nom);
       }break;
     case 'dis':
       if(off.dis==='red'){off.dis='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');showToast('↩️ Disqualif. retirée');}
-      else{off.dis='red';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({type:'dis',team,time:t,player:off.nom,desc:'Disqualification — '+off.nom});showToast('🟥 Disqualif. Officiel — '+off.nom);}break;
+      else{off.dis='red';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({kind:'s',idx,type:'dis',team,time:t,player:off.nom,desc:'Disqualification — '+off.nom});showToast('🟥 Disqualif. Officiel — '+off.nom);}break;
     case 'rapport':
       if(off.rapport==='blue'){off.rapport='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');showToast('↩️ Rapport retiré');}
-      else{off.rapport='blue';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({type:'rapport',team,time:t,player:off.nom,desc:'Disqualification avec rapport — '+off.nom});showToast('📝 Disqualif. + rapport Officiel — '+off.nom);}break;
+      else{off.rapport='blue';off.excluActive=true;off.outOfGame=true;startExcluTimer(team,idx,'s');addEvent({kind:'s',idx,type:'rapport',team,time:t,player:off.nom,desc:'Disqualification avec rapport — '+off.nom});showToast('📝 Disqualif. + rapport Officiel — '+off.nom);}break;
     case 'undo':
       for(let i=data.events.length-1;i>=0;i--){
         const ev=data.events[i];
-        if(ev.team===team&&ev.player===off.nom){
-          if(ev.type==='av')off.av='empty';
-          else if(ev.type==='2min'){off.exclu='empty';off.excluActive=false;stopExcluTimer(team,idx,'s');}
-          else if(ev.type==='dis'){off.dis='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');}
-          else if(ev.type==='rapport'){off.rapport='empty';off.excluActive=false;off.outOfGame=false;stopExcluTimer(team,idx,'s');}
-          data.events.splice(i,1);showToast('↩️ Annulé');renderStaff(team);renderEvents();saveData();closeStaffModal();return;
+        if(ev.team===team&&ev.type!=='tmo'&&ev.player===off.nom){
+          revertEvent(ev);data.events.splice(i,1);showToast('↩️ Annulé');refreshAll();saveData();closeStaffModal();return;
         }
       }
       showToast('Rien à annuler');closeStaffModal();return;
@@ -981,30 +1137,233 @@ const EV_ICONS={but:'⚽',but7:'7️⃣',save:'🧤',av:'<span class="san san-av
 const EV_CLS={but:'e-but',but7:'e-but7',save:'e-save',av:'e-av','2min':'e-2min',dis:'e-dis',rapport:'e-dis',tir:'e-tir',tmo:'e-tmo',blanc:'e-blanc'};
 
 function addEvent(ev){ev.id=Date.now()+Math.random();data.events.unshift(ev);renderEvents();}
+
+let openEvId=null; // fait dont le menu (Supprimer / Modifier) est ouvert
 function renderEvents(){
   const list=document.getElementById('event-list');
   if(!data.events.length){list.innerHTML=`<div class="ev-empty"><span style="font-size:20px;">📋</span><span>Aucun fait</span></div>`;return;}
-  list.innerHTML=data.events.map(ev=>`
-    <div class="event-item ${EV_CLS[ev.type]||''}">
-      <div class="e-icon">${EV_ICONS[ev.type]||'•'}</div>
+  list.innerHTML=data.events.map(ev=>{
+    const open=openEvId!==null&&openEvId===ev.id;
+    return `
+    <div class="event-item ${EV_CLS[ev.type]||''}${open?' menu-open':''}">
+      <div class="e-icon">${evIcon(ev.type)}</div>
       <div class="e-body">
         <div class="e-title">${ev.desc}</div>
         <div class="e-sub">${ev.team==='home'?data.home.nom:data.away.nom}</div>
         <div class="e-time">${ev.time}</div>
       </div>
-      <button class="e-del" onclick="deleteEvent(${ev.id})">✕</button>
-    </div>`).join('');
+      <button class="e-menu" title="Actions" onclick="toggleEvMenu(${ev.id},event)">⋯</button>
+      ${open?`<div class="e-actions">
+        <button class="e-act del" title="Supprimer le fait de match" onclick="deleteEvent(${ev.id})">🗑 Supprimer</button>
+        <button class="e-act edit" title="Modifier le fait de match" onclick="openEventEdit(${ev.id})">✏️ Modifier</button>
+      </div>`:''}
+    </div>`;}).join('');
 }
+function evIcon(t){return t==='2min'?`<span class="ev-2min">${exLbl()}</span>`:(EV_ICONS[t]||'•');}
+function toggleEvMenu(id,e){
+  if(e)e.stopPropagation();
+  openEvId=(openEvId===id)?null:id;
+  renderEvents();
+}
+// un clic ailleurs referme le menu d'un fait
+document.addEventListener('click',function(e){
+  if(openEvId===null)return;
+  if(e.target.closest&&(e.target.closest('.e-actions')||e.target.closest('.e-menu')))return;
+  openEvId=null;renderEvents();
+});
+
+function refreshAll(){
+  renderPlayers('home');renderPlayers('away');renderStaff('home');renderStaff('away');
+  updateScore();updateTMOInfo();renderEvents();
+}
+
+// ═══════════ EFFET D'UN FAIT SUR LES STATISTIQUES ═══════════
+// Retrouve le joueur / officiel visé par un fait (anciens faits : par n° ou par nom)
+function resolveTarget(ev){
+  const t=data[ev.team];if(!t||ev.type==='tmo')return null;
+  if(ev.kind==='p'&&t.players[ev.idx])return{e:t.players[ev.idx],kind:'p',idx:ev.idx};
+  if(ev.kind==='s'&&(t.officials||[])[ev.idx])return{e:t.officials[ev.idx],kind:'s',idx:ev.idx};
+  let i=t.players.findIndex(p=>String(p.num)===String(ev.player));
+  if(i>=0&&ev.kind!=='s'){ev.kind='p';ev.idx=i;return{e:t.players[i],kind:'p',idx:i};}
+  i=(t.officials||[]).findIndex(o=>o.nom&&o.nom===ev.player);
+  if(i>=0){ev.kind='s';ev.idx=i;return{e:t.officials[i],kind:'s',idx:i};}
+  return null;
+}
+const sideKey=t=>t==='home'?'Home':'Away';
+const dec=v=>Math.max(0,(v||0)-1);
+const isSet=v=>v&&v!=='empty';
+
+// Retire de la feuille la statistique liée à un fait
+function revertEvent(ev){
+  const t=data[ev.team];
+  if(ev.type==='tmo'){
+    t.tmo=dec(t.tmo);
+    if(ev.period&&t.tmoByPeriod)t.tmoByPeriod[ev.period]=dec(t.tmoByPeriod[ev.period]);
+    updateTMOInfo();return;
+  }
+  if(ev.type==='but'||ev.type==='but7'){
+    const k='score'+sideKey(ev.team);data.match[k]=dec(data.match[k]);updateScore();
+  }
+  const tg=resolveTarget(ev);if(!tg)return;
+  const e=tg.e;
+  if(tg.kind==='p'){
+    switch(ev.type){
+      case 'but':e.goals=dec(e.goals);e.tirs=dec(e.tirs);break;
+      case 'but7':e.goals=dec(e.goals);e.m7=dec(e.m7);e.tirs=dec(e.tirs);break;
+      case 'save':e.arrets=dec(e.arrets);break;
+      case 'tir':e.tirs=dec(e.tirs);break;
+      case 'av':e.av='empty';break;
+      case '2min':{
+        const hadDisq3=(e.dis==='red3x2');
+        if(isSet(e.p3)){e.p3='empty';if(hadDisq3){e.dis='empty';e.outOfGame=false;}}
+        else if(isSet(e.p2))e.p2='empty';
+        else if(isSet(e.p1))e.p1='empty';
+        e.excluActive=false;stopExcluTimer(ev.team,tg.idx,'p');
+        // la 3e exclusion (disqualifiante) n'existe plus : on retire le marquage des autres faits du joueur
+        if(hadDisq3&&!ev.disq3x2)data.events.forEach(x=>{if(x!==ev&&x.type==='2min'&&x.disq3x2&&x.team===ev.team&&x.idx===tg.idx)x.disq3x2=false;});
+        break;}
+      case 'dis':if(e.dis==='red')e.dis='empty';e.excluActive=false;e.outOfGame=false;stopExcluTimer(ev.team,tg.idx,'p');break;
+      case 'rapport':if(e.dis==='blue')e.dis='empty';e.excluActive=false;e.outOfGame=false;stopExcluTimer(ev.team,tg.idx,'p');break;
+      case 'blanc':e.blanc=false;break;
+    }
+  }else{
+    switch(ev.type){
+      case 'av':e.av='empty';break;
+      case '2min':e.exclu='empty';e.excluActive=false;stopExcluTimer(ev.team,tg.idx,'s');break;
+      case 'dis':e.dis='empty';e.excluActive=false;e.outOfGame=false;stopExcluTimer(ev.team,tg.idx,'s');break;
+      case 'rapport':e.rapport='empty';e.excluActive=false;e.outOfGame=false;stopExcluTimer(ev.team,tg.idx,'s');break;
+    }
+  }
+}
+
+// Applique à la feuille la statistique d'un fait (utilisé pour déplacer un fait vers un autre joueur / une autre équipe)
+function applyEvent(ev){
+  const t=data[ev.team];
+  if(ev.type==='tmo'){
+    t.tmo=(t.tmo||0)+1;t.tmoByPeriod=t.tmoByPeriod||{};
+    if(ev.period)t.tmoByPeriod[ev.period]=(t.tmoByPeriod[ev.period]||0)+1;
+    updateTMOInfo();return{ok:true};
+  }
+  const tg=resolveTarget(ev);if(!tg)return{ok:false,msg:'Joueur introuvable'};
+  const e=tg.e;
+  if(tg.kind==='p'){
+    switch(ev.type){
+      case 'but':e.goals=(e.goals||0)+1;e.tirs=(e.tirs||0)+1;data.match['score'+sideKey(ev.team)]++;updateScore();break;
+      case 'but7':e.goals=(e.goals||0)+1;e.m7=(e.m7||0)+1;e.tirs=(e.tirs||0)+1;data.match['score'+sideKey(ev.team)]++;updateScore();break;
+      case 'save':e.arrets=(e.arrets||0)+1;break;
+      case 'tir':e.tirs=(e.tirs||0)+1;break;
+      case 'av':if(e.av==='yellow')return{ok:false,msg:'Ce joueur a déjà un avertissement'};e.av='yellow';break;
+      case '2min':
+        if(!isSet(e.p1)){e.p1='2min';ev.disq3x2=false;}
+        else if(!isSet(e.p2)){e.p2='2min';ev.disq3x2=false;}
+        else if(!isSet(e.p3)){e.p3='2min';e.dis='red3x2';e.outOfGame=true;ev.disq3x2=true;}
+        else return{ok:false,msg:'Ce joueur a déjà 3 exclusions'};
+        e.excluActive=true;startExcluTimer(ev.team,tg.idx,'p');break;
+      case 'dis':e.dis='red';e.outOfGame=true;e.excluActive=true;startExcluTimer(ev.team,tg.idx,'p');break;
+      case 'rapport':e.dis='blue';e.outOfGame=true;e.excluActive=true;startExcluTimer(ev.team,tg.idx,'p');break;
+      case 'blanc':e.blanc=true;break;
+    }
+  }else{
+    const others=(t.officials||[]).filter((o,i)=>i!==tg.idx);
+    switch(ev.type){
+      case 'av':if(others.some(o=>o.av==='yellow'))return{ok:false,msg:"1 seul avertissement autorisé pour l'équipe"};e.av='yellow';break;
+      case '2min':if(others.some(o=>o.exclu==='2min'))return{ok:false,msg:"1 seule exclusion autorisée pour l'équipe"};e.exclu='2min';e.excluActive=true;startExcluTimer(ev.team,tg.idx,'s');break;
+      case 'dis':e.dis='red';e.excluActive=true;e.outOfGame=true;startExcluTimer(ev.team,tg.idx,'s');break;
+      case 'rapport':e.rapport='blue';e.excluActive=true;e.outOfGame=true;startExcluTimer(ev.team,tg.idx,'s');break;
+      default:return{ok:false,msg:"Action impossible pour un officiel"};
+    }
+  }
+  return{ok:true};
+}
+
+function eventDesc(ev){
+  if(ev.type==='tmo')return 'Temps mort';
+  const tg=resolveTarget(ev);
+  const nm=tg?(tg.kind==='s'?tg.e.nom:fullName(tg.e)):'—';
+  const L={but:'But',but7:'But 7m',save:'Arrêt',tir:'Tir',av:'Avertissement',
+    '2min':'Exclusion '+exLbl(),dis:'Disqualification',rapport:'Disqualification avec rapport',blanc:'Carton blanc'};
+  return (L[ev.type]||ev.type)+' — '+nm;
+}
+
+// ═══════════ SUPPRIMER UN FAIT (et sa statistique) ═══════════
 function deleteEvent(id){
   const ev=data.events.find(e=>e.id===id);
-  // Supprimer un temps mort le rend à l'équipe (total + compteur de la période)
-  if(ev&&ev.type==='tmo'){
-    const t=data[ev.team];
-    t.tmo=Math.max(0,t.tmo-1);
-    if(ev.period&&t.tmoByPeriod)t.tmoByPeriod[ev.period]=Math.max(0,(t.tmoByPeriod[ev.period]||1)-1);
-    updateTMOInfo();
+  openEvId=null;
+  if(!ev){renderEvents();return;}
+  if(!confirm('Supprimer ce fait de match et la statistique associée ?\n\n'+ev.desc)){renderEvents();return;}
+  revertEvent(ev);
+  data.events=data.events.filter(e=>e!==ev);
+  refreshAll();saveData();showToast('🗑 Fait supprimé');
+}
+
+// ═══════════ MODIFIER UN FAIT (équipe / joueur) ═══════════
+let editEv=null; // { ev, team, sel:{kind,idx}|null, origTeam, origSel }
+const SANCTION_TYPES=['av','2min','dis','rapport'];
+
+function openEventEdit(id){
+  const ev=data.events.find(e=>e.id===id);if(!ev)return;
+  openEvId=null;renderEvents();
+  const tg=resolveTarget(ev);
+  const sel=tg?{kind:tg.kind,idx:tg.idx}:null;
+  editEv={ev,team:ev.team,sel,origTeam:ev.team,origSel:sel};
+  document.getElementById('ee-summary').innerHTML=
+    `<div class="e-icon" style="font-size:20px;">${evIcon(ev.type)}</div><div><div class="ee-t">${ev.desc}</div><div class="ee-s">${ev.time} · ${ev.team==='home'?data.home.nom:data.away.nom}</div></div>`;
+  document.getElementById('ee-err').style.display='none';
+  renderEvEdit();
+  document.getElementById('evEditModal').classList.add('open');
+}
+function closeEventEdit(){document.getElementById('evEditModal').classList.remove('open');editEv=null;}
+
+function renderEvEdit(){
+  const ev=editEv.ev,team=editEv.team,t=data[team];
+  const bh=document.getElementById('ee-home'),ba=document.getElementById('ee-away');
+  bh.textContent=data.home.nom||'Domicile';ba.textContent=data.away.nom||'Extérieur';
+  bh.className=team==='home'?'on-home':'';ba.className=team==='away'?'on-away':'';
+  const box=document.getElementById('ee-members');
+  if(ev.type==='tmo'){
+    box.innerHTML='<div class="f-note" style="margin-top:12px;">Un temps mort n\'est lié à aucun joueur : seule l\'équipe peut être modifiée.</div>';
+    return;
   }
-  data.events=data.events.filter(e=>e.id!==id);renderEvents();saveData();
+  const sel=editEv.sel;
+  let html='<div class="f-sec">Joueur</div><div class="mem-grid">'+
+    t.players.map((p,i)=>`<div class="mem${p.isGK?' gk':''}${sel&&sel.kind==='p'&&sel.idx===i?' sel':''}" onclick="pickEvMember('p',${i})"><span class="mn">${p.num||'?'}</span><span class="mt">${p.name||'—'}</span></div>`).join('')+'</div>';
+  if(SANCTION_TYPES.includes(ev.type)){
+    const offs=(t.officials||[]).map((o,i)=>({o,i})).filter(x=>x.o.nom);
+    if(offs.length)html+='<div class="f-sec">Officiel</div><div class="mem-grid">'+
+      offs.map(x=>`<div class="mem off${sel&&sel.kind==='s'&&sel.idx===x.i?' sel':''}" onclick="pickEvMember('s',${x.i})"><span class="mn">👤</span><span class="mt">${x.o.nom}</span></div>`).join('')+'</div>';
+  }
+  box.innerHTML=html;
+}
+function setEvEditTeam(team){
+  editEv.team=team;
+  editEv.sel=(team===editEv.origTeam)?editEv.origSel:null;
+  document.getElementById('ee-err').style.display='none';
+  renderEvEdit();
+}
+function pickEvMember(kind,idx){editEv.sel={kind,idx};document.getElementById('ee-err').style.display='none';renderEvEdit();}
+
+function saveEventEdit(){
+  const ev=editEv.ev,newTeam=editEv.team,sel=editEv.sel;
+  const err=m=>{const e=document.getElementById('ee-err');e.textContent='⚠️ '+m;e.style.display='block';};
+  if(ev.type!=='tmo'&&!sel){err('Choisis un joueur pour cette équipe.');return;}
+  const sameSel=ev.type==='tmo'||(editEv.origSel&&sel.kind===editEv.origSel.kind&&sel.idx===editEv.origSel.idx);
+  if(newTeam===editEv.origTeam&&sameSel){closeEventEdit();return;} // rien n'a changé
+
+  const old={team:ev.team,player:ev.player,kind:ev.kind,idx:ev.idx,desc:ev.desc,disq3x2:ev.disq3x2};
+  revertEvent(ev);
+  ev.team=newTeam;
+  if(ev.type!=='tmo'){
+    const t=data[newTeam];
+    ev.kind=sel.kind;ev.idx=sel.idx;
+    ev.player=sel.kind==='s'?t.officials[sel.idx].nom:t.players[sel.idx].num;
+  }
+  const r=applyEvent(ev);
+  if(!r.ok){ // on remet le fait comme avant
+    Object.assign(ev,old);applyEvent(ev);refreshAll();
+    err(r.msg);return;
+  }
+  ev.desc=eventDesc(ev);
+  refreshAll();saveData();closeEventEdit();showToast('✏️ Fait modifié');
 }
 
 function showEndModal(){
@@ -1019,6 +1378,189 @@ function showEndModal(){
 // ═══════════ TOAST ═══════════
 let toastTimer=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+
+// ═══════════ RÉGLAGES PENDANT LE MATCH ═══════════
+const PALETTE=['#E02D37','#F5A623','#00C17A','#4A9FFF','#9B59B6','#FFFFFF','#1C3256','#FF6B35','#2ECC71','#E74C3C'];
+let setColors={home:'#F5A623',away:'#4A9FFF'};
+
+function refreshPerButton(){
+  const b=document.getElementById('btnPer');
+  if(phase==='pre')b.textContent='Fin '+perShort(1)+' →';
+  else if(phase==='play')b.textContent=(periodIdx<nbP()?'Fin '+perShort(periodIdx):'Fin Match')+' →';
+  else if(phase==='break')b.textContent='Début '+perShort(periodIdx)+' →';
+}
+
+function openSettings(){
+  setColors.home=data.home.color||'#F5A623';
+  setColors.away=data.away.color||'#4A9FFF';
+  document.getElementById('set-home-name').textContent=data.home.nom||'Domicile';
+  document.getElementById('set-away-name').textContent=data.away.nom||'Extérieur';
+  renderSetColors('home');renderSetColors('away');
+  const sel=document.getElementById('set-nbPeriods');
+  sel.value=String(cfg.nbPeriods);
+  [...sel.options].forEach(o=>{o.disabled=parseInt(o.value)<periodIdx;});
+  sel.disabled=(phase==='end');
+  document.getElementById('set-per-note').textContent=phase==='end'?'Match terminé : le nombre de périodes ne peut plus changer.':(periodIdx>1?'Le nombre de périodes ne peut pas être inférieur à la période en cours ('+periodIdx+').':'');
+  document.getElementById('set-periodMin').value=cfg.periodMin;
+  document.getElementById('set-pauseMin').value=cfg.pauseMin;
+  document.getElementById('set-excluMin').value=cfg.excluSec/60;
+  document.getElementById('set-tmoTeam').value=cfg.tmoTeam;
+  document.getElementById('set-tmoPeriod').value=cfg.tmoPeriod;
+  document.getElementById('set-tmoSec').value=cfg.tmoSec;
+  document.getElementById('set-err').style.display='none';
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){document.getElementById('settingsModal').classList.remove('open');}
+
+function renderSetColors(team){
+  const cur=(setColors[team]||'').toUpperCase();
+  const inPal=PALETTE.some(c=>c.toUpperCase()===cur);
+  document.getElementById('set-colors-'+team).innerHTML=
+    PALETTE.map(c=>`<div class="color-dot${c.toUpperCase()===cur?' sel':''}" style="background:${c}" onclick="pickSetColor('${team}','${c}')"></div>`).join('')+
+    `<input type="color" class="cfg-custom${inPal?'':' sel'}" value="${/^#[0-9a-f]{6}$/i.test(cur)?cur:'#E02D37'}" title="Couleur personnalisée" oninput="pickSetColor('${team}',this.value,true)">`;
+}
+function pickSetColor(team,color,fromInput){
+  setColors[team]=color;
+  if(!fromInput)renderSetColors(team);
+  else document.querySelectorAll('#set-colors-'+team+' .color-dot').forEach(d=>d.classList.remove('sel'));
+  // aperçu immédiat
+  data[team].color=color;applyTeamColors();
+}
+
+function applySettings(){
+  const num=id=>parseFloat(document.getElementById(id).value);
+  const n={
+    nbPeriods:parseInt(document.getElementById('set-nbPeriods').value),
+    periodMin:num('set-periodMin'),
+    pauseMin:num('set-pauseMin'),
+    excluSec:Math.round(num('set-excluMin')*60),
+    tmoTeam:parseInt(document.getElementById('set-tmoTeam').value),
+    tmoPeriod:parseInt(document.getElementById('set-tmoPeriod').value),
+    tmoSec:parseInt(document.getElementById('set-tmoSec').value)
+  };
+  let err='';
+  if(!(n.nbPeriods>=periodIdx))err='Le nombre de périodes ne peut pas être inférieur à la période en cours.';
+  else if(!(n.periodMin>=1))err='La durée des périodes doit être d\'au moins 1 minute.';
+  else if(!(n.pauseMin>=0))err='La durée de la pause est invalide.';
+  else if(!(n.excluSec>=15))err='La durée d\'exclusion est invalide.';
+  else if(!(n.tmoTeam>=0))err='Le nombre de temps morts par équipe est invalide.';
+  else if(!(n.tmoPeriod>=0))err='Le nombre de temps morts par période est invalide.';
+  else if(!(n.tmoSec>=10))err='La durée d\'un temps mort doit être d\'au moins 10 secondes.';
+  if(err){const e=document.getElementById('set-err');e.textContent='⚠️ '+err;e.style.display='block';return;}
+
+  const nChanged=n.nbPeriods!==cfg.nbPeriods;
+  cfg=n;
+  data.config={...cfg};
+  data.match.duree=cfg.periodMin;data.match.pause=cfg.pauseMin;
+  data.home.color=setColors.home;data.away.color=setColors.away;
+  // Le score « mi-temps » dépend du nombre de périodes : on le recalcule
+  if(nChanged){
+    const hp=Math.max(1,Math.floor(cfg.nbPeriods/2));
+    const ps=(data.match.periodScores||[])[hp-1];
+    data.match.scoreHTHome=ps?ps.home:0;data.match.scoreHTAway=ps?ps.away:0;
+  }
+  localStorage.setItem('ffhb_match_config',JSON.stringify(cfg));
+  applyTeamColors();refreshPerButton();updateTMOInfo();
+  renderPlayers('home');renderPlayers('away');renderStaff('home');renderStaff('away');
+  saveData();closeSettings();showToast('⚙️ Réglages appliqués');
+}
+
+// ═══════════ AJOUT D'EFFECTIF PENDANT LE MATCH ═══════════
+let rosterTeam='home';
+let newPosGK=false;
+
+function openRoster(){
+  newPosGK=false;
+  document.getElementById('ad-name').value='';
+  document.getElementById('ad-off-name').value='';
+  setRosterTeam('home');
+  document.getElementById('rosterModal').classList.add('open');
+}
+function closeRoster(){document.getElementById('rosterModal').classList.remove('open');}
+
+function setRosterTeam(team){
+  rosterTeam=team;
+  const bh=document.getElementById('rs-home'),ba=document.getElementById('rs-away');
+  bh.textContent=data.home.nom||'Domicile';ba.textContent=data.away.nom||'Extérieur';
+  bh.className=team==='home'?'on-home':'';ba.className=team==='away'?'on-away':'';
+  newPosGK=false;refreshNewPos();
+  document.getElementById('ad-num').value=nextPlayerNum(team);
+  document.getElementById('ad-name').value='';
+  document.getElementById('ad-off-name').value='';
+  refreshRosterInfo();
+}
+function nextPlayerNum(team){
+  const nums=data[team].players.map(p=>parseInt(p.num)).filter(n=>!isNaN(n));
+  return nums.length?Math.max(...nums)+1:1;
+}
+function refreshNewPos(){
+  const b=document.getElementById('ad-pos');
+  b.textContent=newPosGK?'GK':'J';b.classList.toggle('is-gk',newPosGK);
+}
+function toggleNewPos(){newPosGK=!newPosGK;refreshNewPos();}
+
+function refreshRosterInfo(){
+  const t=data[rosterTeam];
+  const nOff=(t.officials||[]).filter(o=>o.nom).length;
+  document.getElementById('roster-count').textContent=`${t.players.length} joueur${t.players.length>1?'s':''} · ${nOff} officiel${nOff>1?'s':''}`;
+  // fonctions disponibles : emplacements libres + « Autre officiel »
+  const sel=document.getElementById('ad-role');
+  let html='';
+  (t.officials||[]).forEach((o,i)=>{if(!o.nom)html+=`<option value="${i}">${o.role}</option>`;});
+  html+='<option value="extra">Autre officiel</option>';
+  sel.innerHTML=html;
+}
+
+function cleanName(v){return (v||'').replace(/[<>]/g,'').trim();}
+
+function addRosterPlayer(){
+  const team=rosterTeam,t=data[team];
+  const num=document.getElementById('ad-num').value.trim();
+  const name=cleanName(document.getElementById('ad-name').value);
+  if(!name){showToast('⚠️ Nom du joueur manquant');document.getElementById('ad-name').focus();return;}
+  if(!num){showToast('⚠️ Numéro manquant');document.getElementById('ad-num').focus();return;}
+  if(t.players.some(p=>String(p.num)===num)){showToast('⛔ Le n° '+num+' est déjà utilisé');return;}
+  if(newPosGK){
+    const prev=t.players.find(p=>p.isGK);
+    if(prev){
+      if(!confirm('Cette équipe a déjà un gardien (n° '+prev.num+' '+(prev.name||'')+'). Le remplacer par ce joueur ?'))return;
+      prev.isGK=false;
+    }
+  }
+  t.players.push({
+    num,name,lic:'',isGK:newPosGK,isCapt:false,
+    goals:0,m7:0,tirs:0,arrets:0,
+    av:'empty',p1:'empty',p2:'empty',p3:'empty',p2d:'empty',dis:'empty',
+    excluTimer:0,excluActive:false
+  });
+  renderPlayers(team);saveData();
+  showToast('✅ '+name+' ajouté ('+(t.abr||t.nom)+')');
+  newPosGK=false;refreshNewPos();
+  document.getElementById('ad-num').value=nextPlayerNum(team);
+  document.getElementById('ad-name').value='';
+  document.getElementById('ad-name').focus();
+  refreshRosterInfo();
+}
+
+function addRosterOfficial(){
+  const team=rosterTeam,t=data[team];
+  const name=cleanName(document.getElementById('ad-off-name').value);
+  if(!name){showToast('⚠️ Nom de l\'officiel manquant');document.getElementById('ad-off-name').focus();return;}
+  t.officials=t.officials||[];
+  const v=document.getElementById('ad-role').value;
+  if(v==='extra'){
+    t.officials.push({role:'Officiel',nom:name,lic:'',av:'empty',exclu:'empty',rapport:'empty'});
+  }else{
+    const o=t.officials[parseInt(v)];
+    if(!o){showToast('⚠️ Fonction invalide');return;}
+    o.nom=name;
+    o.av=o.av||'empty';o.exclu=o.exclu||'empty';o.rapport=o.rapport||'empty';
+  }
+  renderStaff(team);saveData();
+  showToast('✅ '+name+' ajouté ('+(t.abr||t.nom)+')');
+  document.getElementById('ad-off-name').value='';
+  refreshRosterInfo();
+}
 
 // ═══════════ SAVE / EXPORT ═══════════
 function saveData(){localStorage.setItem('ffhb_match_data',JSON.stringify(data));}
