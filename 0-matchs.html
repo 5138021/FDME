@@ -191,13 +191,77 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
 }
 .btn-manual:hover{transform:translateY(-2px);}
 
+
+/* ── MODAL ÉQUIPES PRÉENREGISTRÉES ── */
+.preset-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);align-items:flex-end;justify-content:center;}
+.preset-overlay.open{display:flex;}
+.preset-sheet{background:var(--blue-mid);border-radius:22px 22px 0 0;padding:0 0 32px;width:100%;max-width:500px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp .22s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.preset-header{display:flex;align-items:center;padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.preset-header-icon{font-size:22px;margin-right:10px;}
+.preset-header-title{font-family:var(--font-h);font-size:16px;font-weight:900;letter-spacing:1px;text-transform:uppercase;flex:1;}
+.preset-header-close{background:rgba(255,255,255,.08);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.preset-list{overflow-y:auto;padding:10px 12px;flex:1;}
+.preset-hint{font-size:11px;color:var(--muted);line-height:1.5;padding:2px 4px 10px;}
+.preset-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:all .15s;}
+.preset-card:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
+.preset-badge{width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:15px;font-weight:900;color:#fff;}
+.preset-info{flex:1;min-width:0;cursor:pointer;}
+.preset-name{font-family:var(--font-h);font-size:15px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.preset-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+.preset-count{font-family:var(--font-h);font-size:11px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.06);padding:3px 8px;border-radius:8px;flex-shrink:0;}
+.preset-edit-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;transition:all .15s;flex-shrink:0;}
+.preset-edit-btn:hover{background:rgba(245,166,35,.2);color:var(--gold);border-color:rgba(245,166,35,.4);}
+.preset-new-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(74,159,255,.08);border:1px dashed rgba(74,159,255,.3);border-radius:12px;padding:12px;cursor:pointer;font-family:var(--font-h);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);transition:all .18s;margin-top:4px;}
+.preset-new-btn:hover{background:rgba(74,159,255,.15);}
+.preset-empty{text-align:center;color:var(--muted);font-size:12px;padding:18px 8px;}
+
+.editor-overlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+.editor-overlay.open{display:flex;}
+.editor-sheet{background:var(--blue-mid);border-radius:22px 22px 0 0;width:100%;max-width:500px;max-height:93vh;display:flex;flex-direction:column;animation:slideUp .22s ease;}
+.editor-header{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.editor-header-title{font-family:var(--font-h);font-size:15px;font-weight:900;letter-spacing:1px;text-transform:uppercase;flex:1;}
+.editor-header-close{background:rgba(255,255,255,.08);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.editor-team-idx{font-family:var(--font-mono);font-size:11px;color:var(--muted);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:6px;}
+.editor-tabs{display:flex;gap:2px;padding:8px 12px 0;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06);}
+.editor-tab{padding:6px 12px;border-radius:8px 8px 0 0;font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none;transition:all .15s;}
+.editor-tab.active{background:var(--blue-soft);color:var(--white);border-color:rgba(255,255,255,.1);}
+.editor-body{overflow-y:auto;padding:14px 13px;flex:1;}
+.editor-section{font-family:var(--font-h);font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+.editor-section::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.ed-lbl{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.ei{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;color:var(--white);font-family:var(--font-b);font-size:12px;padding:8px 10px;outline:none;transition:border .15s;}
+.ei:focus{border-color:var(--cyan);background:rgba(74,159,255,.08);}
+.ei::placeholder{color:rgba(138,155,190,.55);}
+.ei-num{font-family:var(--font-mono);font-weight:700;color:var(--gold);}
+.ep-header{display:grid;grid-template-columns:38px 1fr 30px 28px;gap:5px;padding:0 2px 6px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:8px;}
+.ep-header span{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:center;}
+.ep-header span:nth-child(2){text-align:left;}
+.ep-row{display:grid;grid-template-columns:38px 1fr 30px 28px;gap:5px;align-items:center;margin-bottom:6px;}
+.capt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:rgba(255,255,255,.25);font-size:13px;padding:5px 2px;cursor:pointer;transition:all .15s;text-align:center;}
+.capt-btn.is-capt{background:rgba(245,166,35,.2);border-color:var(--gold);color:var(--gold);}
+.del-btn{background:transparent;border:none;color:rgba(255,255,255,.15);font-size:14px;cursor:pointer;padding:4px;border-radius:5px;transition:color .15s;text-align:center;}
+.del-btn:hover{color:var(--accent);}
+.add-player-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:9px;padding:10px;cursor:pointer;color:var(--muted);font-family:var(--font-h);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .2s;margin-top:6px;width:100%;}
+.add-player-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.eo-row{display:grid;grid-template-columns:90px 1fr;gap:7px;margin-bottom:7px;align-items:center;}
+.eo-role{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.editor-colors{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+.ec-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;}
+.ec-dot.sel{border-color:var(--white);transform:scale(1.2);}
+.editor-footer{display:flex;gap:8px;padding:10px 13px 28px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.07);}
+.editor-btn{flex:1;padding:11px;border:none;border-radius:10px;font-family:var(--font-h);font-size:13px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.editor-btn:active{transform:scale(.97);}
+.btn-save-preset{background:linear-gradient(135deg,var(--green),#00a066);color:var(--blue);}
+.btn-del-preset{background:rgba(224,45,55,.15);color:var(--accent);border:1px solid rgba(224,45,55,.3);}
+
 /* TOAST */
 .toast{
   position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
   background:rgba(0,193,122,0.95);color:var(--blue);
   font-family:var(--font-h);font-size:13px;font-weight:800;
   letter-spacing:.5px;padding:10px 18px;border-radius:10px;
-  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:300;
+  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:600;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
@@ -212,7 +276,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Gérer la programmation
     </button>
-    <button class="btn-prog" style="border-color:rgba(155,89,182,0.35);background:rgba(155,89,182,0.12);color:#c58be0;" onclick="window.location.href='1-preparation.html?equipes=1'">
+    <button class="btn-prog" style="border-color:rgba(155,89,182,0.35);background:rgba(155,89,182,0.12);color:#c58be0;" onclick="openTeamsModal()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Équipes préenregistrées
     </button>
@@ -236,6 +300,40 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     Nouveau match sans programmation
   </button>
+</div>
+
+<!-- ── MODAL ÉQUIPES PRÉENREGISTRÉES ── -->
+<div class="preset-overlay" id="teamsModal" onclick="if(event.target===this)closeTeamsModal()">
+  <div class="preset-sheet">
+    <div class="preset-header">
+      <span class="preset-header-icon">👥</span>
+      <div class="preset-header-title">Équipes préenregistrées</div>
+      <button class="preset-header-close" onclick="closeTeamsModal()">✕</button>
+    </div>
+    <div class="preset-list" id="teams-list"></div>
+  </div>
+</div>
+
+<!-- ── MODAL ÉDITEUR D'ÉQUIPE ── -->
+<div class="editor-overlay" id="editorModal">
+  <div class="editor-sheet">
+    <div class="editor-header">
+      <span style="font-size:20px;">✏️</span>
+      <div class="editor-header-title" id="editor-title">Modifier l'équipe</div>
+      <span class="editor-team-idx" id="editor-idx-badge"></span>
+      <button class="editor-header-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="editor-tabs">
+      <div class="editor-tab active" id="etab-infos"     onclick="switchEditorTab('infos')">Infos</div>
+      <div class="editor-tab"        id="etab-joueurs"   onclick="switchEditorTab('joueurs')">Joueurs</div>
+      <div class="editor-tab"        id="etab-officiels" onclick="switchEditorTab('officiels')">Officiels</div>
+    </div>
+    <div class="editor-body" id="editor-body"></div>
+    <div class="editor-footer">
+      <button class="editor-btn btn-del-preset" onclick="deletePreset()" id="btn-del-preset">🗑 Supprimer</button>
+      <button class="editor-btn btn-save-preset" onclick="savePreset()">💾 Enregistrer</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -429,6 +527,243 @@ function launchFromCard(card) {
     const m = JSON.parse(card.dataset.match);
     launchMatch(m);
   } catch(e) { console.error(e); }
+}
+
+// ═══════════════════════════════════════════════
+// ÉQUIPES PRÉENREGISTRÉES
+// Même stockage (clé « ffhb_preset_teams ») et mêmes équipes de départ que 1-preparation.html :
+// toute modification faite ici apparaît dans « Charger une équipe préenregistrée » à la préparation, et inversement.
+// ═══════════════════════════════════════════════
+const PRESET_KEY = 'ffhb_preset_teams';
+const COLORS = ['#E02D37','#F5A623','#00C17A','#4A9FFF','#9B59B6','#FFFFFF','#1C3256','#FF6B35','#2ECC71','#E74C3C'];
+const OFFICIALS_ROLES = ['Entraîneur','Entraîneur adj. 1','Entraîneur adj. 2','Entraîneur adj. 3'];
+
+const PRESET_TEAMS_DEFAULT = [
+  {
+    nom: 'Meylan Handball Club', abr: 'MHB', code: 'MHB38', color: '#E02D37',
+    players: [
+      { num:'1',  name:'DUPONT Alexis',    isGK:true,  isCapt:false },
+      { num:'2',  name:'MARTIN Léo',       isGK:false, isCapt:false },
+      { num:'3',  name:'BERNARD Théo',     isGK:false, isCapt:false },
+      { num:'4',  name:'ROBERT Lucas',     isGK:false, isCapt:true  },
+      { num:'5',  name:'PETIT Antoine',    isGK:false, isCapt:false },
+      { num:'6',  name:'DURAND Mathieu',   isGK:false, isCapt:false },
+      { num:'7',  name:'LEROY Clément',    isGK:false, isCapt:false },
+      { num:'8',  name:'MOREAU Nathan',    isGK:false, isCapt:false },
+      { num:'9',  name:'SIMON Hugo',       isGK:false, isCapt:false },
+      { num:'10', name:'LAURENT Baptiste', isGK:false, isCapt:false },
+      { num:'11', name:'LEFEBVRE Enzo',    isGK:false, isCapt:false },
+      { num:'16', name:'GARCIA Maxime',    isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'ROUSSEAU Pierre' },
+      { role:'Entraîneur adj. 1', nom:'BLANC Nicolas' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+  {
+    nom: 'Grenoble Métropole HB', abr: 'GRE', code: 'GMH38', color: '#4A9FFF',
+    players: [
+      { num:'1',  name:'FONTAINE Tom',    isGK:true,  isCapt:false },
+      { num:'2',  name:'GUERIN Paul',     isGK:false, isCapt:false },
+      { num:'3',  name:'CHEVALIER Jules', isGK:false, isCapt:false },
+      { num:'4',  name:'FAURE Victor',    isGK:false, isCapt:true  },
+      { num:'5',  name:'MASSON Romain',   isGK:false, isCapt:false },
+      { num:'6',  name:'PERRIN Arthur',   isGK:false, isCapt:false },
+      { num:'7',  name:'RENARD Louis',    isGK:false, isCapt:false },
+      { num:'8',  name:'MEYER Julien',    isGK:false, isCapt:false },
+      { num:'9',  name:'HUBERT Axel',     isGK:false, isCapt:false },
+      { num:'10', name:'CARON Samuel',    isGK:false, isCapt:false },
+      { num:'16', name:'LACROIX Florian', isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'DENIS Stéphane' },
+      { role:'Entraîneur adj. 1', nom:'ADAM Frédéric' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+];
+
+function loadPresets() {
+  const raw = localStorage.getItem(PRESET_KEY);
+  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
+  return JSON.parse(JSON.stringify(PRESET_TEAMS_DEFAULT));
+}
+function savePresets(arr) { localStorage.setItem(PRESET_KEY, JSON.stringify(arr)); }
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── Liste ──
+function openTeamsModal() { renderTeamsList(); document.getElementById('teamsModal').classList.add('open'); }
+function closeTeamsModal() { document.getElementById('teamsModal').classList.remove('open'); }
+function renderTeamsList() {
+  const teams = loadPresets();
+  const list = document.getElementById('teams-list');
+  list.innerHTML =
+    `<div class="preset-hint">Ces équipes sont proposées dans « Charger une équipe préenregistrée » à la préparation d'un match. Touche une équipe pour la modifier.</div>` +
+    (teams.length ? teams.map((t, i) => {
+      const pc = (t.players||[]).length;
+      const oc = (t.officials||[]).filter(o => o.nom).length;
+      return `<div class="preset-card">
+        <div class="preset-badge" style="background:${t.color||'#555'};">${esc(t.abr)||'?'}</div>
+        <div class="preset-info" onclick="openEditor(${i})">
+          <div class="preset-name">${esc(t.nom)||'Sans nom'}</div>
+          <div class="preset-meta">Code : ${esc(t.code)||'—'} &nbsp;·&nbsp; ${oc} officiel${oc>1?'s':''}</div>
+        </div>
+        <div class="preset-count">${pc} joueur${pc>1?'s':''}</div>
+        <button class="preset-edit-btn" onclick="openEditor(${i})" title="Modifier cette équipe">✏️</button>
+      </div>`;
+    }).join('') : `<div class="preset-empty">Aucune équipe préenregistrée.</div>`) +
+    `<div class="preset-new-btn" onclick="openEditor(-1)">＋ Nouvelle équipe</div>`;
+}
+
+// ── Éditeur ──
+let _editIdx = -1, _editTeam = null, _editColor = '#E02D37', _editTab = 'infos', _editCaptIdx = -1;
+
+function openEditor(index) {
+  const teams = loadPresets();
+  _editIdx = index;
+  if (index === -1) {
+    _editTeam = { nom:'', abr:'', code:'', color:'#E02D37', players:[], officials: OFFICIALS_ROLES.map(r => ({ role:r, nom:'' })) };
+  } else {
+    _editTeam = JSON.parse(JSON.stringify(teams[index]));
+    if (!_editTeam.officials || _editTeam.officials.length < 4) {
+      _editTeam.officials = OFFICIALS_ROLES.map((r, i) => (_editTeam.officials||[])[i] || { role:r, nom:'' });
+    }
+  }
+  _editColor   = _editTeam.color || '#E02D37';
+  _editCaptIdx = (_editTeam.players||[]).findIndex(p => p.isCapt);
+  _editTab     = 'infos';
+  document.getElementById('editor-title').textContent = index === -1 ? 'Nouvelle équipe' : "Modifier l'équipe";
+  document.getElementById('editor-idx-badge').textContent = index === -1 ? 'Nouveau' : `Équipe ${index+1}/${teams.length}`;
+  document.getElementById('btn-del-preset').style.display = index === -1 ? 'none' : '';
+  ['infos','joueurs','officiels'].forEach(t => document.getElementById('etab-'+t).classList.toggle('active', t === 'infos'));
+  renderEditorTab('infos');
+  document.getElementById('editorModal').classList.add('open');
+}
+function closeEditor() { document.getElementById('editorModal').classList.remove('open'); _editTeam = null; }
+
+function switchEditorTab(tab) {
+  collectEditorTab(_editTab);
+  _editTab = tab;
+  ['infos','joueurs','officiels'].forEach(t => document.getElementById('etab-'+t).classList.toggle('active', t === tab));
+  renderEditorTab(tab);
+}
+
+function collectEditorTab(tab) {
+  if (!_editTeam) return;
+  if (tab === 'infos') {
+    _editTeam.nom   = document.getElementById('ei-nom')?.value  || '';
+    _editTeam.abr   = document.getElementById('ei-abr')?.value  || '';
+    _editTeam.code  = document.getElementById('ei-code')?.value || '';
+    _editTeam.color = _editColor;
+  } else if (tab === 'joueurs') {
+    const players = [];
+    document.querySelectorAll('.ep-row[data-ep-idx]').forEach(row => {
+      const i = parseInt(row.dataset.epIdx);
+      players.push({
+        num:    document.getElementById('ep-num-'+i)?.value  || '',
+        name:   document.getElementById('ep-name-'+i)?.value || '',
+        isGK:   row.dataset.gk === '1', // poste conservé en interne (non affiché)
+        isCapt: document.getElementById('ep-capt-'+i)?.classList.contains('is-capt') || false,
+      });
+    });
+    _editTeam.players = players;
+    _editCaptIdx = players.findIndex(p => p.isCapt);
+  } else if (tab === 'officiels') {
+    OFFICIALS_ROLES.forEach((_, i) => {
+      if (_editTeam.officials[i]) _editTeam.officials[i].nom = document.getElementById('eo-nom-'+i)?.value || '';
+    });
+  }
+}
+
+function renderEditorTab(tab) {
+  const body = document.getElementById('editor-body');
+  if (tab === 'infos') {
+    body.innerHTML = `
+      <div class="editor-section">Identité</div>
+      <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;">
+        <div><label class="ed-lbl">Nom de l'équipe</label><input class="ei" id="ei-nom" placeholder="Ex: Meylan HB" value="${esc(_editTeam.nom)}"></div>
+        <div><label class="ed-lbl">Abrév.</label><input class="ei" id="ei-abr" placeholder="MHB" maxlength="4" value="${esc(_editTeam.abr)}"></div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <label class="ed-lbl">Code équipe / Licence club</label>
+        <input class="ei" id="ei-code" placeholder="Ex: MHB38" value="${esc(_editTeam.code)}">
+      </div>
+      <div class="editor-section">Couleur tenue</div>
+      <div class="editor-colors" id="editor-colors"></div>`;
+    renderEditorColors();
+  } else if (tab === 'joueurs') {
+    const ps = _editTeam.players || [];
+    body.innerHTML = `
+      <div class="ep-header"><span>N°</span><span>Nom / Prénom</span><span>Cap</span><span></span></div>
+      <div id="ep-list">${ps.map((p, i) => buildEditorPlayerRow(p, i)).join('')}</div>
+      <button class="add-player-btn" onclick="editorAddPlayer()">＋ Ajouter un joueur</button>`;
+  } else if (tab === 'officiels') {
+    body.innerHTML = `
+      <div class="editor-section">Officiels</div>
+      ${OFFICIALS_ROLES.map((role, i) => {
+        const off = _editTeam.officials[i] || { nom:'' };
+        return `<div class="eo-row"><div class="eo-role">${role}</div><input class="ei" id="eo-nom-${i}" placeholder="Nom Prénom" value="${esc(off.nom)}"></div>`;
+      }).join('')}`;
+  }
+}
+
+function buildEditorPlayerRow(p, i) {
+  return `<div class="ep-row" data-ep-idx="${i}" data-gk="${p.isGK ? '1' : ''}">
+    <input class="ei ei-num" id="ep-num-${i}"  value="${esc(p.num)}"  placeholder="#">
+    <input class="ei"        id="ep-name-${i}" value="${esc(p.name)}" placeholder="Nom Prénom">
+    <button class="capt-btn${p.isCapt ? ' is-capt' : ''}" id="ep-capt-${i}" onclick="editorToggleCapt(${i})" title="Capitaine">⚑</button>
+    <button class="del-btn" onclick="editorDelPlayer(${i})" title="Supprimer">✕</button>
+  </div>`;
+}
+function renderEditorColors() {
+  document.getElementById('editor-colors').innerHTML = COLORS.map(c =>
+    `<div class="ec-dot${c === _editColor ? ' sel' : ''}" style="background:${c};" onclick="editorSelectColor('${c}',this)"></div>`).join('');
+}
+function editorSelectColor(c, el) {
+  _editColor = c;
+  document.querySelectorAll('.ec-dot').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function editorAddPlayer() {
+  collectEditorTab('joueurs');
+  _editTeam.players.push({ num:'', name:'', isGK:false, isCapt:false });
+  renderEditorTab('joueurs');
+}
+function editorDelPlayer(i) {
+  collectEditorTab('joueurs');
+  _editTeam.players.splice(i, 1);
+  renderEditorTab('joueurs');
+}
+function editorToggleCapt(i) {
+  document.querySelectorAll('.ep-row .capt-btn').forEach((b, k) => { if (k !== i) b.classList.remove('is-capt'); });
+  document.getElementById('ep-capt-'+i).classList.toggle('is-capt');
+}
+
+function savePreset() {
+  collectEditorTab(_editTab);
+  if (!_editTeam.nom.trim()) { showToast("⚠️ Donne un nom à l'équipe !"); switchEditorTab('infos'); return; }
+  _editTeam.color = _editColor;
+  const teams = loadPresets();
+  if (_editIdx === -1) teams.push(_editTeam); else teams[_editIdx] = _editTeam;
+  savePresets(teams);
+  const nom = _editTeam.nom;
+  closeEditor();
+  renderTeamsList();
+  showToast('💾 ' + nom + ' sauvegardée !');
+}
+function deletePreset() {
+  if (_editIdx === -1) return;
+  const teams = loadPresets();
+  const nom = teams[_editIdx]?.nom || 'cette équipe';
+  if (!confirm('Supprimer « ' + nom + ' » des équipes préenregistrées ?')) return;
+  teams.splice(_editIdx, 1);
+  savePresets(teams);
+  closeEditor();
+  renderTeamsList();
+  showToast('🗑 Équipe supprimée');
 }
 
 // Refresh when coming back to this page (storage may have changed)
