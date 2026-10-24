@@ -504,7 +504,7 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
   <div class="app-subtitle">Préparation du match</div>
   <div class="step-indicator">
     <div class="step done">
-      <div class="step-dot"><a href="0-matchs.html">0</a></div>
+      <div class="step-dot">0</div>
       <div class="step-label">Feuilles</div>
     </div>
     <div class="step-line"></div>
@@ -672,6 +672,13 @@ body{font-family:var(--font-b);background:var(--blue);color:var(--white);min-hei
         <div class="form-group"><label>Pause (min)</label><input id="cfg-pauseMin" type="number" inputmode="decimal" min="0" max="30" step="1"></div>
       </div>
 
+      <div class="cfg-sec">Type de match</div>
+      <div class="form-row full">
+        <div class="form-group"><label>Égalité en fin de match</label>
+          <select id="cfg-knockout"><option value="0">Match nul accepté</option><option value="1">Match à élimination — tirs au but</option></select>
+        </div>
+      </div>
+
       <div class="cfg-sec">Exclusions</div>
       <div class="form-row">
         <div class="form-group"><label>Durée d'une exclusion (min)</label><input id="cfg-excluMin" type="number" inputmode="decimal" min="0.5" max="10" step="0.5"></div>
@@ -768,7 +775,7 @@ let homeColor = '#E02D37';
 let awayColor = '#4A9FFF';
 
 // Paramètres du match (modal « Démarrer le match »)
-const CFG_DEFAULT = { nbPeriods:2, periodMin:30, pauseMin:10, excluSec:120, tmoTeam:3, tmoPeriod:2, tmoSec:60 };
+const CFG_DEFAULT = { nbPeriods:2, periodMin:30, pauseMin:10, excluSec:120, tmoTeam:3, tmoPeriod:2, tmoSec:60, knockout:false };
 let cfg = { ...CFG_DEFAULT };
 try {
   const saved = JSON.parse(localStorage.getItem('ffhb_match_config') || 'null');
@@ -1170,6 +1177,7 @@ function openConfigModal() {
   renderCfgColors('home');
   renderCfgColors('away');
   document.getElementById('cfg-nbPeriods').value = String(cfg.nbPeriods);
+  document.getElementById('cfg-knockout').value  = cfg.knockout ? '1' : '0';
   document.getElementById('cfg-periodMin').value = cfg.periodMin;
   document.getElementById('cfg-pauseMin').value  = cfg.pauseMin;
   document.getElementById('cfg-excluMin').value  = cfg.excluSec / 60;
@@ -1208,7 +1216,8 @@ function confirmStartMatch() {
     excluSec:  Math.round(num('cfg-excluMin') * 60),
     tmoTeam:   parseInt(document.getElementById('cfg-tmoTeam').value),
     tmoPeriod: parseInt(document.getElementById('cfg-tmoPeriod').value),
-    tmoSec:    parseInt(document.getElementById('cfg-tmoSec').value)
+    tmoSec:    parseInt(document.getElementById('cfg-tmoSec').value),
+    knockout:  document.getElementById('cfg-knockout').value === '1'
   };
   let err = '';
   if (!(n.periodMin >= 1))                         err = 'La durée des périodes doit être d\'au moins 1 minute.';
@@ -1237,52 +1246,140 @@ function confirmStartMatch() {
 // ═══════════════════════════════════
 const PRESET_TEAMS_DEFAULT = [
   {
-    nom: 'Meylan Handball Club',
-    abr: 'MHB',
-    code: 'MHB38',
+    nom: 'Meylan Handball',
+    abr: '',
+    code: '',
     color: '#E02D37',
     players: [
-      { num:'1',  name:'DUPONT Alexis',    isGK:true,  isCapt:false },
-      { num:'2',  name:'MARTIN Léo',       isGK:false, isCapt:false },
-      { num:'3',  name:'BERNARD Théo',     isGK:false, isCapt:false },
-      { num:'4',  name:'ROBERT Lucas',     isGK:false, isCapt:true  },
-      { num:'5',  name:'PETIT Antoine',    isGK:false, isCapt:false },
-      { num:'6',  name:'DURAND Mathieu',   isGK:false, isCapt:false },
-      { num:'7',  name:'LEROY Clément',    isGK:false, isCapt:false },
-      { num:'8',  name:'MOREAU Nathan',    isGK:false, isCapt:false },
-      { num:'9',  name:'SIMON Hugo',       isGK:false, isCapt:false },
-      { num:'10', name:'LAURENT Baptiste', isGK:false, isCapt:false },
-      { num:'11', name:'LEFEBVRE Enzo',    isGK:false, isCapt:false },
-      { num:'16', name:'GARCIA Maxime',    isGK:true,  isCapt:false },
+      { num:'3',  name:'Gwennael',    isGK:true,  isCapt:false },
+      { num:'4',  name:'Yoan',    isGK:true,  isCapt:false },
+      { num:'5',  name:'Guillaume',    isGK:true,  isCapt:false },
+      { num:'6',  name:'Noah',    isGK:true,  isCapt:false },
+      { num:'7',  name:'Marie',    isGK:true,  isCapt:false },
+      { num:'8',  name:'Nabil',    isGK:true,  isCapt:false },
+      { num:'9',  name:'Tanguy',    isGK:true,  isCapt:false },
+      { num:'10',  name:'Nicolas',    isGK:true,  isCapt:false },
+      { num:'11',  name:'Christina',    isGK:true,  isCapt:false },
+      { num:'14',  name:'Solène',    isGK:true,  isCapt:false },
+      { num:'17',  name:'Timothée',    isGK:true,  isCapt:false },
     ],
     officials: [
-      { role:'Entraîneur',        nom:'ROUSSEAU Pierre' },
-      { role:'Entraîneur adj. 1', nom:'BLANC Nicolas' },
+      { role:'Entraîneur',        nom:'Xavier' },
+      { role:'Entraîneur adj. 1', nom:'Enzo' },
       { role:'Entraîneur adj. 2', nom:'' },
       { role:'Entraîneur adj. 3', nom:'' },
     ]
   },
   {
-    nom: 'Grenoble Métropole HB',
-    abr: 'GRE',
-    code: 'GMH38',
-    color: '#4A9FFF',
+    nom: 'Beaurepaire',
+    abr: '',
+    code: '',
+    color: '',
     players: [
-      { num:'1',  name:'FONTAINE Tom',    isGK:true,  isCapt:false },
-      { num:'2',  name:'GUERIN Paul',     isGK:false, isCapt:false },
-      { num:'3',  name:'CHEVALIER Jules', isGK:false, isCapt:false },
-      { num:'4',  name:'FAURE Victor',    isGK:false, isCapt:true  },
-      { num:'5',  name:'MASSON Romain',   isGK:false, isCapt:false },
-      { num:'6',  name:'PERRIN Arthur',   isGK:false, isCapt:false },
-      { num:'7',  name:'RENARD Louis',    isGK:false, isCapt:false },
-      { num:'8',  name:'MEYER Julien',    isGK:false, isCapt:false },
-      { num:'9',  name:'HUBERT Axel',     isGK:false, isCapt:false },
-      { num:'10', name:'CARON Samuel',    isGK:false, isCapt:false },
-      { num:'16', name:'LACROIX Florian', isGK:true,  isCapt:false },
+      { num:'3',  name:'Florian',    isGK:true,  isCapt:false },
+      { num:'4',  name:'Nasser',    isGK:true,  isCapt:false },
+      { num:'5',  name:'Jérôme',    isGK:true,  isCapt:false },
+      { num:'8',  name:'Adrien',    isGK:true,  isCapt:false },
+      { num:'9',  name:'Renaud',    isGK:true,  isCapt:false },
+      { num:'11',  name:'Maxime',    isGK:true,  isCapt:false },
+      { num:'12',  name:'Christian',    isGK:true,  isCapt:false },
     ],
     officials: [
-      { role:'Entraîneur',        nom:'DENIS Stéphane' },
-      { role:'Entraîneur adj. 1', nom:'ADAM Frédéric' },
+      { role:'Entraîneur',        nom:'Keshia' },
+      { role:'Entraîneur adj. 1', nom:'' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+  {
+    nom: 'Bollène 1',
+    abr: '',
+    code: '',
+    color: '',
+    players: [
+      { num:'3',  name:'Antonin',    isGK:true,  isCapt:false },
+      { num:'4',  name:'Florian',    isGK:true,  isCapt:false },
+      { num:'7',  name:'Corentin',    isGK:true,  isCapt:false },
+      { num:'9',  name:'Kévin',    isGK:true,  isCapt:false },
+      { num:'12',  name:'Sabrina',    isGK:true,  isCapt:false },
+      { num:'15',  name:'Amal',    isGK:true,  isCapt:false },
+      { num:'16',  name:'Cédric',    isGK:true,  isCapt:false },
+      { num:'17',  name:'Maëva',    isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'Manon' },
+      { role:'Entraîneur adj. 1', nom:'Josy' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+  {
+    nom: 'Bollène 2',
+    abr: '',
+    code: '',
+    color: '',
+    players: [
+      { num:'0',  name:'Brayan',    isGK:true,  isCapt:false },
+      { num:'1',  name:'Deborah',    isGK:true,  isCapt:false },
+      { num:'2',  name:'Thomas',    isGK:true,  isCapt:false },
+      { num:'5',  name:'Ludovic',    isGK:true,  isCapt:false },
+      { num:'6',  name:'Benjamin',    isGK:true,  isCapt:false },
+      { num:'8',  name:'Chloé',    isGK:true,  isCapt:false },
+      { num:'10',  name:'Nadia',    isGK:true,  isCapt:false },
+      { num:'11',  name:'Nicolas',    isGK:true,  isCapt:false },
+      { num:'19',  name:'Lilian',    isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'Manon' },
+      { role:'Entraîneur adj. 1', nom:'Josy' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+  {
+    nom: 'Handball Club Donatien 1',
+    abr: '',
+    code: '',
+    color: '',
+    players: [
+      { num:'1',  name:'Virginie',    isGK:true,  isCapt:false },
+      { num:'2',  name:'Jérôme',    isGK:true,  isCapt:false },
+      { num:'3',  name:'Paul',    isGK:true,  isCapt:false },
+      { num:'5',  name:'Jeff',    isGK:true,  isCapt:false },
+      { num:'7',  name:'Léa',    isGK:true,  isCapt:false },
+      { num:'8',  name:'Yannick',    isGK:true,  isCapt:false },
+      { num:'9',  name:'Mickael',    isGK:true,  isCapt:false },
+      { num:'10',  name:'Océane',    isGK:true,  isCapt:false },
+      { num:'11',  name:'Zehra',    isGK:true,  isCapt:false },
+      { num:'13',  name:'Mael',    isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'Nathanael' },
+      { role:'Entraîneur adj. 1', nom:'' },
+      { role:'Entraîneur adj. 2', nom:'' },
+      { role:'Entraîneur adj. 3', nom:'' },
+    ]
+  },
+  {
+    nom: 'Handball Club Donatien 2',
+    abr: '',
+    code: '',
+    color: '',
+    players: [
+      { num:'6',  name:'Suzanne',    isGK:true,  isCapt:false },
+      { num:'7',  name:'Florian',    isGK:true,  isCapt:false },
+      { num:'10',  name:'Jonathan',    isGK:true,  isCapt:false },
+      { num:'11',  name:'Ambre',    isGK:true,  isCapt:false },
+      { num:'13',  name:'Sylvain',    isGK:true,  isCapt:false },
+      { num:'15',  name:'Camel',    isGK:true,  isCapt:false },
+      { num:'16',  name:'Mohammed',    isGK:true,  isCapt:false },
+      { num:'17',  name:'Kylian',    isGK:true,  isCapt:false },
+      { num:'31',  name:'Candice',    isGK:true,  isCapt:false },
+      { num:'51',  name:'Dylan',    isGK:true,  isCapt:false },
+    ],
+    officials: [
+      { role:'Entraîneur',        nom:'Nathanael' },
+      { role:'Entraîneur adj. 1', nom:'' },
       { role:'Entraîneur adj. 2', nom:'' },
       { role:'Entraîneur adj. 3', nom:'' },
     ]
